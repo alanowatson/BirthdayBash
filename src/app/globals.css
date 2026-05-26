@@ -1,26 +1,473 @@
 @import "tailwindcss";
 
+/* ===== Vegas Hype: CSS Variables ===== */
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --bg: #07101F;
+  --bg-deep: #050B16;
+  --bg-soft: #0E1A2E;
+  --bg-felt: #0A1A3E;
+  --gold: #D4AF37;
+  --gold-bright: #F5E6A8;
+  --gold-soft: rgba(138, 114, 32, 0.56);
+  --blue: #3B82F6;
+  --blue-bright: #60A5FA;
+  --blue-deep: #1E3A8A;
+  --sky: #38BDF8;
+  --text: #F4F1EA;
+  --text-dim: #AAB2C5;
 }
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+/* ===== Tailwind v4: Register design tokens ===== */
+@theme {
+  /* Colors — auto-generates text-*, bg-*, border-* utilities */
+  --color-bg: #07101F;
+  --color-bg-deep: #050B16;
+  --color-bg-soft: #0E1A2E;
+  --color-bg-felt: #0A1A3E;
+  --color-gold: #D4AF37;
+  --color-gold-bright: #F5E6A8;
+  --color-gold-soft: rgba(138, 114, 32, 0.56);
+  --color-blue: #3B82F6;
+  --color-blue-bright: #60A5FA;
+  --color-blue-deep: #1E3A8A;
+  --color-sky: #38BDF8;
+  --color-text: #F4F1EA;
+  --color-text-dim: #AAB2C5;
+
+  /* Fonts — auto-generates font-* utilities */
+  --font-display: var(--font-italiana);
+  --font-serif-italic: var(--font-playfair);
+  --font-sans: var(--font-inter);
+  --font-mono-x: var(--font-jetbrains);
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
-}
-
+/* ===== Base styles ===== */
+html,
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  background: var(--bg);
+  color: var(--text);
+}
+
+/* ===== Hero gradient glow ===== */
+.hero-glow {
+  background:
+    radial-gradient(ellipse 80% 60% at 50% 20%, rgba(212, 175, 55, 0.18) 0%, rgba(59, 130, 246, 0.10) 35%, transparent 70%),
+    radial-gradient(ellipse 60% 40% at 25% 85%, rgba(59, 130, 246, 0.10) 0%, transparent 60%),
+    radial-gradient(ellipse 60% 40% at 80% 80%, rgba(212, 175, 55, 0.06) 0%, transparent 60%);
+}
+
+/* ===== Gradient text ===== */
+.gold-gradient {
+  background: linear-gradient(180deg, #F5E6A8 0%, #D4AF37 50%, #8A7220 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.blue-gold-gradient {
+  background: linear-gradient(135deg, #F5E6A8 0%, #D4AF37 40%, #60A5FA 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+/* ===== Art-deco divider ===== */
+.deco-divider {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 1rem;
+}
+.deco-divider::before,
+.deco-divider::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--gold) 50%, transparent);
+  max-width: 200px;
+}
+
+.deco-diamond {
+  width: 8px;
+  height: 8px;
+  background: var(--gold);
+  transform: rotate(45deg);
+  box-shadow: 0 0 10px var(--gold);
+}
+
+.deco-diamond-blue {
+  width: 8px;
+  height: 8px;
+  background: var(--blue);
+  transform: rotate(45deg);
+  box-shadow: 0 0 10px var(--blue-bright);
+}
+
+/* ===== Sparkle animation ===== */
+@keyframes twinkle {
+  0%, 100% { opacity: 0.2; transform: scale(1); }
+  50% { opacity: 0.8; transform: scale(1.3); }
+}
+
+.sparkle {
+  position: absolute;
+  background: var(--gold);
+  border-radius: 50%;
+  opacity: 0.6;
+  animation: twinkle 4s infinite ease-in-out;
+}
+
+.sparkle-blue {
+  background: var(--blue-bright);
+}
+
+/* ===== Section label ===== */
+.section-label {
+  font-family: var(--font-inter), sans-serif;
+  letter-spacing: 0.35em;
+  font-size: 0.7rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  color: var(--gold);
+}
+
+.section-label-blue {
+  color: var(--blue-bright);
+}
+
+/* ===== Buttons ===== */
+.rsvp-chip {
+  transition: all 0.2s ease;
+  background: linear-gradient(135deg, var(--gold) 0%, #B8941F 100%);
+  color: #07101F;
+  font-weight: 600;
+  letter-spacing: 0.05em;
+  cursor: pointer;
+}
+.rsvp-chip:hover {
+  box-shadow: 0 0 20px rgba(212, 175, 55, 0.5);
+  transform: translateY(-1px);
+}
+
+.neon-blue {
+  background: transparent;
+  border: 1px solid var(--blue);
+  color: var(--blue-bright);
+  text-shadow: 0 0 8px rgba(96, 165, 250, 0.5);
+  box-shadow: inset 0 0 10px rgba(59, 130, 246, 0.1), 0 0 15px rgba(59, 130, 246, 0.18);
+  transition: all 0.2s ease;
+}
+.neon-blue:hover {
+  background: rgba(59, 130, 246, 0.1);
+  box-shadow: inset 0 0 15px rgba(59, 130, 246, 0.2), 0 0 25px rgba(59, 130, 246, 0.35);
+  color: var(--blue-bright);
+}
+
+/* ===== Day pill ===== */
+.day-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.5rem 1.25rem;
+  border: 1px solid var(--gold-soft);
+  border-radius: 9999px;
+  background: rgba(212, 175, 55, 0.05);
+}
+
+/* ===== Event cards ===== */
+.event-card {
+  transition: all 0.3s ease;
+  background: linear-gradient(135deg, rgba(14,26,46,0.85), rgba(7,16,31,0.95));
+}
+.event-card:hover {
+  border-color: var(--gold);
+  box-shadow: 0 0 30px rgba(212, 175, 55, 0.15), inset 0 0 20px rgba(59, 130, 246, 0.04);
+  transform: translateY(-2px);
+}
+
+.event-card-hero {
+  background: linear-gradient(135deg, rgba(30, 58, 138, 0.25) 0%, rgba(14, 26, 46, 0.9) 50%, rgba(7, 16, 31, 0.95) 100%);
+  border-color: var(--gold) !important;
+  box-shadow: 0 0 25px rgba(212, 175, 55, 0.12), inset 0 1px 0 rgba(245, 230, 168, 0.15);
+}
+
+/* ===== Avatar ===== */
+.avatar {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  border: 2px solid var(--bg);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 600;
+  font-size: 0.75rem;
+  color: #07101F;
+}
+
+/* ===== RSVP status chip ===== */
+.status-attending {
+  color: var(--sky);
+  border: 1px solid rgba(56, 189, 248, 0.4);
+  background: rgba(56, 189, 248, 0.08);
+}
+
+/* ===== Lodging cards ===== */
+.lodging-card {
+  background: linear-gradient(180deg, rgba(14,26,46,0.7), rgba(7,16,31,0.95));
+  transition: all 0.3s ease;
+}
+.lodging-card:hover {
+  border-color: var(--blue);
+  box-shadow: 0 0 25px rgba(59, 130, 246, 0.15);
+}
+.lodging-card-primary {
+  background: linear-gradient(180deg, rgba(30, 58, 138, 0.18) 0%, rgba(14, 26, 46, 0.9) 100%);
+}
+
+/* ===== Pull quote ===== */
+.pull-quote {
+  border-left: 2px solid var(--gold);
+  padding-left: 1.5rem;
+  font-family: var(--font-playfair), serif;
+  font-style: italic;
+  color: var(--text);
+}
+
+/* ===== Scavenger Hunt board ===== */
+.felt-bg {
+  background:
+    radial-gradient(ellipse 80% 50% at 50% 0%, rgba(59, 130, 246, 0.12) 0%, transparent 60%),
+    radial-gradient(ellipse 80% 50% at 50% 100%, rgba(212, 175, 55, 0.06) 0%, transparent 60%),
+    var(--bg-felt);
+}
+
+.reveal-banner {
+  background: linear-gradient(90deg, rgba(212, 175, 55, 0.10), rgba(59, 130, 246, 0.10));
+  border: 1px dashed var(--gold-soft);
+}
+
+.suit-header {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  padding: 0.75rem 1rem;
+  background: linear-gradient(180deg, rgba(7,16,31,0.85), rgba(7,16,31,0.5));
+  border: 1px solid var(--gold-soft);
+  border-radius: 6px;
+  font-family: var(--font-italiana), serif;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  font-size: 0.9rem;
+}
+
+.suit-symbol { font-size: 1.5rem; line-height: 1; }
+.suit-diamonds { color: var(--gold); }
+.suit-clubs    { color: var(--blue); }
+.suit-hearts   { color: var(--gold-bright); }
+.suit-spades   { color: var(--blue-bright); }
+
+.poker-card {
+  position: relative;
+  background: linear-gradient(160deg, rgba(20, 30, 55, 0.95) 0%, rgba(7, 16, 31, 0.98) 100%);
+  border: 1px solid var(--gold-soft);
+  border-radius: 8px;
+  padding: 1rem 1rem 1.1rem 1rem;
+  min-height: 175px;
+  overflow: hidden;
+  transition: all 0.3s ease;
+}
+.poker-card::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 3px;
+}
+.poker-card.diamonds::before { background: linear-gradient(90deg, transparent, var(--gold), transparent); }
+.poker-card.clubs::before    { background: linear-gradient(90deg, transparent, var(--blue), transparent); }
+.poker-card.hearts::before   { background: linear-gradient(90deg, transparent, var(--gold-bright), transparent); }
+.poker-card.spades::before   { background: linear-gradient(90deg, transparent, var(--blue-bright), transparent); }
+.poker-card:hover {
+  transform: translateY(-2px);
+  border-color: var(--gold);
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.5), 0 0 16px rgba(212, 175, 55, 0.18);
+}
+
+.pip {
+  font-family: var(--font-italiana), serif;
+  font-size: 1.35rem;
+  line-height: 1;
+  display: inline-flex;
+  align-items: baseline;
+  gap: 0.15rem;
+}
+.pip .pip-suit { font-size: 1.05rem; }
+
+.point-badge {
+  position: absolute;
+  top: 0.6rem;
+  right: 0.6rem;
+  font-family: var(--font-jetbrains), monospace;
+  font-size: 0.65rem;
+  letter-spacing: 0.1em;
+  padding: 0.15rem 0.45rem;
+  border-radius: 9999px;
+  background: rgba(212, 175, 55, 0.12);
+  color: var(--gold);
+  border: 1px solid rgba(212, 175, 55, 0.35);
+}
+
+.card-title {
+  font-family: var(--font-italiana), serif;
+  font-size: 1.05rem;
+  color: var(--gold);
+  margin-top: 0.55rem;
+  margin-bottom: 0.4rem;
+  line-height: 1.15;
+}
+.card-desc {
+  font-size: 0.78rem;
+  color: var(--text-dim);
+  line-height: 1.45;
+}
+.card-desc em.poem {
+  display: block;
+  font-family: var(--font-playfair), serif;
+  color: var(--text);
+  font-style: italic;
+  margin-top: 0.2rem;
+}
+
+.rank-divider {
+  grid-column: 1 / -1;
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  color: var(--gold);
+  font-family: var(--font-italiana), serif;
+  font-size: 0.85rem;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  opacity: 0.7;
+  margin-top: 0.5rem;
+}
+.rank-divider::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: linear-gradient(90deg, var(--gold-soft), transparent);
+}
+
+/* ===== Rules section ===== */
+.rules-block {
+  background: linear-gradient(180deg, rgba(14, 26, 46, 0.6), rgba(7, 16, 31, 0.9));
+}
+.rules-block h3 {
+  font-family: var(--font-italiana), serif;
+  font-size: 1.5rem;
+  color: var(--gold);
+  margin-top: 1.5rem;
+  margin-bottom: 0.75rem;
+}
+.rules-block ul {
+  list-style: none;
+  padding-left: 0;
+}
+.rules-block ul li {
+  padding-left: 1.5rem;
+  margin-bottom: 0.6rem;
+  position: relative;
+  color: var(--text);
+  line-height: 1.55;
+}
+.rules-block ul li::before {
+  content: '◆';
+  position: absolute;
+  left: 0;
+  color: var(--gold);
+  font-size: 0.7rem;
+  top: 0.4rem;
+}
+
+.jump-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.6rem 1.25rem;
+  border: 1px solid var(--blue);
+  border-radius: 9999px;
+  color: var(--blue-bright);
+  font-size: 0.8rem;
+  text-transform: uppercase;
+  letter-spacing: 0.15em;
+  transition: all 0.2s ease;
+}
+.jump-link:hover {
+  background: rgba(59, 130, 246, 0.1);
+  box-shadow: 0 0 18px rgba(59, 130, 246, 0.3);
+}
+
+/* ===== Important Links ===== */
+.link-card {
+  display: block;
+  padding: 1.5rem;
+  background: linear-gradient(135deg, rgba(14,26,46,0.85), rgba(7,16,31,0.95));
+  border: 1px solid var(--gold-soft);
+  border-radius: 10px;
+  transition: all 0.3s ease;
+  position: relative;
+  height: 100%;
+}
+.link-card:hover {
+  transform: translateY(-2px);
+  border-color: var(--gold);
+  box-shadow: 0 8px 30px rgba(0,0,0,0.4), 0 0 22px rgba(212, 175, 55, 0.18);
+}
+.link-card.is-pending {
+  cursor: default;
+}
+.link-card.is-pending:hover {
+  transform: none;
+  border-color: var(--gold-soft);
+  box-shadow: 0 0 18px rgba(59, 130, 246, 0.10);
+}
+
+.link-icon {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(135deg, rgba(212,175,55,0.18) 0%, rgba(59,130,246,0.18) 100%);
+  border: 1px solid var(--gold-soft);
+  font-size: 1.4rem;
+  flex-shrink: 0;
+}
+
+.pending-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.3rem 0.75rem;
+  border-radius: 9999px;
+  background: rgba(59, 130, 246, 0.08);
+  border: 1px dashed var(--blue);
+  color: var(--blue-bright);
+  font-size: 0.65rem;
+  text-transform: uppercase;
+  letter-spacing: 0.15em;
+  font-weight: 600;
+}
+
+.live-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  color: var(--gold);
+  font-size: 0.7rem;
+  text-transform: uppercase;
+  letter-spacing: 0.15em;
+  font-weight: 600;
 }
