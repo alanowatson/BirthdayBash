@@ -1,11 +1,12 @@
 import type { Metadata } from "next";
-import { Italiana, Playfair_Display, Inter, JetBrains_Mono } from "next/font/google";
+import { Cormorant_Garamond, Playfair_Display, Inter, JetBrains_Mono } from "next/font/google";
 import "./globals.css";
 
-const italiana = Italiana({
-  weight: "400",
+const cormorant = Cormorant_Garamond({
+  weight: ["300", "400", "500", "600", "700"],
   subsets: ["latin"],
   variable: "--font-italiana",
+  style: ["normal", "italic"],
   display: "swap",
 });
 
@@ -29,7 +30,7 @@ const jetbrains = JetBrains_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Vegas Hype — You're on the list.",
+  title: "Alan's 40th: The 4th Awakens",
   description: "Alan Watson's 40th birthday weekend. Las Vegas, Oct 22–26, 2026.",
   robots: {
     index: false,
@@ -46,7 +47,7 @@ export default function RootLayout({
   return (
     <html
       lang="en"
-      className={`${italiana.variable} ${playfair.variable} ${inter.variable} ${jetbrains.variable} min-h-full antialiased`}
+      className={`${cormorant.variable} ${playfair.variable} ${inter.variable} ${jetbrains.variable} min-h-full antialiased`}
     >
       <head>
         <meta name="robots" content="noindex, nofollow" />

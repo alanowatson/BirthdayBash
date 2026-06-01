@@ -48,6 +48,12 @@ body {
   color: var(--text);
 }
 
+/* Cormorant Garamond defaults to old-style figures — force lining nums for display headings */
+.font-display {
+  font-variant-numeric: lining-nums;
+  font-feature-settings: "lnum" 1;
+}
+
 /* ===== Hero gradient glow ===== */
 .hero-glow {
   background:
@@ -62,6 +68,7 @@ body {
   -webkit-background-clip: text;
   background-clip: text;
   -webkit-text-fill-color: transparent;
+  padding-bottom: 0.15em;
 }
 
 .blue-gold-gradient {
@@ -69,6 +76,7 @@ body {
   -webkit-background-clip: text;
   background-clip: text;
   -webkit-text-fill-color: transparent;
+  padding-bottom: 0.15em;
 }
 
 /* ===== Art-deco divider ===== */
@@ -175,6 +183,28 @@ body {
 }
 
 /* ===== Event cards ===== */
+.field-input {
+  background: transparent;
+  border: 1px solid var(--gold-soft);
+  border-radius: 0.5rem;
+  padding: 0.625rem 0.875rem;
+  color: var(--text);
+  font-size: 0.875rem;
+  width: 100%;
+  transition: border-color 0.2s;
+}
+.field-input:focus {
+  outline: none;
+  border-color: var(--gold);
+}
+.field-input::placeholder {
+  color: var(--text-dim);
+}
+option {
+  background: var(--bg);
+  color: var(--text);
+}
+
 .event-card {
   transition: all 0.3s ease;
   background: linear-gradient(135deg, rgba(14,26,46,0.85), rgba(7,16,31,0.95));
@@ -183,6 +213,12 @@ body {
   border-color: var(--gold);
   box-shadow: 0 0 30px rgba(212, 175, 55, 0.15), inset 0 0 20px rgba(59, 130, 246, 0.04);
   transform: translateY(-2px);
+}
+
+.event-card-static:hover {
+  border-color: inherit;
+  box-shadow: none;
+  transform: none;
 }
 
 .event-card-hero {
