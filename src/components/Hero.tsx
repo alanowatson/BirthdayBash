@@ -32,8 +32,8 @@ export default function Hero({ isSignedIn = false }: { isSignedIn?: boolean }) {
         </p>
 
         <p className="text-text-dim max-w-2xl mx-auto mb-10 text-lg leading-relaxed">
-          They say life begins at 40. They also say what happens in Vegas stays in Vegas.{' '}
-          <span className="text-gold">I&#39;m here to test both hypotheses simultaneously.</span>
+          Some milestones you mark quietly.{' '}
+          <span className="text-gold">I&#39;ve never been good at quiet.</span>
         </p>
 
         <Countdown />
