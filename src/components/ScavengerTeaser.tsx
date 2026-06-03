@@ -12,7 +12,7 @@ export default function ScavengerTeaser() {
         </h2>
         <p className="text-text-dim text-lg leading-relaxed mb-8">
           52 tasks. One weekend. A gold-foil deck of poker cards as souvenirs. Bragging rights,
-          eternal glory, and a sizable chunk of your weekend split for the winner.
+          eternal glory, and a sizable chunk off your weekend split for the winner.
         </p>
 
         <div
