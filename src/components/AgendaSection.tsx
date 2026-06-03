@@ -194,7 +194,7 @@ export default function AgendaSection({ events, myRsvps = {} }: { events: Event[
         )}
 
         <p className="text-center text-text-dim text-sm italic mt-6">
-          Monday Oct 26 — checkouts, last breakfasts, and tearful Ubers to the airport. Alan &amp; Kate hit the road at noon.
+          Monday Oct 26 — checkouts, last breakfasts, and tearful goodbyes. Alan &amp; Kate hit the road at noon.
         </p>
       </div>
     </section>

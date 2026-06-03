@@ -66,7 +66,7 @@ INSERT INTO events (title, slug, description, starts_at, ends_at, location, pric
 
 ('Sunday Dinner',
  'sunday-dinner',
- 'Low-key farewell dinner for whoever''s still standing. TBD based on who''s around — Alan and Kate fly out Monday at 11am.',
+ 'Low-key farewell dinner for whoever''s still standing. TBD based on who''s around — Alan and Kate hit the road Monday at noon.',
  '2026-10-26 02:00:00+00',   -- Oct 25, 7:00 PM PDT
  NULL,
  'TBD',

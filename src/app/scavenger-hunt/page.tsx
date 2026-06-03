@@ -144,6 +144,17 @@ export default async function ScavengerHuntPage() {
   const claimedCount = tasks.filter((t) => t.is_claimed).length;
   const availablePoints = tasks.filter((t) => !t.is_claimed).reduce((s, t) => s + t.points, 0);
 
+  // Teaser cards shown while the board is locked
+  const TEASERS: { rank: string; suit: ScavengerSuit }[] = [
+    { rank: 'A', suit: 'spades' },
+    { rank: '9', suit: 'clubs' },
+    { rank: '7', suit: 'diamonds' },
+    { rank: '2', suit: 'hearts' },
+  ];
+  const teaserCards = TEASERS
+    .map(({ rank, suit }) => tasks.find((t) => t.rank === rank && t.suit === suit))
+    .filter(Boolean) as ScavengerTask[];
+
   // Group tasks by suit, ordered by rank
   const bySuit = SUIT_ORDER.reduce<Record<ScavengerSuit, ScavengerTask[]>>(
     (acc, suit) => {
@@ -204,6 +215,22 @@ export default async function ScavengerHuntPage() {
               </p>
             </div>
           </section>
+
+          {/* Teaser cards */}
+          {teaserCards.length > 0 && (
+            <section className="pb-16 px-6">
+              <div className="max-w-3xl mx-auto">
+                <p className="text-center text-xs uppercase tracking-widest text-text-dim mb-6">
+                  A taste of what's coming
+                </p>
+                <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+                  {teaserCards.map((task) => (
+                    <TaskCard key={task.id} task={task} isAdmin={false} />
+                  ))}
+                </div>
+              </div>
+            </section>
+          )}
 
           {/* Rules — visible even before reveal */}
           <Rules />
