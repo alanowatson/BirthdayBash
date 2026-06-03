@@ -1,3 +1,5 @@
+import Countdown from './Countdown';
+
 export default function Hero({ isSignedIn = false }: { isSignedIn?: boolean }) {
   return (
     <section className="relative min-h-screen flex items-center justify-center overflow-hidden pt-20 bg-bg">
@@ -33,6 +35,8 @@ export default function Hero({ isSignedIn = false }: { isSignedIn?: boolean }) {
           They say life begins at 40. They also say what happens in Vegas stays in Vegas.{' '}
           <span className="text-gold">I&#39;m here to test both hypotheses simultaneously.</span>
         </p>
+
+        <Countdown />
 
         <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
           <a href="#agenda" className="rsvp-chip px-8 py-4 rounded-full uppercase text-sm tracking-widest">

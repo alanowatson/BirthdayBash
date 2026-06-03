@@ -44,6 +44,7 @@ export async function signupAction(_prev: unknown, formData: FormData) {
   const email = (formData.get('email') as string | null)?.trim().toLowerCase() ?? '';
   const bio = (formData.get('bio') as string | null)?.trim() || null;
   const obsession = (formData.get('obsession') as string | null)?.trim() || null;
+  const tshirt_size = (formData.get('tshirt_size') as string | null)?.trim() || null;
   const tripRsvpRaw = formData.get('trip_rsvp') as string | null;
   const trip_rsvp = tripRsvpRaw === 'yes' || tripRsvpRaw === 'no' ? tripRsvpRaw : null;
 
@@ -75,6 +76,7 @@ export async function signupAction(_prev: unknown, formData: FormData) {
     slug,
     bio,
     obsession,
+    tshirt_size,
     trip_rsvp,
   });
 

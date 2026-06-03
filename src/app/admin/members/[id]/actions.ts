@@ -24,12 +24,13 @@ export async function updateMemberAction(formData: FormData) {
   const bio = ((formData.get('bio') as string) ?? '').trim() || null;
   const slug = ((formData.get('slug') as string) ?? '').trim();
   const obsession = ((formData.get('obsession') as string) ?? '').trim() || null;
+  const tshirt_size = ((formData.get('tshirt_size') as string) ?? '').trim() || null;
   const known_for = ((formData.get('known_for') as string) ?? '').trim() || null;
   const fun_fact = ((formData.get('fun_fact') as string) ?? '').trim() || null;
 
   if (!name || !slug) return;
 
-  await supabaseAdmin.from('members').update({ name, bio, slug, obsession, known_for, fun_fact }).eq('id', id);
+  await supabaseAdmin.from('members').update({ name, bio, slug, obsession, tshirt_size, known_for, fun_fact }).eq('id', id);
 
   revalidatePath('/admin/members');
   revalidatePath(`/admin/members/${id}`);

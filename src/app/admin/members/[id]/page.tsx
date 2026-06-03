@@ -79,6 +79,19 @@ export default async function AdminMemberDetailPage({ params }: Props) {
             </div>
 
             <div className="flex flex-col gap-1">
+              <label className="text-xs uppercase tracking-widest text-text-dim">T-Shirt Size</label>
+              <select name="tshirt_size" defaultValue={member.tshirt_size ?? ''} className="field-input">
+                <option value="">— Not set</option>
+                <option value="XS">XS</option>
+                <option value="S">S</option>
+                <option value="M">M</option>
+                <option value="L">L</option>
+                <option value="XL">XL</option>
+                <option value="XXL">XXL</option>
+              </select>
+            </div>
+
+            <div className="flex flex-col gap-1">
               <label className="text-xs uppercase tracking-widest text-text-dim">Known for <span className="normal-case text-text-dim">(admin — shown on profile)</span></label>
               <input name="known_for" type="text" defaultValue={member.known_for ?? ''} className="field-input" placeholder="e.g. The instigator. Has never turned down a dare." />
             </div>

@@ -12,6 +12,7 @@ CREATE TABLE IF NOT EXISTS members (
   known_for             text,
   fun_fact              text,
   obsession             text,
+  tshirt_size           text,
   plus_one_member_id    uuid REFERENCES members(id) ON DELETE SET NULL,
   is_admin              boolean NOT NULL DEFAULT false,
   is_referee            boolean NOT NULL DEFAULT false,

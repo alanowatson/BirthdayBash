@@ -84,6 +84,25 @@ export default function SignupPage() {
               />
             </div>
 
+            <div className="flex flex-col gap-1.5">
+              <label htmlFor="tshirt_size" className="text-xs uppercase tracking-widest text-text-dim">
+                T-Shirt Size <span className="text-text-dim text-xs normal-case">(optional)</span>
+              </label>
+              <select
+                id="tshirt_size"
+                name="tshirt_size"
+                className="bg-transparent border border-gold-soft rounded-lg px-4 py-3 text-text focus:outline-none focus:border-gold transition-colors"
+              >
+                <option value="">— Select a size</option>
+                <option value="XS">XS</option>
+                <option value="S">S</option>
+                <option value="M">M</option>
+                <option value="L">L</option>
+                <option value="XL">XL</option>
+                <option value="XXL">XXL</option>
+              </select>
+            </div>
+
             <div className="flex flex-col gap-2">
               <p className="text-xs uppercase tracking-widest text-text-dim mb-1">Are you in for the weekend?</p>
               {[

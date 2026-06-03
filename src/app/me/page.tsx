@@ -102,7 +102,7 @@ export default async function MePage() {
             <div className="mb-6 pb-6 border-b" style={{ borderColor: 'var(--gold-soft)' }}>
               <PhotoUpload currentUrl={member.photo_url} name={member.name} />
             </div>
-            <ProfileForm name={member.name} bio={member.bio} obsession={member.obsession} />
+            <ProfileForm name={member.name} bio={member.bio} obsession={member.obsession} tshirt_size={member.tshirt_size} />
           </div>
 
           {/* RSVPs */}

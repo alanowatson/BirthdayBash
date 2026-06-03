@@ -8,6 +8,7 @@ export interface Member {
   known_for: string | null;
   fun_fact: string | null;
   obsession: string | null;
+  tshirt_size: string | null;
   plus_one_member_id: string | null;
   is_admin: boolean;
   is_referee: boolean;

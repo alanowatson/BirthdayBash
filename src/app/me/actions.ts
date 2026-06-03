@@ -52,12 +52,13 @@ export async function updateProfileAction(_prev: ProfileState, formData: FormDat
   const name = (formData.get('name') as string | null)?.trim() ?? '';
   const bio = (formData.get('bio') as string | null)?.trim() || null;
   const obsession = (formData.get('obsession') as string | null)?.trim() || null;
+  const tshirt_size = (formData.get('tshirt_size') as string | null)?.trim() || null;
 
   if (!name) return { error: 'Name is required.' };
 
   const { error } = await supabaseAdmin
     .from('members')
-    .update({ name, bio, obsession })
+    .update({ name, bio, obsession, tshirt_size })
     .eq('email', user.email);
 
   if (error) return { error: 'Update failed. Try again.' };

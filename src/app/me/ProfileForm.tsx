@@ -8,9 +8,10 @@ interface Props {
   name: string;
   bio: string | null;
   obsession: string | null;
+  tshirt_size: string | null;
 }
 
-export default function ProfileForm({ name, bio, obsession }: Props) {
+export default function ProfileForm({ name, bio, obsession, tshirt_size }: Props) {
   const [state, action, pending] = useActionState<ProfileState, FormData>(updateProfileAction, null);
 
   return (
@@ -57,6 +58,26 @@ export default function ProfileForm({ name, bio, obsession }: Props) {
           placeholder="Fantasy football, true crime, hot sauces, whatever…"
           className="bg-transparent border border-gold-soft rounded-lg px-4 py-3 text-text placeholder:text-text-dim focus:outline-none focus:border-gold transition-colors"
         />
+      </div>
+
+      <div className="flex flex-col gap-1.5">
+        <label htmlFor="tshirt_size" className="text-xs uppercase tracking-widest text-text-dim">
+          T-Shirt Size <span className="text-text-dim text-xs normal-case">(optional)</span>
+        </label>
+        <select
+          id="tshirt_size"
+          name="tshirt_size"
+          defaultValue={tshirt_size ?? ''}
+          className="bg-transparent border border-gold-soft rounded-lg px-4 py-3 text-text focus:outline-none focus:border-gold transition-colors"
+        >
+          <option value="">— Select a size</option>
+          <option value="XS">XS</option>
+          <option value="S">S</option>
+          <option value="M">M</option>
+          <option value="L">L</option>
+          <option value="XL">XL</option>
+          <option value="XXL">XXL</option>
+        </select>
       </div>
 
       {state && 'error' in state && (
