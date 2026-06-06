@@ -16,11 +16,11 @@ const VIEWS = {
 const STRIP_IDS = ['vdara', 'cosmopolitan', 'aria', 'planet-hollywood'];
 const DOWNTOWN_IDS = ['el-cortez', 'fremont', 'circa'];
 
-export default function StripMap() {
-  const [activeView, setActiveView] = useState<'strip' | 'downtown'>('strip');
+export default function StripMap({ initialView = 'strip' }: { initialView?: 'strip' | 'downtown' }) {
+  const [activeView, setActiveView] = useState<'strip' | 'downtown'>(initialView);
   const [selected, setSelected] = useState<MapLocation | null>(null);
   const [activeRouteFrom, setActiveRouteFrom] = useState<string>('vdara');
-  const [viewport, setViewport] = useState(VIEWS.strip);
+  const [viewport, setViewport] = useState(VIEWS[initialView]);
 
   const switchView = useCallback((view: 'strip' | 'downtown') => {
     setActiveView(view);

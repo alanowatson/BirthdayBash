@@ -47,7 +47,7 @@ INSERT INTO events (title, slug, description, starts_at, ends_at, location, pric
 
 ('Saturday Nightclub',
  'saturday-nightclub',
- 'The big night. Meetup at 10:15pm sharp — club arrival around 11:15pm. Venue TBD. Expect an expense — everyone should be there. Dress code: smart-casual to dressed up. Men: collared or fitted dress shirt, dark jeans or dress pants, dress shoes or clean solid-color sneakers — no athletic wear, shorts, hats, or work boots. Women: dresses, jumpsuits, dressy separates, heels. Bags: small clutches only — backpacks and large bags not allowed inside.',
+ 'The big night. Meetup at 10:15pm sharp — club arrival around 11:15pm. Venue TBD. Expect an expense. Dress code: smart-casual to dressed up. Men: collared or fitted dress shirt, dark jeans or dress pants, dress shoes or clean solid-color sneakers — no athletic wear, shorts, hats, or work boots. Women: dresses, jumpsuits, dressy separates, heels. Bags: small clutches only — backpacks and large bags not allowed inside.',
  '2026-10-25 05:15:00+00',   -- Oct 24, 10:15 PM PDT
  NULL,
  'TBD',
