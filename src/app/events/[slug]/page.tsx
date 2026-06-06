@@ -207,7 +207,7 @@ export default async function EventPage({ params }: Props) {
                       const dotColor = isStart ? 'var(--gold)' : isEnd ? 'var(--blue-bright)' : 'rgba(212,175,55,0.35)';
                       const nameColor = isStart ? 'var(--gold)' : isEnd ? 'var(--blue-bright)' : 'var(--text)';
                       return (
-                        <div key={i} className="flex gap-5 pb-8 last:pb-0">
+                        <div key={i} className="flex gap-5 pb-12 last:pb-0">
                           {/* Dot */}
                           <div className="flex-shrink-0 relative z-10 mt-1">
                             <div
