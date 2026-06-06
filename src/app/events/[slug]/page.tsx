@@ -6,19 +6,7 @@ import Nav from '@/components/Nav';
 import SiteFooter from '@/components/SiteFooter';
 import RsvpForm from './RsvpForm';
 import { TIPS, type Tip } from '@/lib/tips';
-import dynamic from 'next/dynamic';
-
-const StripMap = dynamic(() => import('@/app/map/StripMap'), {
-  ssr: false,
-  loading: () => (
-    <div
-      className="flex items-center justify-center rounded-xl"
-      style={{ height: 420, border: '1px solid rgba(212,175,55,0.15)', background: 'rgba(212,175,55,0.02)' }}
-    >
-      <p className="text-text-dim text-sm">Loading map…</p>
-    </div>
-  ),
-});
+import EventMap from './EventMap';
 
 // Events that have an embedded map and which view to use
 const EVENT_MAP_VIEW: Record<string, 'strip' | 'downtown'> = {
@@ -277,7 +265,7 @@ export default async function EventPage({ params }: Props) {
           <div className="max-w-5xl mx-auto">
             <p className="text-xs uppercase tracking-widest text-text-dim mb-4">The Route</p>
             <div style={{ height: 520 }}>
-              <StripMap initialView={EVENT_MAP_VIEW[slug]} />
+              <EventMap initialView={EVENT_MAP_VIEW[slug]} />
             </div>
           </div>
         </section>
