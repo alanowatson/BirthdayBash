@@ -198,13 +198,72 @@ export default async function EventPage({ params }: Props) {
           style={{ borderColor: 'var(--gold-soft)', background: 'rgba(212,175,55,0.03)' }}
         >
           <div className="max-w-5xl mx-auto">
-            <p className="text-xs uppercase tracking-widest text-text-dim mb-4">Need to Know</p>
-            <div
-              className="rounded-xl p-6 max-w-2xl"
-              style={{ border: '1px solid rgba(212,175,55,0.15)', background: 'rgba(212,175,55,0.04)' }}
-            >
-              <p className="text-sm text-text leading-relaxed whitespace-pre-line">{event.additional_info}</p>
-            </div>
+            {slug === 'fremont-street-crawl' ? (
+              /* ── Crawl route: timeline layout ── */
+              <>
+                <p className="text-xs uppercase tracking-widest text-text-dim mb-8">The Crawl</p>
+                <div className="max-w-xl relative">
+                  {/* Vertical line */}
+                  <div
+                    className="absolute left-[11px] top-3 bottom-3"
+                    style={{ width: 1, background: 'linear-gradient(to bottom, var(--gold), rgba(212,175,55,0.1))' }}
+                  />
+                  <div className="flex flex-col gap-0">
+                    {event.additional_info.split('\n\n').filter(Boolean).map((block, i, arr) => {
+                      const lines = block.trim().split('\n');
+                      const stopName = lines[0];
+                      const desc = lines.slice(1).join('\n').trim();
+                      const isStart = stopName.startsWith('START');
+                      const isEnd = stopName.startsWith('END');
+                      const isTerminal = isStart || isEnd;
+                      const dotColor = isStart ? 'var(--gold)' : isEnd ? 'var(--blue-bright)' : 'rgba(212,175,55,0.35)';
+                      const nameColor = isStart ? 'var(--gold)' : isEnd ? 'var(--blue-bright)' : 'var(--text)';
+                      return (
+                        <div key={i} className="flex gap-5 pb-8 last:pb-0">
+                          {/* Dot */}
+                          <div className="flex-shrink-0 relative z-10 mt-1">
+                            <div
+                              className="rounded-full"
+                              style={{
+                                width: isTerminal ? 22 : 14,
+                                height: isTerminal ? 22 : 14,
+                                background: isTerminal ? dotColor : 'var(--bg)',
+                                border: `2px solid ${dotColor}`,
+                                marginLeft: isTerminal ? 0 : 4,
+                                boxShadow: isTerminal ? `0 0 10px ${dotColor}60` : 'none',
+                              }}
+                            />
+                          </div>
+                          {/* Content */}
+                          <div className="flex-1 pt-0.5">
+                            <p
+                              className="font-display text-lg leading-tight mb-1"
+                              style={{ color: nameColor }}
+                            >
+                              {stopName}
+                            </p>
+                            {desc && (
+                              <p className="text-sm text-text-dim leading-relaxed">{desc}</p>
+                            )}
+                          </div>
+                        </div>
+                      );
+                    })}
+                  </div>
+                </div>
+              </>
+            ) : (
+              /* ── Default: plain card ── */
+              <>
+                <p className="text-xs uppercase tracking-widest text-text-dim mb-4">Need to Know</p>
+                <div
+                  className="rounded-xl p-6 max-w-2xl"
+                  style={{ border: '1px solid rgba(212,175,55,0.15)', background: 'rgba(212,175,55,0.04)' }}
+                >
+                  <p className="text-sm text-text leading-relaxed whitespace-pre-line">{event.additional_info}</p>
+                </div>
+              </>
+            )}
           </div>
         </section>
       )}
