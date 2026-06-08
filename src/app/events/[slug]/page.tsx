@@ -197,7 +197,7 @@ export default async function EventPage({ params }: Props) {
                     style={{ width: 1, background: 'linear-gradient(to bottom, var(--gold), rgba(212,175,55,0.1))' }}
                   />
                   <div className="flex flex-col gap-0">
-                    {event.additional_info.split('\n\n').filter(Boolean).map((block, i, arr) => {
+                    {event.additional_info.replace(/\r\n/g, '\n').split('\n\n').filter(Boolean).map((block, i, arr) => {
                       const lines = block.trim().split('\n');
                       const stopName = lines[0];
                       const desc = lines.slice(1).join('\n').trim();
@@ -264,7 +264,7 @@ export default async function EventPage({ params }: Props) {
         >
           <div className="max-w-5xl mx-auto">
             <p className="text-xs uppercase tracking-widest text-text-dim mb-4">The Route</p>
-            <div style={{ height: 520 }}>
+            <div className="lg:h-[520px]">
               <EventMap initialView={EVENT_MAP_VIEW[slug]} />
             </div>
           </div>

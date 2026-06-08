@@ -75,7 +75,7 @@ export default function StripMap({ initialView = 'strip' }: { initialView?: 'str
 
       <div className="flex flex-col lg:flex-row gap-4 flex-1">
         {/* Map */}
-        <div className="lg:flex-1 rounded-xl overflow-hidden" style={{ minHeight: 420, border: '1px solid rgba(212,175,55,0.15)' }}>
+        <div className="h-[420px] lg:h-auto lg:flex-1 rounded-xl overflow-hidden" style={{ border: '1px solid rgba(212,175,55,0.15)' }}>
           <Map
             {...viewport}
             // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -125,11 +125,12 @@ export default function StripMap({ initialView = 'strip' }: { initialView?: 'str
               <Popup
                 longitude={selected.coords[0]}
                 latitude={selected.coords[1]}
-                anchor="top"
                 onClose={() => setSelected(null)}
                 closeButton={true}
                 closeOnClick={false}
-                style={{ maxWidth: 280 }}
+                maxWidth="240px"
+                offset={16}
+                style={{ maxWidth: 'min(240px, calc(100vw - 64px))' }}
               >
                 <div style={{ background: '#0a0a14', padding: '12px', borderRadius: 8 }}>
                   <p style={{ color: selected.color, fontFamily: 'serif', fontSize: 15, fontWeight: 600, marginBottom: 4 }}>
