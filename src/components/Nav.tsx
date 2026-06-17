@@ -8,7 +8,6 @@ const LINKS = [
   { href: '/scavenger-hunt',   label: 'Scavenger Hunt' },
   { href: '/#members',         label: "Who's Coming" },
   { href: '/map',              label: 'Maps' },
-  { href: '/where-is-alan',    label: 'Where is Alan?' },
   { href: '/tips',             label: 'Insider Tips' },
   { href: '/#links',           label: 'Links' },
 ];

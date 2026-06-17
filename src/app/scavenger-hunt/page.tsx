@@ -3,115 +3,39 @@ import { createAuthClient } from '@/lib/supabase/server-session';
 import type { ScavengerTask, ScavengerSuit } from '@/lib/types';
 import Nav from '@/components/Nav';
 import SiteFooter from '@/components/SiteFooter';
-import ClaimButton from './ClaimButton';
+import ScavengerBoard, { SUIT_SYMBOL, SUIT_COLOR } from './ScavengerBoard';
 
 export const revalidate = 0;
 
-const SUIT_SYMBOL: Record<ScavengerSuit, string> = {
-  diamonds: '♦',
-  clubs: '♣',
-  hearts: '♥',
-  spades: '♠',
-};
-
-const SUIT_COLOR: Record<ScavengerSuit, string> = {
-  diamonds: '#ef4444',
-  clubs: '#D4AF37',
-  hearts: '#ef4444',
-  spades: '#38BDF8',
-};
-
-const SUIT_ORDER: ScavengerSuit[] = ['diamonds', 'clubs', 'hearts', 'spades'];
-
-const RANK_ORDER = ['A', 'K', 'Q', 'J', '10', '9', '8', '7', '6', '5', '4', '3', '2'];
-
 function daysUntil(iso: string): number {
-  const now = Date.now();
-  const target = new Date(iso).getTime();
-  return Math.max(0, Math.ceil((target - now) / (1000 * 60 * 60 * 24)));
+  return Math.max(0, Math.ceil((new Date(iso).getTime() - Date.now()) / 86_400_000));
 }
 
-function TaskCard({ task, isAdmin }: { task: ScavengerTask; isAdmin: boolean }) {
+// Minimal static card used only for the locked-state teaser (no interactivity)
+function TeaserCard({ task }: { task: ScavengerTask }) {
   const symbol = SUIT_SYMBOL[task.suit];
   const color = SUIT_COLOR[task.suit];
-  const claimed = task.is_claimed;
-
   return (
     <div
-      className="poker-card flex flex-col h-full rounded-xl border p-4 relative"
-      style={{
-        borderColor: claimed ? 'rgba(255,255,255,0.08)' : color + '40',
-        background: claimed ? 'rgba(255,255,255,0.02)' : color + '08',
-        opacity: claimed ? 0.55 : 1,
-      }}
+      className="rounded-xl border p-4"
+      style={{ borderColor: color + '40', background: color + '08' }}
     >
-      {/* Corner rank + suit */}
-      <div className="flex items-start justify-between mb-3">
-        <div className="flex flex-col items-start leading-none">
-          <span
-            className="font-display text-2xl"
-            style={{ color: claimed ? 'rgba(255,255,255,0.25)' : color }}
-          >
-            {task.rank}
-          </span>
-          <span
-            className="text-lg leading-none"
-            style={{ color: claimed ? 'rgba(255,255,255,0.25)' : color }}
-          >
-            {symbol}
-          </span>
+      <div className="flex items-center justify-between mb-3">
+        <div className="flex items-center gap-1">
+          <span className="font-display text-2xl" style={{ color }}>{task.rank}</span>
+          <span className="text-lg" style={{ color }}>{symbol}</span>
         </div>
-        {claimed ? (
-          <span
-            className="text-xs px-2 py-0.5 rounded-full font-mono-x"
-            style={{
-              color: 'rgba(239,68,68,0.7)',
-              background: 'rgba(239,68,68,0.08)',
-              border: '1px solid rgba(239,68,68,0.2)',
-            }}
-          >
-            CLAIMED
-          </span>
-        ) : (
-          <span
-            className="text-xs px-2 py-0.5 rounded-full font-mono-x"
-            style={{ color, background: color + '18', border: `1px solid ${color}30` }}
-          >
-            {task.points} pts
-          </span>
-        )}
+        <span
+          className="text-xs px-2 py-0.5 rounded-full"
+          style={{ color, background: color + '18', border: `1px solid ${color}30` }}
+        >
+          {task.points} pts
+        </span>
       </div>
-
-      {/* Title */}
-      <p
-        className="font-display text-base leading-tight mb-2"
-        style={{
-          color: claimed ? 'rgba(255,255,255,0.3)' : 'var(--gold)',
-          textDecoration: claimed ? 'line-through' : 'none',
-        }}
-      >
-        {task.title}
-      </p>
-
-      {/* Description */}
-      <p
-        className="text-xs leading-relaxed flex-1"
-        style={{ color: claimed ? 'rgba(255,255,255,0.2)' : 'var(--text-dim)' }}
-      >
+      <p className="font-display text-base text-gold leading-tight mb-2">{task.title}</p>
+      <p className="text-xs leading-relaxed" style={{ color: 'var(--text-dim)' }}>
         {task.description}
       </p>
-
-      {/* Claimed-by note */}
-      {claimed && task.claimed_by && (
-        <p className="text-xs mt-2" style={{ color: 'rgba(239,68,68,0.5)' }}>
-          Claimed
-        </p>
-      )}
-
-      {/* Admin toggle */}
-      {isAdmin && (
-        <ClaimButton id={task.id} isClaimed={claimed} claimedBy={task.claimed_by} />
-      )}
     </div>
   );
 }
@@ -141,10 +65,6 @@ export default async function ScavengerHuntPage() {
   const days = daysUntil(revealAt);
   const tasks = (tasksRes.data ?? []) as ScavengerTask[];
 
-  const claimedCount = tasks.filter((t) => t.is_claimed).length;
-  const availablePoints = tasks.filter((t) => !t.is_claimed).reduce((s, t) => s + t.points, 0);
-
-  // Teaser cards shown while the board is locked
   const TEASERS: { rank: string; suit: ScavengerSuit }[] = [
     { rank: 'A', suit: 'spades' },
     { rank: '9', suit: 'clubs' },
@@ -154,17 +74,6 @@ export default async function ScavengerHuntPage() {
   const teaserCards = TEASERS
     .map(({ rank, suit }) => tasks.find((t) => t.rank === rank && t.suit === suit))
     .filter(Boolean) as ScavengerTask[];
-
-  // Group tasks by suit, ordered by rank
-  const bySuit = SUIT_ORDER.reduce<Record<ScavengerSuit, ScavengerTask[]>>(
-    (acc, suit) => {
-      acc[suit] = RANK_ORDER
-        .map((rank) => tasks.find((t) => t.suit === suit && t.rank === rank))
-        .filter(Boolean) as ScavengerTask[];
-      return acc;
-    },
-    { diamonds: [], clubs: [], hearts: [], spades: [] }
-  );
 
   return (
     <main className="min-h-screen flex flex-col">
@@ -187,7 +96,6 @@ export default async function ScavengerHuntPage() {
         <>
           <section className="py-16 px-6">
             <div className="max-w-2xl mx-auto text-center">
-              {/* Lock badge */}
               <div
                 className="inline-flex flex-col items-center gap-4 px-10 py-8 rounded-2xl border mb-8"
                 style={{ borderColor: 'var(--gold-soft)', background: 'rgba(212,175,55,0.04)' }}
@@ -202,13 +110,16 @@ export default async function ScavengerHuntPage() {
                 {days > 0 && (
                   <div
                     className="px-6 py-3 rounded-full border text-sm font-mono-x"
-                    style={{ borderColor: 'var(--blue)', color: 'var(--blue-bright)', background: 'rgba(59,130,246,0.08)' }}
+                    style={{
+                      borderColor: 'var(--blue)',
+                      color: 'var(--blue-bright)',
+                      background: 'rgba(59,130,246,0.08)',
+                    }}
                   >
                     {days} days to go
                   </div>
                 )}
               </div>
-
               <p className="text-text-dim max-w-md mx-auto text-sm leading-relaxed">
                 The full task list drops October 15th — one week before the trip. Study the rules
                 below. Coordinate with your team. Come prepared.
@@ -216,128 +127,31 @@ export default async function ScavengerHuntPage() {
             </div>
           </section>
 
-          {/* Teaser cards */}
           {teaserCards.length > 0 && (
             <section className="pb-16 px-6">
               <div className="max-w-3xl mx-auto">
                 <p className="text-center text-xs uppercase tracking-widest text-text-dim mb-6">
-                  A taste of what's coming
+                  A taste of what&apos;s coming
                 </p>
                 <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
                   {teaserCards.map((task) => (
-                    <TaskCard key={task.id} task={task} isAdmin={false} />
+                    <TeaserCard key={task.id} task={task} />
                   ))}
                 </div>
               </div>
             </section>
           )}
 
-          {/* Rules — visible even before reveal */}
           <Rules />
         </>
       ) : (
         /* ── REVEALED STATE ── */
         <>
-          <section className="py-16 px-6 border-t" style={{ borderColor: 'var(--gold-soft)' }}>
-            <div className="max-w-6xl mx-auto">
-              <div className="text-center mb-16">
-                <h2 className="font-display text-4xl md:text-5xl gold-gradient mb-3">The Board</h2>
-                {isAdmin && !(Date.now() >= new Date(revealAt).getTime()) && (
-                  <p className="text-xs text-gold border border-gold-soft rounded-full px-3 py-1 inline-block mb-2">
-                    🔒 Admin preview — not yet visible to guests
-                  </p>
-                )}
-                <p className="text-text-dim">
-                  {tasks.length} tasks ·{' '}
-                  {claimedCount > 0 ? (
-                    <span>
-                      <span style={{ color: 'rgba(239,68,68,0.7)' }}>{claimedCount} claimed</span>
-                      {' · '}
-                    </span>
-                  ) : null}
-                  {availablePoints} pts still available
-                </p>
-              </div>
-
-              {/* ── Mobile: suits stacked vertically ── */}
-              <div className="md:hidden space-y-10">
-                {SUIT_ORDER.map((suit) => {
-                  const color = SUIT_COLOR[suit];
-                  const suitTasks = bySuit[suit];
-                  const pts = suitTasks.filter((t) => !t.is_claimed).reduce((s, t) => s + t.points, 0);
-                  const suitClaimed = suitTasks.filter((t) => t.is_claimed).length;
-                  return (
-                    <div key={suit}>
-                      <div
-                        className="text-center py-3 rounded-xl mb-3"
-                        style={{ background: color + '10', border: `1px solid ${color}30` }}
-                      >
-                        <span className="font-display text-3xl block" style={{ color }}>
-                          {SUIT_SYMBOL[suit]}
-                        </span>
-                        <span className="text-xs uppercase tracking-widest capitalize block mt-0.5" style={{ color }}>
-                          {suit}
-                        </span>
-                        <span className="text-text-dim text-xs block">
-                          {pts} pts
-                          {suitClaimed > 0 && (
-                            <span style={{ color: 'rgba(239,68,68,0.6)' }}> · {suitClaimed} claimed</span>
-                          )}
-                        </span>
-                      </div>
-                      <div className="space-y-3">
-                        {suitTasks.map((task) => (
-                          <TaskCard key={task.id} task={task} isAdmin={isAdmin} />
-                        ))}
-                      </div>
-                    </div>
-                  );
-                })}
-              </div>
-
-              {/* ── Desktop: 4-column suit grid ── */}
-              <div className="hidden md:grid grid-cols-4 gap-3">
-                {/* Suit column headers */}
-                {SUIT_ORDER.map((suit) => {
-                  const color = SUIT_COLOR[suit];
-                  const pts = bySuit[suit].filter((t) => !t.is_claimed).reduce((s, t) => s + t.points, 0);
-                  const suitClaimed = bySuit[suit].filter((t) => t.is_claimed).length;
-                  return (
-                    <div
-                      key={suit}
-                      className="text-center py-3 rounded-xl mb-1"
-                      style={{ background: color + '10', border: `1px solid ${color}30` }}
-                    >
-                      <span className="font-display text-3xl block" style={{ color }}>
-                        {SUIT_SYMBOL[suit]}
-                      </span>
-                      <span className="text-xs uppercase tracking-widest capitalize block mt-0.5" style={{ color }}>
-                        {suit}
-                      </span>
-                      <span className="text-text-dim text-xs block">
-                        {pts} pts
-                        {suitClaimed > 0 && (
-                          <span style={{ color: 'rgba(239,68,68,0.6)' }}> · {suitClaimed} claimed</span>
-                        )}
-                      </span>
-                    </div>
-                  );
-                })}
-
-                {/* Cards: one rank per row, all four suits */}
-                {RANK_ORDER.flatMap((rank) =>
-                  SUIT_ORDER.map((suit) => {
-                    const task = bySuit[suit].find((t) => t.rank === rank);
-                    return task
-                      ? <TaskCard key={task.id} task={task} isAdmin={isAdmin} />
-                      : <div key={`${rank}-${suit}`} />;
-                  })
-                )}
-              </div>
-            </div>
-          </section>
-
-          {/* Rules — below the board */}
+          <ScavengerBoard
+            tasks={tasks}
+            isAdmin={isAdmin}
+            isAdminPreview={isAdmin && !(Date.now() >= new Date(revealAt).getTime())}
+          />
           <Rules />
         </>
       )}
@@ -346,6 +160,8 @@ export default async function ScavengerHuntPage() {
     </main>
   );
 }
+
+// ── Rules ─────────────────────────────────────────────────────────────────────
 
 function RuleCard({ title, body }: { title: string; body: string }) {
   return (
@@ -365,14 +181,12 @@ function Rules() {
       <div className="max-w-3xl mx-auto">
         <h2 className="font-display text-3xl text-gold mb-8 text-center">Rules of the Hunt</h2>
 
-        {/* General rules */}
         <div className="grid md:grid-cols-2 gap-6 mb-12">
           {GENERAL_RULES.map((rule) => (
             <RuleCard key={rule.title} title={rule.title} body={rule.body} />
           ))}
         </div>
 
-        {/* Prizes sub-section */}
         <div className="flex items-center gap-4 mb-8">
           <div className="flex-1 h-px" style={{ background: 'var(--gold-soft)' }} />
           <p className="font-display text-xl text-gold tracking-widest whitespace-nowrap">Prizes</p>
@@ -384,8 +198,11 @@ function Rules() {
             { place: '2nd', amount: '$150', tagline: null,                               color: '#C0C0C0', bg: 'rgba(192,192,192,0.08)', border: 'rgba(192,192,192,0.3)' },
             { place: '3rd', amount: '$75',  tagline: null,                               color: '#CD7F32', bg: 'rgba(205,127,50,0.08)', border: 'rgba(205,127,50,0.3)' },
           ].map((p) => (
-            <div key={p.place} className="rounded-xl p-5 text-center flex flex-col gap-2"
-              style={{ background: p.bg, border: `1px solid ${p.border}` }}>
+            <div
+              key={p.place}
+              className="rounded-xl p-5 text-center flex flex-col gap-2"
+              style={{ background: p.bg, border: `1px solid ${p.border}` }}
+            >
               <p className="font-display text-4xl" style={{ color: p.color }}>{p.place} Place</p>
               {p.tagline && (
                 <p className="text-xs leading-snug" style={{ color: p.color }}>{p.tagline}</p>
@@ -395,7 +212,6 @@ function Rules() {
           ))}
         </div>
 
-        {/* Points & Scoring sub-section */}
         <div className="flex items-center gap-4 mb-8">
           <div className="flex-1 h-px" style={{ background: 'var(--gold-soft)' }} />
           <p className="font-display text-xl text-gold tracking-widest whitespace-nowrap">Points &amp; Scoring</p>
