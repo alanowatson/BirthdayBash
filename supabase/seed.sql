@@ -81,7 +81,7 @@ INSERT INTO scavenger_tasks (rank, suit, title, description, points, display_ord
 
 -- ACES (14 pts)
 ('A', 'diamonds', 'Private Jet Flex',
- 'Get a photo inside a vehicle you definitely can''t afford (Ferrari/Lambo/luxury car, helicopter, private jet — 747 doesn''t count). Must be sitting in driver''s seat or cockpit.',
+ 'Get a photo inside a vehicle you definitely can''t afford (Ferrari/Lambo/luxury car, helicopter, private jet, 747 doesn''t count). Must be sitting in driver''s seat or cockpit.',
  14, 10),
 
 ('A', 'clubs', 'These Aren''t the Droids You''re Looking For',
@@ -101,29 +101,29 @@ INSERT INTO scavenger_tasks (rank, suit, title, description, points, display_ord
  'Push someone who hasn''t been in the pool... into the pool at your hotel (ejection risk accepted).',
  13, 50),
 
-('K', 'clubs', 'Care Package',
- 'Get a round of 3+ shots comped for the group or yourself.',
+('K', 'clubs', 'That''s No Moon',
+ 'Photobomb a stranger with required exposure (nipple for ladies, ball/shaft for fellas).',
  13, 60),
 
-('K', 'hearts', 'Longest Road',
- 'Lose the most money gambling. (Un-stealable, follows the player)',
+('K', 'hearts', 'Tea Bagging',
+ 'Photobomb a stranger with required exposure (nipple for ladies, ball/shaft for fellas).',
  13, 70),
 
-('K', 'spades', 'Sugar Rush',
- 'Get someone of the opposite gender older than you to buy you a drink. Sugar Mommas should appear to be in their late 40s+. Sugar Daddies must be late 50s+.',
+('K', 'spades', 'Longest Road',
+ 'Lose the most money gambling. (Un-stealable, follows the player)',
  13, 80),
 
 -- QUEENS (12 pts)
-('Q', 'diamonds', 'That''s No Moon',
- 'Photobomb a stranger with required exposure (nipple for ladies, ball/shaft for fellas).',
+('Q', 'diamonds', 'Sugar Rush',
+ 'Get someone of the opposite gender older than you to buy you a drink. Sugar Mommas should appear to be in their late 40s+. Sugar Daddies must be late 50s+.',
  12, 90),
 
-('Q', 'clubs', 'Minneapolis Miracle',
- 'WIN a sports bet on any Minnesota, New York or Arizona sports team. Card goes to the biggest profiteer.',
+('Q', 'clubs', 'Care Package',
+ 'Get a round of 3+ shots comped for the group or yourself.',
  12, 100),
 
-('Q', 'hearts', 'Tea Bagging',
- 'Photobomb a stranger with required exposure (nipple for ladies, ball/shaft for fellas).',
+('Q', 'hearts', 'XXX-Wingman',
+ 'Try to matchmake a stranger and get them to make out with someone they didn''t previously know. +4 points if you get them to make out with someone in our group. (Please note there are very few single attendees)',
  12, 110),
 
 ('Q', 'spades', 'It''s a Trap!',
@@ -149,19 +149,19 @@ INSERT INTO scavenger_tasks (rank, suit, title, description, points, display_ord
 
 -- 10s (10 pts)
 ('10', 'diamonds', 'Flurry Rush',
- 'Leverage the El Cortez''s free play into the most profits.',
+ 'Leverage the El Cortez''s free play into the most profits. If unclaimed this card is given to the winner of Longest Road.',
  10, 170),
 
-('10', 'clubs', 'DJ Request',
- 'Successfully get a DJ to play a song you request. Photo/video of song playing required.',
+('10', 'clubs', 'Use the Force',
+ 'Bet Fibonacci sequence on 2:1 roulette bets (columns or dozens). Start $15, must continue (15, 30, 45, 75) until you win OR lose the $75 bet. (15% chance you lose $180, 85% chance you win ~$30)',
  10, 180),
 
-('10', 'hearts', 'XXX-Wingman',
- 'Try to matchmake a stranger and get them to make out with someone they didn''t previously know. Double points if you get them to make out with Jason Ma.',
+('10', 'hearts', 'Minneapolis Miracle',
+ 'WIN a sports bet on any Minnesota, New York or Arizona sports team. Card goes to the biggest profiteer.',
  10, 190),
 
 ('10', 'spades', 'Continue?',
- 'Start with $10 bet on any even-money game. If lose, double to $20. If lose again, double to $40. Stop when you win OR lose $40 bet.',
+ 'Start with $20 bet on any even-money game. If lose, double to $40. If lose again, double to $80. Stop when you win OR lose $80 bet. (13% chance you lose $140, 87% chance you win $20)',
  10, 200),
 
 -- 9s (9 pts)
@@ -174,7 +174,7 @@ INSERT INTO scavenger_tasks (rank, suit, title, description, points, display_ord
  9, 220),
 
 ('9', 'hearts', 'Fault Lines Redux',
- 'Find girl(s), not in our group, that can do the splits.',
+ 'Find someone, not in our group, that can do the splits.',
  9, 230),
 
 ('9', 'spades', 'Mei Ult',
@@ -191,11 +191,11 @@ INSERT INTO scavenger_tasks (rank, suit, title, description, points, display_ord
  8, 260),
 
 ('8', 'hearts', 'Third Party (Bachelor)',
- 'Photo with a bachelor party.',
+ 'Photo with a bachelor party. +1 point if Kate''s in the photo.',
  8, 270),
 
 ('8', 'spades', 'Third Party (Bachelorette)',
- 'Photo with a bachelorette party.',
+ 'Photo with a bachelorette party. +1 point if Alan''s in the photo.',
  8, 280),
 
 -- 7s (7 pts)
@@ -207,8 +207,8 @@ INSERT INTO scavenger_tasks (rank, suit, title, description, points, display_ord
  'At a live game of craps, be the shooter.',
  7, 300),
 
-('7', 'hearts', 'Use the Force',
- 'Bet Fibonacci sequence on 2:1 roulette bets (columns or dozens). Start $15, must continue (15, 30, 45, 75) until you win OR lose the $75 bet. (15% chance you lose $180, 85% chance you win ~$30)',
+('7', 'hearts', 'DJ Request',
+ 'Successfully get a DJ to play a song you request. Photo/video of song playing required.',
  7, 310),
 
 ('7', 'spades', 'Birthday Twins',
@@ -217,7 +217,7 @@ INSERT INTO scavenger_tasks (rank, suit, title, description, points, display_ord
 
 -- 6s (6 pts)
 ('6', 'diamonds', 'Patch Notes',
- 'In Aria''s depths, a restaurant evolution, the net was cast, but met dissolution. Seek the spot where 2 starts rise, name the before and after to claim the prize. (Find location and post pic)',
+ 'In Aria''s depths, a restaurant evolution, the net was cast, but met dissolution. Seek the spot where 2 starts risel, name the before and after to claim the prize. (Find location and post pic)',
  6, 330),
 
 ('6', 'clubs', 'Apex Heirloom',
@@ -225,11 +225,11 @@ INSERT INTO scavenger_tasks (rank, suit, title, description, points, display_ord
  6, 340),
 
 ('6', 'hearts', 'Explosive Payload',
- 'In a cosmic kitchen where a chef''s empire grew, the bar Alan''s gut cannot pursue. Where casein reigns and sweet treats flow, eat the compost to prove you know. (Find location and post pic)',
+ 'In a cosmic kitchen where a chef''s empire grew, the bar Alan''s gut cannot pursue. Where casien reigns and sweet treats flow, eat the compost to prove you know. (Find location and post pic)',
  6, 350),
 
 ('6', 'spades', 'Legendary Skin',
- 'Awarded to best dressed Saturday Night.',
+ 'Awarded to best dressed Saturday Night. Kate decides.',
  6, 360),
 
 -- 5s (5 pts)
@@ -246,7 +246,7 @@ INSERT INTO scavenger_tasks (rank, suit, title, description, points, display_ord
  5, 390),
 
 ('5', 'spades', 'Overwatch Villains',
- 'Where high rollers rest above the fray, a bird of prey marks the way. Seek the lounge where few can go, find the talon''s exclusive show.',
+ 'Where high rollers rest above the fray, a bird of prey marks the way. Seek the lounge where few can go, find the talon''s exclusive show. (Find location and post pic)',
  5, 400),
 
 -- 4s (4 pts)
@@ -255,11 +255,11 @@ INSERT INTO scavenger_tasks (rank, suit, title, description, points, display_ord
  4, 410),
 
 ('4', 'clubs', 'Tears of the Kingdom',
- 'Find the opulent shower of tears, eight thousand pieces through the years. Spanning the floors from 1 and 2, snap a pic from the 1.5 view.',
+ 'Find the opulent shower of tears, eight thousand pieces through the years. Spanning the floors from 1 and 2, snap a pic from the 1.5 view. (Find location and post pic)',
  4, 420),
 
 ('4', 'hearts', 'Project Hail Mary',
- 'Find someone at a casino who''s reading a physical book. Photo with them and the book.',
+ 'Find someone at a casino (excluding the pool) who''s reading a physical book. Photo with them and the book.',
  4, 430),
 
 ('4', 'spades', 'The Robber',
@@ -285,7 +285,7 @@ INSERT INTO scavenger_tasks (rank, suit, title, description, points, display_ord
 
 -- 2s (-2 pts — penalty cards)
 ('2', 'diamonds', 'Lagggggg',
- 'Negative 2 points to the player who is most late, to the most events.',
+ 'Negative 2 points to the player that the most late, to the most events.',
  -2, 490),
 
 ('2', 'clubs', 'Dysentery',
