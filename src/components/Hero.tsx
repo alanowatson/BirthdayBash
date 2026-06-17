@@ -33,7 +33,7 @@ export default function Hero({ isSignedIn = false }: { isSignedIn?: boolean }) {
 
         <p className="text-text-dim max-w-2xl mx-auto mb-10 text-lg leading-relaxed">
           Some milestones you mark quietly.{' '}
-          <span className="text-gold">I&#39;ve never been good at quiet.</span>
+          <span className="text-gold">This will not be quiet.</span>
         </p>
 
         <Countdown />

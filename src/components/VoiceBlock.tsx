@@ -11,7 +11,7 @@ export default function VoiceBlock() {
         <div className="pull-quote text-lg leading-relaxed text-text-dim space-y-4">
           <p>
             Mortgages. Kids&#39; soccer tournaments. That thing called{' '}
-            <span className="text-gold">&ldquo;responsibility&rdquo;</span> we all pretend to
+            <span className="text-gold">&ldquo;responsibility&rdquo;</span>{' '}we all pretend to
             understand. You&#39;ve got a year to negotiate your weekend pass, perfect your alibi,
             and bank a day of PTO.
           </p>
