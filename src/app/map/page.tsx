@@ -20,9 +20,29 @@ export default function MapPage() {
         </p>
       </section>
 
-      <section className="flex-1 px-6 pb-16">
+      <section className="flex-1 px-6 pb-10">
         <div className="max-w-6xl mx-auto">
           <TabSwitcher />
+        </div>
+      </section>
+
+      {/* Where is Alan link */}
+      <section className="px-6 pb-16">
+        <div className="max-w-6xl mx-auto">
+          <a
+            href="/where-is-alan"
+            className="flex items-center justify-between px-6 py-4 rounded-xl transition-all group"
+            style={{ border: '1px solid rgba(212,175,55,0.2)', background: 'rgba(212,175,55,0.04)' }}
+          >
+            <div className="flex items-center gap-3">
+              <span className="text-xl">📍</span>
+              <div>
+                <p className="font-display text-base text-gold">Where is Alan?</p>
+                <p className="text-text-dim text-xs">Live location tracking — on during select events</p>
+              </div>
+            </div>
+            <span className="text-text-dim group-hover:text-gold transition-colors text-lg">→</span>
+          </a>
         </div>
       </section>
 
