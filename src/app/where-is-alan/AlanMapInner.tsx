@@ -23,7 +23,15 @@ export default function AlanMapInner({ initial }: { initial: Location }) {
     zoom:      initial.lat && initial.lon ? 17 : FREMONT.zoom,
   });
 
-  const isLive = location.lat !== 0 || location.lon !== 0;
+  // Re-evaluate staleness every 30 s so the overlay appears automatically when Alan stops
+  const [now, setNow] = useState(Date.now());
+  useEffect(() => {
+    const timer = setInterval(() => setNow(Date.now()), 30_000);
+    return () => clearInterval(timer);
+  }, []);
+
+  const STALE_MS = 3 * 60 * 1000; // 3 minutes
+  const isLive = (now - new Date(location.updated_at).getTime()) < STALE_MS;
 
   // Supabase Realtime — fires instantly when the row changes
   useEffect(() => {
