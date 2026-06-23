@@ -35,7 +35,9 @@ export default async function WhereIsAlanPage() {
           <p className="text-xs uppercase tracking-widest text-text-dim mb-2">Live Tracking</p>
           <h1 className="font-display text-4xl md:text-5xl gold-gradient mb-3">Where is Alan?</h1>
           <p className="text-text-dim text-sm max-w-xl">
-            Alan&apos;s real-time location when he&apos;s got it turned on. The map updates automatically — no refresh needed.
+            In an effort to facilitate the inevitable question of &ldquo;where is everyone?&rdquo; Alan built a tracker
+            he can turn on before events — and most importantly, help people find him easily during the Fremont Street night.
+            The map updates automatically, no refresh needed.
           </p>
         </div>
       </section>
