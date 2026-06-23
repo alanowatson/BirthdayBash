@@ -31,7 +31,9 @@ export default function AlanMapInner({ initial }: { initial: Location }) {
   }, []);
 
   const STALE_MS = 3 * 60 * 1000; // 3 minutes
-  const isLive = (now - new Date(location.updated_at).getTime()) < STALE_MS;
+  const isLive =
+    (location.lat !== 0 || location.lon !== 0) &&
+    (now - new Date(location.updated_at).getTime()) < STALE_MS;
 
   // Supabase Realtime — fires instantly when the row changes
   useEffect(() => {
