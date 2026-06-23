@@ -1,9 +1,26 @@
 'use client';
 
-import { useState, useCallback } from 'react';
+import { useState, useCallback, useEffect } from 'react';
 import Map, { Marker, Popup, NavigationControl, ScaleControl } from 'react-map-gl';
 import 'mapbox-gl/dist/mapbox-gl.css';
 import { LOCATIONS, type MapLocation } from './map-data';
+
+// ── Alan's live location ──────────────────────────────────────────────────────
+type AlanLoc = { lat: number; lon: number; updated_at: string };
+
+// Bounding boxes [minLon, minLat, maxLon, maxLat] — generous enough to cover
+// the whole walkable area around each cluster of venues
+const BOUNDS = {
+  strip:    [-115.195, 36.090, -115.160, 36.130],
+  downtown: [-115.160, 36.163, -115.128, 36.182],
+} as const;
+
+const STALE_MS = 3 * 60 * 1000;
+
+function inBounds(lon: number, lat: number, view: 'strip' | 'downtown') {
+  const [minLon, minLat, maxLon, maxLat] = BOUNDS[view];
+  return lon >= minLon && lon <= maxLon && lat >= minLat && lat <= maxLat;
+}
 
 const MAPBOX_TOKEN = process.env.NEXT_PUBLIC_MAPBOX_TOKEN;
 
@@ -21,6 +38,35 @@ export default function StripMap({ initialView = 'strip' }: { initialView?: 'str
   const [selected, setSelected] = useState<MapLocation | null>(null);
   const [activeRouteFrom, setActiveRouteFrom] = useState<string>('vdara');
   const [viewport, setViewport] = useState(VIEWS[initialView]);
+
+  // Alan's live location
+  const [alanLoc, setAlanLoc] = useState<AlanLoc | null>(null);
+  const [now, setNow] = useState(Date.now());
+
+  useEffect(() => {
+    const fetchLoc = async () => {
+      try {
+        const res = await fetch('/api/location');
+        if (res.ok) setAlanLoc(await res.json());
+      } catch { /* silent */ }
+    };
+    fetchLoc();
+    const poll = setInterval(fetchLoc, 10_000);
+    return () => clearInterval(poll);
+  }, []);
+
+  useEffect(() => {
+    const timer = setInterval(() => setNow(Date.now()), 30_000);
+    return () => clearInterval(timer);
+  }, []);
+
+  const isAlanLive =
+    alanLoc !== null &&
+    (alanLoc.lat !== 0 || alanLoc.lon !== 0) &&
+    (now - new Date(alanLoc.updated_at).getTime()) < STALE_MS;
+
+  const alanInStrip    = isAlanLive && alanLoc && inBounds(alanLoc.lon, alanLoc.lat, 'strip');
+  const alanInDowntown = isAlanLive && alanLoc && inBounds(alanLoc.lon, alanLoc.lat, 'downtown');
 
   const switchView = useCallback((view: 'strip' | 'downtown') => {
     setActiveView(view);
@@ -57,20 +103,29 @@ export default function StripMap({ initialView = 'strip' }: { initialView?: 'str
     <div className="flex flex-col gap-4 h-full">
       {/* View toggle */}
       <div className="flex gap-2">
-        {(['strip', 'downtown'] as const).map((v) => (
-          <button
-            key={v}
-            onClick={() => switchView(v)}
-            className="px-4 py-2 rounded-full text-xs uppercase tracking-widest transition-all"
-            style={{
-              border: `1px solid ${activeView === v ? 'var(--gold)' : 'rgba(212,175,55,0.2)'}`,
-              background: activeView === v ? 'rgba(212,175,55,0.1)' : 'transparent',
-              color: activeView === v ? 'var(--gold)' : 'var(--text-dim)',
-            }}
-          >
-            {v === 'strip' ? '◆ Strip · CityCenter' : '✦ Downtown · Fremont'}
-          </button>
-        ))}
+        {(['strip', 'downtown'] as const).map((v) => {
+          const alanHere = v === 'strip' ? alanInStrip : alanInDowntown;
+          return (
+            <button
+              key={v}
+              onClick={() => switchView(v)}
+              className="px-4 py-2 rounded-full text-xs uppercase tracking-widest transition-all flex items-center gap-2"
+              style={{
+                border: `1px solid ${activeView === v ? 'var(--gold)' : 'rgba(212,175,55,0.2)'}`,
+                background: activeView === v ? 'rgba(212,175,55,0.1)' : 'transparent',
+                color: activeView === v ? 'var(--gold)' : 'var(--text-dim)',
+              }}
+            >
+              {v === 'strip' ? '◆ Strip · CityCenter' : '✦ Downtown · Fremont'}
+              {alanHere && (
+                <span className="relative flex h-2 w-2 flex-shrink-0">
+                  <span className="animate-ping absolute inline-flex h-full w-full rounded-full opacity-75" style={{ background: '#22c55e' }} />
+                  <span className="relative inline-flex rounded-full h-2 w-2" style={{ background: '#22c55e' }} />
+                </span>
+              )}
+            </button>
+          );
+        })}
       </div>
 
       <div className="flex flex-col lg:flex-row gap-4 flex-1">
@@ -120,6 +175,22 @@ export default function StripMap({ initialView = 'strip' }: { initialView?: 'str
                 </div>
               </Marker>
             ))}
+
+            {/* Alan's live position */}
+            {isAlanLive && alanLoc && inBounds(alanLoc.lon, alanLoc.lat, activeView) && (
+              <Marker longitude={alanLoc.lon} latitude={alanLoc.lat} anchor="center">
+                <div className="relative flex items-center justify-center" style={{ width: 48, height: 48 }}>
+                  <div className="absolute rounded-full animate-ping"
+                    style={{ width: 48, height: 48, background: 'rgba(212,175,55,0.12)', animationDuration: '2s' }} />
+                  <div className="absolute rounded-full"
+                    style={{ width: 30, height: 30, background: 'rgba(212,175,55,0.18)', border: '1px solid rgba(212,175,55,0.5)' }} />
+                  <div className="relative z-10 rounded-full flex items-center justify-center"
+                    style={{ width: 18, height: 18, background: 'var(--gold)', boxShadow: '0 0 12px rgba(212,175,55,0.9), 0 0 24px rgba(212,175,55,0.4)' }}>
+                    <span className="font-display font-bold" style={{ color: '#0a0a14', fontSize: 10 }}>A</span>
+                  </div>
+                </div>
+              </Marker>
+            )}
 
             {selected && (
               <Popup
