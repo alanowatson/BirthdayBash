@@ -12,8 +12,7 @@ export default function VoiceBlock() {
           <p>
             Mortgages. Kids&#39; soccer tournaments. That thing called{' '}
             <span className="text-gold">&ldquo;responsibility&rdquo;</span>{' '}we all pretend to
-            understand. You&#39;ve got a year to negotiate your weekend pass, perfect your alibi,
-            and bank a day of PTO.
+            understand.
           </p>
           <p>
             SOs are <span className="text-blue-bright">absolutely</span> invited. Misery loves
