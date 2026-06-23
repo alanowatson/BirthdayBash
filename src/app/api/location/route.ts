@@ -1,6 +1,17 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { supabaseAdmin } from '@/lib/supabase/server';
 
+export async function GET() {
+  const { data, error } = await supabaseAdmin
+    .from('location')
+    .select('lat, lon, updated_at')
+    .eq('id', 1)
+    .maybeSingle();
+
+  if (error) return NextResponse.json({ error: 'DB error' }, { status: 500 });
+  return NextResponse.json(data ?? { lat: 0, lon: 0, updated_at: new Date().toISOString() });
+}
+
 export async function POST(req: NextRequest) {
   const auth = req.headers.get('authorization') ?? '';
   const token = auth.startsWith('Bearer ') ? auth.slice(7) : '';

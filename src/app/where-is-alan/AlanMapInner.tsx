@@ -25,7 +25,7 @@ export default function AlanMapInner({ initial }: { initial: Location }) {
 
   const isLive = location.lat !== 0 || location.lon !== 0;
 
-  // Supabase Realtime — listens for the single-row overwrite
+  // Supabase Realtime — fires instantly when the row changes
   useEffect(() => {
     const channel = supabaseBrowser
       .channel('alan-location')
@@ -43,6 +43,25 @@ export default function AlanMapInner({ initial }: { initial: Location }) {
       .subscribe();
 
     return () => { supabaseBrowser.removeChannel(channel); };
+  }, []);
+
+  // Polling fallback — catches updates if Realtime isn't wired up
+  useEffect(() => {
+    const poll = setInterval(async () => {
+      try {
+        const res = await fetch('/api/location');
+        if (!res.ok) return;
+        const row: Location = await res.json();
+        setLocation((prev) => {
+          if (prev.updated_at === row.updated_at) return prev;
+          if (row.lat || row.lon) {
+            setViewport((v) => ({ ...v, latitude: row.lat, longitude: row.lon }));
+          }
+          return row;
+        });
+      } catch { /* silent — don't crash the map on a failed poll */ }
+    }, 10_000);
+    return () => clearInterval(poll);
   }, []);
 
   const lastUpdated = isLive
