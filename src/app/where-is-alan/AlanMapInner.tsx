@@ -191,8 +191,8 @@ export default function AlanMapInner({ initial }: { initial: Location }) {
                 backdropFilter: 'blur(8px)',
               }}
             >
-              <p className="font-display text-xl text-gold mb-1">Stand by.</p>
-              <p className="text-text-dim text-sm">Alan will start broadcasting when the crawl kicks off.</p>
+              <p className="font-display text-xl text-gold mb-1">Not sharing right now.</p>
+              <p className="text-text-dim text-sm">Alan will turn this on when the group is out.</p>
             </div>
           </div>
         )}

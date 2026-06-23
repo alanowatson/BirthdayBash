@@ -32,23 +32,11 @@ export default async function WhereIsAlanPage() {
         style={{ borderColor: 'var(--gold-soft)' }}
       >
         <div className="max-w-5xl mx-auto">
-          <p className="text-xs uppercase tracking-widest text-text-dim mb-2">Live · Fremont Street Crawl</p>
+          <p className="text-xs uppercase tracking-widest text-text-dim mb-2">Live Tracking</p>
           <h1 className="font-display text-4xl md:text-5xl gold-gradient mb-3">Where is Alan?</h1>
-          <p className="text-text-dim text-sm max-w-xl mb-4">
-            Alan&apos;s real-time location during the Friday night bar crawl. The map updates automatically — no refresh needed.
+          <p className="text-text-dim text-sm max-w-xl">
+            Alan&apos;s real-time location when he&apos;s got it turned on. The map updates automatically — no refresh needed.
           </p>
-          {/* Context banner */}
-          <div
-            className="inline-flex items-start gap-3 px-4 py-3 rounded-xl text-sm max-w-xl"
-            style={{ background: 'rgba(212,175,55,0.06)', border: '1px solid rgba(212,175,55,0.2)' }}
-          >
-            <span className="text-lg flex-shrink-0">📍</span>
-            <p className="text-text-dim leading-relaxed">
-              This feature is only live during the{' '}
-              <span className="text-gold font-medium">Friday night Fremont Street crawl</span>{' '}
-              (Oct 23, ~9 PM onward). If the map shows &ldquo;Stand by&rdquo; — Alan hasn&apos;t started broadcasting yet or the crawl has wrapped.
-            </p>
-          </div>
         </div>
       </section>
 
