@@ -10,9 +10,9 @@ export default function VoiceBlock() {
         </div>
         <div className="pull-quote text-lg leading-relaxed text-text-dim space-y-4">
           <p>
-            Mortgages. Kids&#39; soccer tournaments. That thing called{' '}
+            Mortgages. Swim classes. That thing called{' '}
             <span className="text-gold">&ldquo;responsibility&rdquo;</span>{' '}we all pretend to
-            understand.
+            understand. Leave that life behind and join me in an oasis in the desert.
           </p>
           <p>
             SOs are <span className="text-blue-bright">absolutely</span> invited. Misery loves
