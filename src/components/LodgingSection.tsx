@@ -95,6 +95,22 @@ export default function LodgingSection() {
             </span>
           </p>
         </div>
+
+        <a
+          href="/travel"
+          className="mt-6 flex items-center justify-between px-6 py-4 rounded-xl transition-all group"
+          style={{ border: '1px solid rgba(212,175,55,0.2)', background: 'rgba(212,175,55,0.04)' }}
+        >
+          <div className="flex items-center gap-3">
+            <span className="text-xl">🧳</span>
+            <div>
+              <p className="font-display text-base text-gold">Share your plans</p>
+              <p className="text-text-dim text-xs">Let the crew know where you&#39;re staying and when you&#39;re arriving</p>
+            </div>
+          </div>
+          <span className="text-text-dim group-hover:text-gold transition-colors text-lg">→</span>
+        </a>
+
       </div>
     </section>
   );
