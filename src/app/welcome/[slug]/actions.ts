@@ -25,5 +25,5 @@ export async function batchRsvpAction(formData: FormData) {
       .upsert(rows, { onConflict: 'member_id,event_id' });
   }
 
-  redirect(`/members/${slug}`);
+  redirect(`/welcome/${slug}/profile`);
 }

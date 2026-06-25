@@ -1,9 +1,9 @@
 import { supabaseAdmin } from '@/lib/supabase/server';
-import type { Member, Event } from '@/lib/types';
 import { notFound } from 'next/navigation';
+import type { Member, Travel } from '@/lib/types';
 import Nav from '@/components/Nav';
 import SiteFooter from '@/components/SiteFooter';
-import EventsForm from './EventsForm';
+import ProfileStep from './ProfileStep';
 
 export const revalidate = 0;
 
@@ -26,14 +26,14 @@ function StepIndicator() {
             <div
               className="w-8 h-8 rounded-full flex items-center justify-center text-sm font-mono-x transition-all"
               style={{
-                background: n === 2 ? 'var(--gold)' : n < 2 ? 'rgba(212,175,55,0.2)' : 'rgba(255,255,255,0.05)',
-                color: n === 2 ? '#07101F' : n < 2 ? 'var(--gold)' : 'var(--text-dim)',
-                border: n !== 2 ? '1px solid var(--gold-soft)' : 'none',
+                background: n === 3 ? 'var(--gold)' : 'rgba(212,175,55,0.2)',
+                color: n === 3 ? '#07101F' : 'var(--gold)',
+                border: n !== 3 ? '1px solid var(--gold-soft)' : 'none',
               }}
             >
-              {n < 2 ? '✓' : n}
+              {n < 3 ? '✓' : 3}
             </div>
-            <span className="text-xs" style={{ color: n === 2 ? 'var(--gold)' : 'var(--text-dim)' }}>
+            <span className="text-xs" style={{ color: n === 3 ? 'var(--gold)' : 'var(--text-dim)' }}>
               {label}
             </span>
           </div>
@@ -43,45 +43,54 @@ function StepIndicator() {
   );
 }
 
-export default async function WelcomeStep2Page({ params }: Props) {
+export default async function ProfileStepPage({ params }: Props) {
   const { slug } = await params;
 
-  const [memberRes, eventsRes] = await Promise.all([
-    supabaseAdmin.from('members').select('id, name').eq('slug', slug).maybeSingle(),
-    supabaseAdmin
-      .from('events')
-      .select('id, title, slug, starts_at, ends_at, location, description, pricing_tiers, is_featured, display_order, created_at, updated_at')
-      .order('starts_at', { ascending: true }),
-  ]);
+  const memberRes = await supabaseAdmin
+    .from('members')
+    .select('id, name, photo_url, obsession, fun_fact, tshirt_size')
+    .eq('slug', slug)
+    .maybeSingle();
 
   if (!memberRes.data) notFound();
+  const member = memberRes.data as Pick<Member, 'id' | 'name' | 'photo_url' | 'obsession' | 'fun_fact' | 'tshirt_size'>;
 
-  const member = memberRes.data as Pick<Member, 'id' | 'name'>;
-  const events = (eventsRes.data ?? []) as Event[];
+  const travelRes = await supabaseAdmin
+    .from('travel')
+    .select('*')
+    .eq('member_id', member.id)
+    .maybeSingle();
+
+  const travel = (travelRes.data ?? null) as Travel | null;
 
   return (
     <main className="min-h-screen flex flex-col">
       <Nav />
       <div className="flex-1 px-6 py-24">
         <div className="max-w-lg mx-auto">
+
           <div className="text-center mb-10">
-            <p className="section-label section-label-blue mb-4">You&#39;re invited</p>
+            <p className="section-label section-label-blue mb-4">Almost there</p>
             <h1 className="font-display text-4xl md:text-5xl gold-gradient mb-2">
-              The Schedule
+              Your Profile
             </h1>
             <p className="text-text-dim text-sm">
-              Mark your interest for each event. No pressure — skip anything and come back later.
+              Add a photo, a few details, and your travel plans. All optional — skip anything.
             </p>
           </div>
 
           <StepIndicator />
 
-          <EventsForm
-            events={events}
-            memberId={member.id}
+          <ProfileStep
             slug={slug}
-            memberName={member.name}
+            name={member.name}
+            currentPhotoUrl={member.photo_url}
+            obsession={member.obsession}
+            fun_fact={member.fun_fact}
+            tshirt_size={member.tshirt_size}
+            travel={travel}
           />
+
         </div>
       </div>
       <SiteFooter />

@@ -6,29 +6,29 @@ import type { WelcomeStep1State } from './actions';
 import Nav from '@/components/Nav';
 import SiteFooter from '@/components/SiteFooter';
 
-function StepIndicator({ step }: { step: 1 | 2 }) {
+function StepIndicator() {
+  const steps = [
+    { n: 1, label: 'Your info' },
+    { n: 2, label: 'The schedule' },
+    { n: 3, label: 'Your profile' },
+  ];
   return (
     <div className="flex items-center justify-center gap-0 mb-12">
-      {[
-        { n: 1, label: 'Your info' },
-        { n: 2, label: 'The schedule' },
-      ].map(({ n, label }, i) => (
+      {steps.map(({ n, label }, i) => (
         <div key={n} className="flex items-center">
-          {i > 0 && (
-            <div className="w-16 h-px mx-1" style={{ background: step > 1 ? 'var(--gold-soft)' : 'var(--gold-soft)' }} />
-          )}
+          {i > 0 && <div className="w-12 h-px mx-1" style={{ background: 'var(--gold-soft)' }} />}
           <div className="flex flex-col items-center gap-1">
             <div
               className="w-8 h-8 rounded-full flex items-center justify-center text-sm font-mono-x transition-all"
               style={{
-                background: n === step ? 'var(--gold)' : n < step ? 'rgba(212,175,55,0.2)' : 'rgba(255,255,255,0.05)',
-                color: n === step ? '#07101F' : n < step ? 'var(--gold)' : 'var(--text-dim)',
-                border: n !== step ? '1px solid var(--gold-soft)' : 'none',
+                background: n === 1 ? 'var(--gold)' : 'rgba(255,255,255,0.05)',
+                color: n === 1 ? '#07101F' : 'var(--text-dim)',
+                border: n !== 1 ? '1px solid var(--gold-soft)' : 'none',
               }}
             >
               {n}
             </div>
-            <span className="text-xs" style={{ color: n === step ? 'var(--gold)' : 'var(--text-dim)' }}>
+            <span className="text-xs" style={{ color: n === 1 ? 'var(--gold)' : 'var(--text-dim)' }}>
               {label}
             </span>
           </div>
@@ -61,7 +61,7 @@ export default function WelcomePage() {
             </p>
           </div>
 
-          <StepIndicator step={1} />
+          <StepIndicator />
 
           <form
             action={action}
