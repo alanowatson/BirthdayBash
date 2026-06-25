@@ -2,6 +2,7 @@
 
 import { redirect } from 'next/navigation';
 import { supabaseAdmin } from '@/lib/supabase/server';
+import { createAuthClient } from '@/lib/supabase/server-session';
 
 function toSlug(name: string): string {
   return name.toLowerCase().trim().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
@@ -21,18 +22,23 @@ async function uniqueSlug(base: string): Promise<string> {
 // verify URL so the browser can exchange it for a real session immediately —
 // no email click required.
 async function buildSignInUrl(email: string, next: string): Promise<string | null> {
-  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? 'http://localhost:3000';
-  const { data } = await supabaseAdmin.auth.admin.generateLink({
-    type: 'magiclink',
-    email,
-    options: {
-      redirectTo: `${siteUrl}/auth/callback?next=${encodeURIComponent(next)}`,
-    },
-  });
-  return data?.properties?.action_link ?? null;
+  try {
+    const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? 'http://localhost:3000';
+    const { data, error } = await supabaseAdmin.auth.admin.generateLink({
+      type: 'magiclink',
+      email,
+      options: {
+        redirectTo: `${siteUrl}/auth/callback?next=${encodeURIComponent(next)}`,
+      },
+    });
+    if (error) return null;
+    return data?.properties?.action_link ?? null;
+  } catch {
+    return null;
+  }
 }
 
-export type WelcomeStep1State = { error: string } | null;
+export type WelcomeStep1State = { error: string } | { sent: string } | null;
 
 export async function welcomeStep1Action(
   _prev: WelcomeStep1State,
@@ -50,7 +56,19 @@ export async function welcomeStep1Action(
     .from('members').select('slug').eq('email', email).maybeSingle();
   if (existing) {
     const url = await buildSignInUrl(email, `/welcome/${existing.slug}`);
-    redirect(url ?? `/welcome/${existing.slug}`);
+    if (url) redirect(url);
+    // Fallback: auto-sign-in failed (e.g. recently-deleted auth user);
+    // send a magic link email so they can sign in the old-fashioned way.
+    const supabase = await createAuthClient();
+    const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? 'http://localhost:3000';
+    await supabase.auth.signInWithOtp({
+      email,
+      options: {
+        emailRedirectTo: `${siteUrl}/auth/callback?next=${encodeURIComponent(`/welcome/${existing.slug}`)}`,
+        shouldCreateUser: true,
+      },
+    });
+    return { sent: email };
   }
 
   // New guest — create member then auto-sign-in through the same redirect dance

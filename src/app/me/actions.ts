@@ -9,6 +9,12 @@ export type ProfileState = { success: true } | { error: string } | null;
 export type MagicLinkState = { success: true; email: string } | { error: string } | null;
 export type PhotoState = { success: true; url: string } | { error: string } | null;
 
+export async function signOutAction() {
+  const supabase = await createAuthClient();
+  await supabase.auth.signOut();
+  redirect('/');
+}
+
 export async function bulkUpdateUserRsvpsAction(formData: FormData) {
   const supabase = await createAuthClient();
   const { data: { user } } = await supabase.auth.getUser();

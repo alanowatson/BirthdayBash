@@ -6,7 +6,7 @@ import SiteFooter from '@/components/SiteFooter';
 import ProfileForm from './ProfileForm';
 import MagicLinkForm from './MagicLinkForm';
 import PhotoUpload from './PhotoUpload';
-import { bulkUpdateUserRsvpsAction } from './actions';
+import { bulkUpdateUserRsvpsAction, signOutAction } from './actions';
 
 export const revalidate = 0;
 
@@ -89,11 +89,18 @@ export default async function MePage() {
             <p className="section-label mb-4">My Profile</p>
             <h1 className="font-display text-5xl gold-gradient mb-2">{member.name}</h1>
             <p className="text-text-dim text-sm">{user.email}</p>
-            {member.is_admin && (
-              <a href="/admin" className="inline-block mt-3 text-xs text-gold border border-gold-soft rounded-full px-4 py-1 hover:border-gold transition-colors">
-                Admin panel →
-              </a>
-            )}
+            <div className="flex items-center justify-center gap-3 mt-3 flex-wrap">
+              {member.is_admin && (
+                <a href="/admin" className="text-xs text-gold border border-gold-soft rounded-full px-4 py-1 hover:border-gold transition-colors">
+                  Admin panel →
+                </a>
+              )}
+              <form action={signOutAction}>
+                <button type="submit" className="text-xs text-text-dim border border-gold-soft rounded-full px-4 py-1 hover:border-gold hover:text-gold transition-colors">
+                  Sign out
+                </button>
+              </form>
+            </div>
           </div>
 
           {/* Photo + profile edit */}

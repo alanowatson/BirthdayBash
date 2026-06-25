@@ -112,9 +112,14 @@ export default function WelcomePage() {
               />
             </div>
 
-            {state?.error && (
+            {state && 'error' in state && (
               <p className="text-sm text-red-400 bg-red-950/30 border border-red-800/40 rounded-lg px-4 py-3">
                 {state.error}
+              </p>
+            )}
+            {state && 'sent' in state && (
+              <p className="text-sm text-emerald-400 bg-emerald-950/30 border border-emerald-800/40 rounded-lg px-4 py-3">
+                You&apos;re already on the list! We sent a sign-in link to <strong>{state.sent}</strong> — click it to continue.
               </p>
             )}
 
