@@ -1,6 +1,5 @@
 import { supabaseAdmin } from '@/lib/supabase/server';
 import { createAuthClient } from '@/lib/supabase/server-session';
-import { redirect } from 'next/navigation';
 import Nav from '@/components/Nav';
 import SiteFooter from '@/components/SiteFooter';
 import AlanMap from './AlanMap';
@@ -8,19 +7,18 @@ import AlanMap from './AlanMap';
 export const dynamic = 'force-dynamic';
 
 export default async function WhereIsAlanPage() {
-  // Guests only — redirect anyone not signed in
   const authClient = await createAuthClient();
   const { data: { user } } = await authClient.auth.getUser();
-  if (!user) redirect('/welcome');
 
-  // Fetch Alan's current location (single row, id = 1)
-  const { data } = await supabaseAdmin
-    .from('location')
-    .select('lat, lon, updated_at')
-    .eq('id', 1)
-    .maybeSingle();
-
-  const initial = data ?? { lat: 0, lon: 0, updated_at: new Date().toISOString() };
+  // Fetch location only for signed-in users
+  const initial = user
+    ? await supabaseAdmin
+        .from('location')
+        .select('lat, lon, updated_at')
+        .eq('id', 1)
+        .maybeSingle()
+        .then(({ data }) => data ?? { lat: 0, lon: 0, updated_at: new Date().toISOString() })
+    : null;
 
   return (
     <main className="min-h-screen flex flex-col">
@@ -42,15 +40,35 @@ export default async function WhereIsAlanPage() {
         </div>
       </section>
 
-      {/* Map */}
+      {/* Map or sign-in prompt */}
       <section className="flex-1 px-6 py-6">
         <div className="max-w-5xl mx-auto" style={{ height: 'calc(100vh - 320px)', minHeight: 460 }}>
-          <div
-            className="w-full h-full rounded-xl overflow-hidden"
-            style={{ border: '1px solid rgba(212,175,55,0.15)' }}
-          >
-            <AlanMap initial={initial} />
-          </div>
+          {initial ? (
+            <div
+              className="w-full h-full rounded-xl overflow-hidden"
+              style={{ border: '1px solid rgba(212,175,55,0.15)' }}
+            >
+              <AlanMap initial={initial} />
+            </div>
+          ) : (
+            <div
+              className="w-full h-full rounded-xl flex items-center justify-center"
+              style={{ border: '1px solid rgba(212,175,55,0.15)', background: 'rgba(212,175,55,0.03)' }}
+            >
+              <div className="text-center px-6">
+                <p className="font-display text-2xl text-gold mb-2">You&apos;re on the guest list, right?</p>
+                <p className="text-text-dim text-sm mb-6 max-w-xs mx-auto">
+                  Sign in with your invite to track Alan&apos;s location during the weekend.
+                </p>
+                <a
+                  href="/welcome"
+                  className="rsvp-chip px-6 py-3 rounded-full text-sm uppercase tracking-widest"
+                >
+                  Sign in
+                </a>
+              </div>
+            </div>
+          )}
         </div>
       </section>
 
