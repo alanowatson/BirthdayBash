@@ -64,6 +64,26 @@ export interface ScavengerTask {
   claimed_by: string | null;
 }
 
+export interface Travel {
+  id: string;
+  member_id: string;
+  travel_mode: 'flying' | 'driving';
+  arrives_at: string | null;
+  arrival_airline: string | null;
+  arrival_flight: string | null;
+  departs_at: string | null;
+  departure_airline: string | null;
+  departure_flight: string | null;
+  notes: string | null;
+  created_at: string;
+  updated_at: string;
+  members?: {
+    name: string;
+    photo_url: string | null;
+    slug: string;
+  } | null;
+}
+
 export interface SiteSetting {
   key: string;
   value_text: string | null;
