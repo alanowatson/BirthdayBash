@@ -198,6 +198,19 @@ export default function TravelForm({ myMemberId, myTravel, isAdmin, members, all
           </div>
         </div>
 
+        {/* Accommodation */}
+        <div>
+          <label className={labelClass} style={labelStyle}>Staying at <span className="normal-case text-text-dim">(optional)</span></label>
+          <input
+            type="text"
+            name="accommodation"
+            placeholder="e.g. Venetian, Airbnb on Paradise Rd…"
+            defaultValue={src?.accommodation ?? ''}
+            className={inputClass}
+            style={inputStyle}
+          />
+        </div>
+
         {/* Notes */}
         <div>
           <label className={labelClass} style={labelStyle}>Notes <span className="normal-case text-text-dim">(optional)</span></label>

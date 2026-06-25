@@ -88,6 +88,16 @@ function TravelCard({ entry }: { entry: TravelWithMember }) {
         </div>
       )}
 
+      {/* Accommodation */}
+      {entry.accommodation && (
+        <div className="flex flex-col sm:flex-row sm:items-center gap-1 sm:gap-3">
+          <span className="text-xs uppercase tracking-widest w-20 flex-shrink-0" style={{ color: 'var(--text-dim)' }}>
+            Staying
+          </span>
+          <span className="text-sm" style={{ color: 'var(--text)' }}>{entry.accommodation}</span>
+        </div>
+      )}
+
       {/* Notes */}
       {entry.notes && (
         <p className="text-xs italic" style={{ color: 'var(--text-dim)' }}>&ldquo;{entry.notes}&rdquo;</p>

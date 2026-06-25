@@ -36,6 +36,7 @@ export async function upsertTravelAction(formData: FormData) {
     departs_at:       vegasToUTC(formData.get('departs_at') as string || null),
     departure_airline: mode === 'flying' ? (formData.get('departure_airline') as string || null) : null,
     departure_flight:  mode === 'flying' ? (formData.get('departure_flight') as string || null) : null,
+    accommodation: formData.get('accommodation') as string || null,
     notes: formData.get('notes') as string || null,
     updated_at: new Date().toISOString(),
   };

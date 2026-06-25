@@ -74,6 +74,7 @@ export interface Travel {
   departs_at: string | null;
   departure_airline: string | null;
   departure_flight: string | null;
+  accommodation: string | null;
   notes: string | null;
   created_at: string;
   updated_at: string;

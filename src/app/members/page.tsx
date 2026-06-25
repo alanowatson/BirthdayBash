@@ -30,6 +30,7 @@ export default async function MembersPage() {
       <Nav />
       <div className="flex-1 px-6 py-24">
         <div className="max-w-5xl mx-auto">
+
           <div className="text-center mb-16">
             <p className="section-label mb-4">The Guest List</p>
             <h1 className="font-display text-5xl md:text-6xl gold-gradient mb-3">Who&#39;s Coming</h1>
@@ -75,7 +76,6 @@ export default async function MembersPage() {
               ))}
             </div>
           )}
-        </div>
 
           {/* Travel coordination */}
           <div
