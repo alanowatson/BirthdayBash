@@ -7,7 +7,6 @@ const LINKS = [
   { href: '/#agenda',          label: 'Deets' },
   { href: '/scavenger-hunt',   label: 'Scavenger Hunt' },
   { href: '/#members',         label: "Who's Coming" },
-  { href: '/travel',           label: 'Travel' },
   { href: '/map',              label: 'Maps' },
   { href: '/where-is-alan',    label: 'Where is Alan?' },
   { href: '/tips',             label: 'Insider Tips' },
