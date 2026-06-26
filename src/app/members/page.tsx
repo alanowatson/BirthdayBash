@@ -1,7 +1,10 @@
 import { supabaseAdmin } from '@/lib/supabase/server';
-import type { Member } from '@/lib/types';
+import { createAuthClient } from '@/lib/supabase/server-session';
+import type { Member, Travel } from '@/lib/types';
 import Nav from '@/components/Nav';
 import SiteFooter from '@/components/SiteFooter';
+import TravelTable from '../travel/TravelTable';
+import TravelForm from '../travel/TravelForm';
 
 export const revalidate = 0;
 
@@ -17,13 +20,35 @@ function initials(name: string) {
   return name.split(' ').map((w) => w[0]).join('').slice(0, 2).toUpperCase();
 }
 
-export default async function MembersPage() {
-  const { data } = await supabaseAdmin
-    .from('members')
-    .select('*')
-    .order('created_at', { ascending: true });
+type TravelWithMember = Travel & {
+  members: { name: string; photo_url: string | null; slug: string } | null;
+};
 
-  const members = (data ?? []) as Member[];
+export default async function MembersPage() {
+  const authClient = await createAuthClient();
+  const { data: { user } } = await authClient.auth.getUser();
+
+  const [membersRes, travelRes, memberRes] = await Promise.all([
+    supabaseAdmin.from('members').select('*').order('created_at', { ascending: true }),
+    supabaseAdmin
+      .from('travel')
+      .select('*, members(name, photo_url, slug)')
+      .order('arrives_at', { ascending: true, nullsFirst: false }),
+    user?.email
+      ? supabaseAdmin.from('members').select('id, name, is_admin').eq('email', user.email).maybeSingle()
+      : Promise.resolve({ data: null }),
+  ]);
+
+  const members = (membersRes.data ?? []) as Member[];
+  const allTravel = (travelRes.data ?? []) as TravelWithMember[];
+  const me = memberRes.data;
+  const isAdmin = me?.is_admin === true;
+
+  const myTravel = me ? allTravel.find((t) => t.member_id === me.id) ?? null : null;
+
+  const adminMembers = isAdmin
+    ? await supabaseAdmin.from('members').select('id, name').order('name').then(({ data }) => data ?? [])
+    : [];
 
   return (
     <main className="min-h-screen flex flex-col">
@@ -77,24 +102,38 @@ export default async function MembersPage() {
             </div>
           )}
 
-          {/* Travel coordination */}
-          <div
-            className="mt-16 pt-12 border-t"
-            style={{ borderColor: 'var(--gold-soft)' }}
-          >
-            <p className="font-display text-2xl text-gold mb-2">How are they getting there?</p>
-            <p className="text-text-dim text-sm max-w-md mb-4">
-              See and share travel plans — same flights, shared cabs, airport runs.
-            </p>
-            <a
-              href="/travel"
-              className="inline-flex items-center gap-2 px-5 py-3 rounded-xl text-sm transition-all group"
-              style={{ border: '1px solid rgba(212,175,55,0.25)', background: 'rgba(212,175,55,0.04)', color: 'var(--gold)' }}
+          {/* Travel — only shown to signed-in members */}
+          {me && (
+            <div
+              id="travel"
+              className="mt-16 pt-12 border-t"
+              style={{ borderColor: 'var(--gold-soft)' }}
             >
-              View travel plans
-              <span className="group-hover:translate-x-0.5 transition-transform">→</span>
-            </a>
-          </div>
+              <div className="mb-8">
+                <p className="font-display text-2xl text-gold mb-2">How are they getting there?</p>
+                <p className="text-text-dim text-sm max-w-md">
+                  See and share travel plans — same flights, shared cabs, airport runs.
+                  All times are Las Vegas time (PDT).
+                </p>
+              </div>
+
+              <div className="flex flex-col lg:flex-row gap-8 items-start">
+                <div className="flex-1 min-w-0">
+                  <TravelTable entries={allTravel} />
+                </div>
+                <div className="w-full lg:w-80 flex-shrink-0 lg:sticky lg:top-24">
+                  <TravelForm
+                    myMemberId={me.id}
+                    myTravel={myTravel as Travel | null}
+                    isAdmin={isAdmin}
+                    members={adminMembers as Pick<Member, 'id' | 'name'>[]}
+                    allTravel={allTravel as Travel[]}
+                    compact
+                  />
+                </div>
+              </div>
+            </div>
+          )}
 
         </div>
       </div>

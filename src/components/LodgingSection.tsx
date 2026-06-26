@@ -7,7 +7,7 @@ export default function LodgingSection() {
           <h2 className="font-display text-5xl md:text-6xl gold-gradient mb-3">Lodging</h2>
           <p className="text-text-dim max-w-md mx-auto">
             Home base is The Cosmopolitan. The rest are within easy walking/Ubering distance.{' '}
-            <a href="/travel" className="text-gold underline underline-offset-2 hover:opacity-80 transition-opacity">Share your travel plans</a> so the crew can coordinate.
+            <a href="/members#travel" className="text-gold underline underline-offset-2 hover:opacity-80 transition-opacity">Share your travel plans</a> so the crew can coordinate.
           </p>
         </div>
 
