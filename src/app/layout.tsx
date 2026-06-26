@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Cormorant_Garamond, Playfair_Display, Inter, JetBrains_Mono } from "next/font/google";
 import "./globals.css";
+import AuthHashHandler from "@/components/AuthHashHandler";
 
 const cormorant = Cormorant_Garamond({
   weight: ["300", "400", "500", "600", "700"],
@@ -52,7 +53,10 @@ export default function RootLayout({
       <head>
         <meta name="robots" content="noindex, nofollow" />
       </head>
-      <body className="min-h-full bg-bg text-text font-sans">{children}</body>
+      <body className="min-h-full bg-bg text-text font-sans">
+        <AuthHashHandler />
+        {children}
+      </body>
     </html>
   );
 }
