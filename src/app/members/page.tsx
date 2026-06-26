@@ -24,9 +24,20 @@ type TravelWithMember = Travel & {
   members: { name: string; photo_url: string | null; slug: string } | null;
 };
 
+// Safely resolves the current auth user.
+// Returns null when called without a request cookie context (e.g. background revalidation).
+async function getAuthUser() {
+  try {
+    const authClient = await createAuthClient();
+    const { data: { user } } = await authClient.auth.getUser();
+    return user ?? null;
+  } catch {
+    return null;
+  }
+}
+
 export default async function MembersPage() {
-  const authClient = await createAuthClient();
-  const { data: { user } } = await authClient.auth.getUser();
+  const user = await getAuthUser();
 
   const [membersRes, travelRes, memberRes] = await Promise.all([
     supabaseAdmin.from('members').select('*').order('created_at', { ascending: true }),
