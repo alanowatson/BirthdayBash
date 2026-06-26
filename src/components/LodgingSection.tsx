@@ -6,7 +6,8 @@ export default function LodgingSection() {
           <p className="section-label section-label-blue mb-4">Where We&#39;re Staying</p>
           <h2 className="font-display text-5xl md:text-6xl gold-gradient mb-3">Lodging</h2>
           <p className="text-text-dim max-w-md mx-auto">
-            Home base is The Cosmopolitan. The rest are within easy walking/Ubering distance.
+            Home base is The Cosmopolitan. The rest are within easy walking/Ubering distance.{' '}
+            <a href="/travel" className="text-gold underline underline-offset-2 hover:opacity-80 transition-opacity">Share your travel plans</a> so the crew can coordinate.
           </p>
         </div>
 
@@ -95,21 +96,6 @@ export default function LodgingSection() {
             </span>
           </p>
         </div>
-
-        <a
-          href="/travel"
-          className="mt-6 flex items-center justify-between px-6 py-4 rounded-xl transition-all group"
-          style={{ border: '1px solid rgba(212,175,55,0.2)', background: 'rgba(212,175,55,0.04)' }}
-        >
-          <div className="flex items-center gap-3">
-            <span className="text-xl">🧳</span>
-            <div>
-              <p className="font-display text-base text-gold">Share your plans</p>
-              <p className="text-text-dim text-xs">Let the crew know where you&#39;re staying and when you&#39;re arriving</p>
-            </div>
-          </div>
-          <span className="text-text-dim group-hover:text-gold transition-colors text-lg">→</span>
-        </a>
 
       </div>
     </section>
