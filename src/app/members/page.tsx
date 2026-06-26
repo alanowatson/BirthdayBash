@@ -82,23 +82,18 @@ export default async function MembersPage() {
             className="mt-16 pt-12 border-t"
             style={{ borderColor: 'var(--gold-soft)' }}
           >
-            <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
-              <div>
-                <p className="font-display text-2xl text-gold mb-2">Getting There</p>
-                <p className="text-text-dim text-sm max-w-md">
-                  Share your flight or drive details so the crew can coordinate — same flights,
-                  shared cabs, airport runs. See who&apos;s arriving when and find someone to split a ride with.
-                </p>
-              </div>
-              <a
-                href="/travel"
-                className="flex-shrink-0 flex items-center gap-2 px-5 py-3 rounded-xl text-sm transition-all group"
-                style={{ border: '1px solid rgba(212,175,55,0.25)', background: 'rgba(212,175,55,0.04)', color: 'var(--gold)' }}
-              >
-                View travel plans
-                <span className="group-hover:translate-x-0.5 transition-transform">→</span>
-              </a>
-            </div>
+            <p className="font-display text-2xl text-gold mb-2">How are they getting there?</p>
+            <p className="text-text-dim text-sm max-w-md mb-4">
+              See and share travel plans — same flights, shared cabs, airport runs.
+            </p>
+            <a
+              href="/travel"
+              className="inline-flex items-center gap-2 px-5 py-3 rounded-xl text-sm transition-all group"
+              style={{ border: '1px solid rgba(212,175,55,0.25)', background: 'rgba(212,175,55,0.04)', color: 'var(--gold)' }}
+            >
+              View travel plans
+              <span className="group-hover:translate-x-0.5 transition-transform">→</span>
+            </a>
           </div>
 
         </div>
