@@ -65,12 +65,14 @@ export async function adminUploadPhotoAction(_prev: AdminPhotoState, formData: F
     }
 
     const { data: { publicUrl } } = supabaseAdmin.storage.from('member-photos').getPublicUrl(path);
+    // Append a timestamp so the browser doesn't serve a stale cached version after re-upload
+    const urlWithBust = `${publicUrl}?t=${Date.now()}`;
 
-    await supabaseAdmin.from('members').update({ photo_url: publicUrl }).eq('id', memberId);
+    await supabaseAdmin.from('members').update({ photo_url: urlWithBust }).eq('id', memberId);
 
     revalidatePath(`/admin/members/${memberId}`);
 
-    return { success: true, url: publicUrl };
+    return { success: true, url: urlWithBust };
   } catch (err) {
     console.error('adminUploadPhotoAction unexpected error:', err);
     return { error: err instanceof Error ? err.message : 'Unexpected error. Check server logs.' };
