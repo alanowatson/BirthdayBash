@@ -42,7 +42,15 @@ export async function upsertTravelAction(formData: FormData) {
   };
 
   await supabaseAdmin.from('travel').upsert(row, { onConflict: 'member_id' });
-  revalidatePath('/travel');
+  revalidatePath('/me');
+
+  // Revalidate the member's public profile so travel info shows immediately
+  const { data: memberRow } = await supabaseAdmin
+    .from('members')
+    .select('slug')
+    .eq('id', memberId)
+    .maybeSingle();
+  if (memberRow?.slug) revalidatePath(`/members/${memberRow.slug}`);
 }
 
 export async function deleteTravelAction(formData: FormData) {
@@ -61,5 +69,12 @@ export async function deleteTravelAction(formData: FormData) {
   const memberId = me.is_admin ? targetMemberId : me.id;
 
   await supabaseAdmin.from('travel').delete().eq('member_id', memberId);
-  revalidatePath('/travel');
+  revalidatePath('/me');
+
+  const { data: memberRow } = await supabaseAdmin
+    .from('members')
+    .select('slug')
+    .eq('id', memberId)
+    .maybeSingle();
+  if (memberRow?.slug) revalidatePath(`/members/${memberRow.slug}`);
 }

@@ -1,11 +1,12 @@
 import { createAuthClient } from '@/lib/supabase/server-session';
 import { supabaseAdmin } from '@/lib/supabase/server';
-import type { Member, Event, Rsvp } from '@/lib/types';
+import type { Member, Event, Rsvp, Travel } from '@/lib/types';
 import Nav from '@/components/Nav';
 import SiteFooter from '@/components/SiteFooter';
 import ProfileForm from './ProfileForm';
 import MagicLinkForm from './MagicLinkForm';
 import PhotoUpload from './PhotoUpload';
+import TravelForm from '../travel/TravelForm';
 import { bulkUpdateUserRsvpsAction, signOutAction } from './actions';
 
 export const revalidate = 0;
@@ -69,15 +70,17 @@ export default async function MePage() {
     );
   }
 
-  const [eventsRes, rsvpRes] = await Promise.all([
+  const [eventsRes, rsvpRes, travelRes] = await Promise.all([
     supabaseAdmin.from('events').select('id, title, slug, starts_at').order('display_order', { ascending: true }),
     supabaseAdmin.from('rsvps').select('status, event_id').eq('member_id', member.id),
+    supabaseAdmin.from('travel').select('*').eq('member_id', member.id).maybeSingle(),
   ]);
 
   const events = (eventsRes.data ?? []) as Pick<Event, 'id' | 'title' | 'slug' | 'starts_at'>[];
   const rsvpMap = Object.fromEntries(
     ((rsvpRes.data ?? []) as Pick<Rsvp, 'status' | 'event_id'>[]).map((r) => [r.event_id, r.status])
   );
+  const myTravel = (travelRes.data as Travel | null) ?? null;
 
   return (
     <main className="min-h-screen flex flex-col">
@@ -110,6 +113,19 @@ export default async function MePage() {
               <PhotoUpload currentUrl={member.photo_url} name={member.name} />
             </div>
             <ProfileForm name={member.name} bio={member.bio} obsession={member.obsession} tshirt_size={member.tshirt_size} />
+          </div>
+
+          {/* Travel plans */}
+          <div className="event-card event-card-static border border-gold-soft rounded-xl p-8 mb-8">
+            <h2 className="font-display text-2xl text-gold mb-2">Travel Plans</h2>
+            <p className="text-text-dim text-sm mb-6">All times are Las Vegas time (PDT).</p>
+            <TravelForm
+              myMemberId={member.id}
+              myTravel={myTravel}
+              isAdmin={false}
+              members={[]}
+              allTravel={myTravel ? [myTravel] : []}
+            />
           </div>
 
           {/* RSVPs */}
