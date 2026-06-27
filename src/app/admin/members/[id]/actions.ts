@@ -79,29 +79,34 @@ export async function adminUploadPhotoAction(_prev: AdminPhotoState, formData: F
   }
 }
 
-export async function bulkUpdateRsvpsAction(formData: FormData) {
-  await requireAdmin();
+export type RsvpSaveState = { success: true } | { error: string } | null;
 
-  const member_id = formData.get('member_id') as string;
-  const member_page_id = formData.get('member_page_id') as string;
-  const event_ids = formData.getAll('event_ids') as string[];
+export async function bulkUpdateRsvpsAction(_prev: RsvpSaveState, formData: FormData): Promise<RsvpSaveState> {
+  try {
+    await requireAdmin();
 
-  for (const event_id of event_ids) {
-    const raw = formData.get(`rsvp_${event_id}`);
-    const status = typeof raw === 'string' ? raw : 'none';
+    const member_id = formData.get('member_id') as string;
+    const event_ids = formData.getAll('event_ids') as string[];
 
-    if (status === 'none') {
-      await supabaseAdmin.from('rsvps').delete()
-        .eq('member_id', member_id).eq('event_id', event_id);
-    } else {
-      await supabaseAdmin.from('rsvps').upsert(
-        { member_id, event_id, status },
-        { onConflict: 'member_id,event_id' }
-      );
+    for (const event_id of event_ids) {
+      const raw = formData.get(`rsvp_${event_id}`);
+      const status = typeof raw === 'string' ? raw : 'none';
+
+      if (status === 'none') {
+        await supabaseAdmin.from('rsvps').delete()
+          .eq('member_id', member_id).eq('event_id', event_id);
+      } else {
+        await supabaseAdmin.from('rsvps').upsert(
+          { member_id, event_id, status },
+          { onConflict: 'member_id,event_id' }
+        );
+      }
     }
-  }
 
-  revalidatePath(`/admin/members/${member_page_id}`);
-  revalidatePath('/');
-  redirect(`/admin/members/${member_page_id}`);
+    revalidatePath('/');
+    return { success: true };
+  } catch (err) {
+    console.error('bulkUpdateRsvpsAction error:', err);
+    return { error: 'Failed to save RSVPs.' };
+  }
 }

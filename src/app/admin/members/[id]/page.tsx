@@ -1,8 +1,9 @@
 import { supabaseAdmin } from '@/lib/supabase/server';
 import type { Member, Event, Rsvp } from '@/lib/types';
 import { notFound } from 'next/navigation';
-import { updateMemberAction, bulkUpdateRsvpsAction } from './actions';
+import { updateMemberAction } from './actions';
 import AdminPhotoUpload from './AdminPhotoUpload';
+import AdminRsvpForm from './AdminRsvpForm';
 
 export const revalidate = 0;
 
@@ -116,43 +117,7 @@ export default async function AdminMemberDetailPage({ params }: Props) {
         {/* RSVP management */}
         <div className="event-card event-card-static border border-gold-soft rounded-xl p-6">
           <h2 className="font-display text-2xl text-gold mb-5">RSVPs</h2>
-          <form action={bulkUpdateRsvpsAction} className="flex flex-col gap-0">
-            <input type="hidden" name="member_id" value={member.id} />
-            <input type="hidden" name="member_page_id" value={id} />
-
-            {events.map((event) => {
-              const currentStatus = rsvpMap[event.id] ?? 'none';
-              return (
-                <div key={event.id} className="flex items-center gap-3 py-3 border-b last:border-0" style={{ borderColor: 'var(--gold-soft)' }}>
-                  <input type="hidden" name="event_ids" value={event.id} />
-
-                  <div className="flex-1 min-w-0 pr-2">
-                    <p className="text-sm text-text truncate">{event.title}</p>
-                    <p className="text-xs text-text-dim whitespace-nowrap">{formatDate(event.starts_at)}</p>
-                  </div>
-
-                  <select
-                    name={`rsvp_${event.id}`}
-                    defaultValue={currentStatus}
-                    className="field-input flex-shrink-0 text-xs py-1.5 px-2"
-                    style={{ width: 130 }}
-                  >
-                    <option value="none">— No RSVP</option>
-                    <option value="attending">Attending</option>
-                    <option value="maybe">Maybe</option>
-                    <option value="not_attending">Not attending</option>
-                  </select>
-                </div>
-              );
-            })}
-
-            <button
-              type="submit"
-              className="rsvp-chip px-5 py-2.5 rounded-full uppercase text-xs tracking-widest mt-5 self-start"
-            >
-              Save RSVPs
-            </button>
-          </form>
+          <AdminRsvpForm memberId={member.id} events={events} rsvpMap={rsvpMap} />
         </div>
       </div>
     </div>

@@ -1,9 +1,10 @@
 import { supabaseAdmin } from '@/lib/supabase/server';
 import { createAuthClient } from '@/lib/supabase/server-session';
-import type { Member } from '@/lib/types';
+import type { Member, Travel } from '@/lib/types';
 import { notFound } from 'next/navigation';
 import Nav from '@/components/Nav';
 import SiteFooter from '@/components/SiteFooter';
+import TravelForm from '../../travel/TravelForm';
 
 export const revalidate = 0;
 
@@ -15,8 +16,12 @@ interface Props {
 export default async function MemberPage({ params, searchParams }: Props) {
   const [{ slug }, { sent }] = await Promise.all([params, searchParams]);
 
-  const authClient = await createAuthClient();
-  const { data: { user } } = await authClient.auth.getUser();
+  let user = null;
+  try {
+    const authClient = await createAuthClient();
+    const res = await authClient.auth.getUser();
+    user = res.data.user ?? null;
+  } catch { /* no cookie context */ }
 
   const { data } = await supabaseAdmin
     .from('members')
@@ -28,11 +33,24 @@ export default async function MemberPage({ params, searchParams }: Props) {
 
   const member = data as Member;
 
-  // Check if the current viewer is an admin
   const viewerRes = user?.email
-    ? await supabaseAdmin.from('members').select('is_admin, id').eq('email', user.email).maybeSingle()
+    ? await supabaseAdmin.from('members').select('is_admin, id, email').eq('email', user.email).maybeSingle()
     : { data: null };
-  const isAdmin = viewerRes.data?.is_admin === true;
+
+  const viewer = viewerRes.data;
+  const isAdmin = viewer?.is_admin === true;
+  const isSelf = viewer?.email === member.email;
+
+  // Fetch travel for self or admin view
+  let myTravel: Travel | null = null;
+  if (isSelf || isAdmin) {
+    const { data: travelData } = await supabaseAdmin
+      .from('travel')
+      .select('*')
+      .eq('member_id', member.id)
+      .maybeSingle();
+    myTravel = (travelData as Travel | null) ?? null;
+  }
 
   return (
     <main className="min-h-screen flex flex-col">
@@ -68,7 +86,6 @@ export default async function MemberPage({ params, searchParams }: Props) {
           <h1 className="font-display text-5xl gold-gradient mb-2">{member.name}</h1>
           {member.is_referee && <p className="text-sky text-sm mb-6 uppercase tracking-widest">Referee</p>}
 
-          {/* Profile info — how they know Alan, plus any extra details admin has filled in */}
           {(member.bio || member.known_for || member.fun_fact || member.obsession) && (
             <div className="mb-6 flex flex-col gap-3 text-left">
               {member.bio && (
@@ -107,6 +124,23 @@ export default async function MemberPage({ params, searchParams }: Props) {
                   <p className="text-text text-sm leading-relaxed">{member.fun_fact}</p>
                 </div>
               )}
+            </div>
+          )}
+
+          {/* Travel plans — shown when viewing your own profile */}
+          {isSelf && (
+            <div className="mt-2 mb-6 text-left">
+              <p className="font-display text-xl text-gold mb-1">Your travel plans</p>
+              <p className="text-text-dim text-xs mb-4">
+                All times are Las Vegas time (PDT).
+              </p>
+              <TravelForm
+                myMemberId={member.id}
+                myTravel={myTravel}
+                isAdmin={false}
+                members={[]}
+                allTravel={myTravel ? [myTravel] : []}
+              />
             </div>
           )}
 
