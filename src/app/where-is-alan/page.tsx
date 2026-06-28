@@ -61,7 +61,7 @@ export default async function WhereIsAlanPage() {
                   Sign in with your invite to track Alan&apos;s location during the weekend.
                 </p>
                 <a
-                  href="/welcome"
+                  href="/signup"
                   className="rsvp-chip px-6 py-3 rounded-full text-sm uppercase tracking-widest"
                 >
                   Sign in

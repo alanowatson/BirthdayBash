@@ -56,8 +56,8 @@ export default function Nav() {
             </a>
           )}
           {signedIn === false && (
-            <a href="/welcome" className="rsvp-chip px-4 py-2 rounded-full text-xs">
-              Get on the list
+            <a href="/signup" className="rsvp-chip px-4 py-2 rounded-full text-xs">
+              RSVP
             </a>
           )}
         </div>
@@ -106,9 +106,9 @@ export default function Nav() {
           )}
           {signedIn === false && (
             <div className="px-6 py-4">
-              <a href="/welcome" onClick={() => setOpen(false)}
+              <a href="/signup" onClick={() => setOpen(false)}
                 className="rsvp-chip px-5 py-2.5 rounded-full text-xs inline-block">
-                Get on the list
+                RSVP
               </a>
             </div>
           )}

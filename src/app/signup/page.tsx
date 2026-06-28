@@ -1,12 +1,17 @@
 'use client';
 
-import { useActionState } from 'react';
-import { signupAction } from './actions';
+import { useActionState, useState } from 'react';
+import { submitRsvpAction } from './actions';
+import type { RsvpState } from './actions';
 import Nav from '@/components/Nav';
 import SiteFooter from '@/components/SiteFooter';
 
+const INPUT =
+  'bg-transparent border border-gold-soft rounded-lg px-4 py-3 text-text placeholder:text-text-dim focus:outline-none focus:border-gold transition-colors w-full';
+
 export default function SignupPage() {
-  const [state, action, pending] = useActionState(signupAction, null);
+  const [state, action, pending] = useActionState<RsvpState, FormData>(submitRsvpAction, null);
+  const [attending, setAttending] = useState<'yes' | 'no'>('yes');
 
   return (
     <main className="min-h-screen flex flex-col">
@@ -15,11 +20,9 @@ export default function SignupPage() {
       <div className="flex-1 flex items-center justify-center px-6 py-24">
         <div className="w-full max-w-md">
           <div className="text-center mb-10">
-            <p className="section-label mb-4">Join the List</p>
-            <h1 className="font-display text-5xl gold-gradient mb-3">Get on the List</h1>
-            <p className="text-text-dim">
-              Lock in your spot for Vegas 2026. Alan&#39;s 40th is not to be missed.
-            </p>
+            <p className="section-label mb-4">RSVP</p>
+            <h1 className="font-display text-5xl gold-gradient mb-3">Alan&apos;s 40th</h1>
+            <p className="text-text-dim">Vegas · Oct 22–26, 2026</p>
           </div>
 
           <form
@@ -37,7 +40,7 @@ export default function SignupPage() {
                 required
                 autoComplete="name"
                 placeholder="Your name"
-                className="bg-transparent border border-gold-soft rounded-lg px-4 py-3 text-text placeholder:text-text-dim focus:outline-none focus:border-gold transition-colors"
+                className={INPUT}
               />
             </div>
 
@@ -52,77 +55,43 @@ export default function SignupPage() {
                 required
                 autoComplete="email"
                 placeholder="you@example.com"
-                className="bg-transparent border border-gold-soft rounded-lg px-4 py-3 text-text placeholder:text-text-dim focus:outline-none focus:border-gold transition-colors"
+                className={INPUT}
               />
             </div>
 
-            <div className="flex flex-col gap-1.5">
-              <label htmlFor="bio" className="text-xs uppercase tracking-widest text-text-dim">
-                One-liner <span className="text-text-dim text-xs normal-case">(optional)</span>
-              </label>
-              <input
-                id="bio"
-                name="bio"
-                type="text"
-                maxLength={120}
-                placeholder="How you know Alan, your vibe, etc."
-                className="bg-transparent border border-gold-soft rounded-lg px-4 py-3 text-text placeholder:text-text-dim focus:outline-none focus:border-gold transition-colors"
-              />
-            </div>
-
-            <div className="flex flex-col gap-1.5">
-              <label htmlFor="obsession" className="text-xs uppercase tracking-widest text-text-dim">
-                I will talk your ear off about… <span className="text-text-dim text-xs normal-case">(optional)</span>
-              </label>
-              <input
-                id="obsession"
-                name="obsession"
-                type="text"
-                maxLength={120}
-                placeholder="Fantasy football, true crime, hot sauces, whatever…"
-                className="bg-transparent border border-gold-soft rounded-lg px-4 py-3 text-text placeholder:text-text-dim focus:outline-none focus:border-gold transition-colors"
-              />
-            </div>
-
-            <div className="flex flex-col gap-1.5">
-              <label htmlFor="tshirt_size" className="text-xs uppercase tracking-widest text-text-dim">
-                T-Shirt Size <span className="text-text-dim text-xs normal-case">(optional)</span>
-              </label>
-              <select
-                id="tshirt_size"
-                name="tshirt_size"
-                className="bg-transparent border border-gold-soft rounded-lg px-4 py-3 text-text focus:outline-none focus:border-gold transition-colors"
-              >
-                <option value="">— Select a size</option>
-                <option value="XS">XS</option>
-                <option value="S">S</option>
-                <option value="M">M</option>
-                <option value="L">L</option>
-                <option value="XL">XL</option>
-                <option value="XXL">XXL</option>
-              </select>
-            </div>
-
-            <div className="flex flex-col gap-2">
-              <p className="text-xs uppercase tracking-widest text-text-dim mb-1">Are you in for the weekend?</p>
-              {[
-                { value: 'yes', label: "I'm in!", sublabel: 'Count me for Vegas 2026' },
-                { value: 'no',  label: "Can't make it", sublabel: "I'll sit this one out" },
-              ].map((opt) => (
-                <label key={opt.value} className="flex items-center gap-3 cursor-pointer group">
-                  <input
-                    type="radio"
-                    name="trip_rsvp"
-                    value={opt.value}
-                    defaultChecked={opt.value === 'yes'}
-                    className="accent-gold"
-                  />
-                  <span>
-                    <span className="text-text text-sm group-hover:text-gold transition-colors">{opt.label}</span>
-                    <span className="text-text-dim text-xs ml-2">{opt.sublabel}</span>
-                  </span>
-                </label>
-              ))}
+            <div>
+              <p className="text-xs uppercase tracking-widest text-text-dim mb-3">
+                Can you make it to Vegas?
+              </p>
+              <div className="grid grid-cols-2 gap-3">
+                {[
+                  { value: 'yes', label: "I'm in! 🎉", sub: 'Count me for Vegas 2026' },
+                  { value: 'no', label: "Can't make it", sub: "I'll sit this one out" },
+                ].map((opt) => (
+                  <button
+                    key={opt.value}
+                    type="button"
+                    onClick={() => setAttending(opt.value as 'yes' | 'no')}
+                    className="py-4 px-4 rounded-xl border text-left transition-all"
+                    style={{
+                      borderColor: attending === opt.value ? 'var(--gold)' : 'var(--gold-soft)',
+                      background:
+                        attending === opt.value ? 'rgba(212,175,55,0.08)' : 'transparent',
+                    }}
+                  >
+                    <p
+                      className="text-sm font-medium"
+                      style={{ color: attending === opt.value ? 'var(--gold)' : 'var(--text)' }}
+                    >
+                      {opt.label}
+                    </p>
+                    <p className="text-xs mt-0.5" style={{ color: 'var(--text-dim)' }}>
+                      {opt.sub}
+                    </p>
+                  </button>
+                ))}
+              </div>
+              <input type="hidden" name="attending" value={attending} />
             </div>
 
             {state?.error && (
@@ -136,14 +105,18 @@ export default function SignupPage() {
               disabled={pending}
               className="rsvp-chip px-6 py-3 rounded-full uppercase text-sm tracking-widest font-medium mt-2 disabled:opacity-50 disabled:cursor-not-allowed"
             >
-              {pending ? 'Saving…' : 'Submit →'}
+              {pending
+                ? 'Saving…'
+                : attending === 'yes'
+                ? 'Count me in →'
+                : 'Submit →'}
             </button>
           </form>
 
           <p className="text-center text-text-dim text-xs mt-6">
             Already signed up?{' '}
-            <a href="/members" className="text-gold hover:underline">
-              Find yourself on the guest list
+            <a href="/me" className="text-gold hover:underline">
+              Sign in to your profile →
             </a>
           </p>
         </div>
