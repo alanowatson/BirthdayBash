@@ -3,7 +3,7 @@
 import { useActionState, useRef, useState } from 'react';
 import { adminUploadPhotoAction } from './actions';
 import type { AdminPhotoState } from './actions';
-import PhotoCropModal from './PhotoCropModal';
+import PhotoCropModal from '@/components/PhotoCropModal';
 
 interface Props {
   memberId: string;
