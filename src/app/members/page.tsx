@@ -40,7 +40,11 @@ export default async function MembersPage() {
   const user = await getAuthUser();
 
   const [membersRes, travelRes, memberRes] = await Promise.all([
-    supabaseAdmin.from('members').select('*').order('created_at', { ascending: true }),
+    supabaseAdmin
+      .from('members')
+      .select('*')
+      .or('trip_rsvp.is.null,trip_rsvp.eq.yes')
+      .order('created_at', { ascending: true }),
     supabaseAdmin
       .from('travel')
       .select('*, members(name, photo_url, slug)')
@@ -51,7 +55,9 @@ export default async function MembersPage() {
   ]);
 
   const members = (membersRes.data ?? []) as Member[];
-  const allTravel = (travelRes.data ?? []) as TravelWithMember[];
+  const allTravel = ((travelRes.data ?? []) as TravelWithMember[]).filter(
+    (t) => t.arrives_at || t.departs_at || t.accommodation
+  );
   const me = memberRes.data;
   const isAdmin = me?.is_admin === true;
 
@@ -72,7 +78,7 @@ export default async function MembersPage() {
             <h1 className="font-display text-5xl md:text-6xl gold-gradient mb-3">Who&#39;s Coming</h1>
             <p className="text-text-dim max-w-md mx-auto">
               {members.length > 0
-                ? `${members.length} confirmed and counting.`
+                ? `${members.length} ${members.length === 1 ? 'person' : 'people'} in so far.`
                 : 'No one yet. Be the first.'}
             </p>
           </div>

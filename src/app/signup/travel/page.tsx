@@ -61,18 +61,19 @@ export default async function SignupTravelPage() {
             />
           </div>
 
-          <div className="flex gap-4 items-center justify-center">
+          <div className="flex flex-col gap-3">
             <a
               href="/members"
-              className="rsvp-chip px-6 py-3 rounded-full uppercase text-sm tracking-widest"
+              className="rsvp-chip px-6 py-3 rounded-full uppercase text-sm tracking-widest text-center"
             >
               Done — see who&apos;s coming →
             </a>
             <a
               href="/members"
-              className="text-text-dim text-sm hover:text-gold transition-colors"
+              className="flex items-center justify-center px-6 py-3 rounded-full text-sm uppercase tracking-widest transition-colors"
+              style={{ border: '1px solid var(--gold-soft)', color: 'var(--text-dim)' }}
             >
-              Skip for now
+              Skip — I&apos;ll add travel plans later
             </a>
           </div>
         </div>

@@ -59,19 +59,20 @@ export default function EventsSetupForm({ memberId, events, rsvpMap }: Props) {
           );
         })}
 
-        <div className="flex gap-4 items-center mt-5">
+        <div className="flex flex-col gap-3 mt-5">
           <button
             type="submit"
             disabled={pending}
-            className="rsvp-chip px-6 py-3 rounded-full uppercase text-sm tracking-widest disabled:opacity-50 disabled:cursor-not-allowed"
+            className="rsvp-chip px-6 py-3 rounded-full uppercase text-sm tracking-widest disabled:opacity-50 disabled:cursor-not-allowed w-full"
           >
-            {pending ? 'Saving…' : 'Continue →'}
+            {pending ? 'Saving…' : 'Save RSVPs & Continue →'}
           </button>
           <a
             href="/signup/travel"
-            className="text-text-dim text-sm hover:text-gold transition-colors"
+            className="flex items-center justify-center px-6 py-3 rounded-full text-sm uppercase tracking-widest transition-colors w-full"
+            style={{ border: '1px solid var(--gold-soft)', color: 'var(--text-dim)' }}
           >
-            Skip for now
+            Skip — I&apos;ll RSVP to events later
           </a>
         </div>
       </form>
