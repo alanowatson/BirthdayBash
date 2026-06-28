@@ -18,24 +18,30 @@ async function uniqueSlug(base: string): Promise<string> {
   }
 }
 
-async function buildSignInUrl(email: string, next: string): Promise<string | null> {
+// Signs the user in entirely server-side:
+// 1. generateLink gives us a hashed_token without sending any email
+// 2. verifyOtp redeems it and writes the session cookies directly into the response
+//    (works because createAuthClient's setAll handler writes to next/headers cookies)
+async function signInServerSide(email: string): Promise<boolean> {
   try {
-    const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? 'http://localhost:3000';
     const { data, error } = await supabaseAdmin.auth.admin.generateLink({
       type: 'magiclink',
       email,
-      options: {
-        redirectTo: `${siteUrl}/auth/callback?next=${encodeURIComponent(next)}`,
-      },
     });
-    if (error) return null;
-    return data?.properties?.action_link ?? null;
+    if (error || !data?.properties?.hashed_token) return false;
+
+    const supabase = await createAuthClient();
+    const { error: verifyError } = await supabase.auth.verifyOtp({
+      token_hash: data.properties.hashed_token,
+      type: 'magiclink',
+    });
+    return !verifyError;
   } catch {
-    return null;
+    return false;
   }
 }
 
-export type RsvpState = { error: string } | { signInUrl: string } | null;
+export type RsvpState = { error: string } | null;
 
 export async function submitRsvpAction(_prev: RsvpState, formData: FormData): Promise<RsvpState> {
   const name = (formData.get('name') as string)?.trim() ?? '';
@@ -76,17 +82,16 @@ export async function submitRsvpAction(_prev: RsvpState, formData: FormData): Pr
     if (error) return { error: 'Something went wrong. Please try again.' };
   }
 
-  // Create Supabase auth user — pre-confirmed, no email sent
+  // Create Supabase auth user (pre-confirmed, no email sent).
+  // Ignore error — user may already exist in auth if they're re-RSVPing.
   await supabaseAdmin.auth.admin.createUser({ email, email_confirm: true });
 
-  // Auto sign-in via instant magic link — returned to client so the
-  // browser can do a real full-page navigation to the external Supabase URL.
-  // (redirect() from a server action uses Next.js soft-nav which can't
-  //  cross origins, so the ?next= param gets lost.)
-  const url = await buildSignInUrl(email, '/signup/profile');
-  if (url) return { signInUrl: url };
+  // Sign in server-side: generateLink → verifyOtp writes session cookies.
+  // Then redirect() to an internal route — no cross-origin bounce needed.
+  const ok = await signInServerSide(email);
+  if (ok) redirect('/signup/profile');
 
-  // Fallback: send a magic link email if instant sign-in generation failed
+  // Fallback: email magic link (rare — only if generateLink/verifyOtp fail)
   const supabase = await createAuthClient();
   const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? 'http://localhost:3000';
   await supabase.auth.signInWithOtp({
@@ -96,5 +101,7 @@ export async function submitRsvpAction(_prev: RsvpState, formData: FormData): Pr
       shouldCreateUser: false,
     },
   });
-  return { error: `Check your email — we sent a sign-in link to ${email} to continue setup.` };
+  return {
+    error: `Almost there! Check your email (${email}) for a sign-in link to continue setup.`,
+  };
 }

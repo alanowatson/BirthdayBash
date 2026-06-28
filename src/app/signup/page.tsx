@@ -1,6 +1,6 @@
 'use client';
 
-import { useActionState, useEffect, useState } from 'react';
+import { useActionState, useState } from 'react';
 import { submitRsvpAction } from './actions';
 import type { RsvpState } from './actions';
 import Nav from '@/components/Nav';
@@ -12,14 +12,6 @@ const INPUT =
 export default function SignupPage() {
   const [state, action, pending] = useActionState<RsvpState, FormData>(submitRsvpAction, null);
   const [attending, setAttending] = useState<'yes' | 'no'>('yes');
-  const [navigating, setNavigating] = useState(false);
-
-  useEffect(() => {
-    if (state && 'signInUrl' in state) {
-      setNavigating(true);
-      window.location.href = state.signInUrl;
-    }
-  }, [state]);
 
   return (
     <main className="min-h-screen flex flex-col">
@@ -110,12 +102,10 @@ export default function SignupPage() {
 
             <button
               type="submit"
-              disabled={pending || navigating}
+              disabled={pending}
               className="rsvp-chip px-6 py-3 rounded-full uppercase text-sm tracking-widest font-medium mt-2 disabled:opacity-50 disabled:cursor-not-allowed"
             >
-              {navigating
-                ? 'Setting things up…'
-                : pending
+              {pending
                 ? 'Saving…'
                 : attending === 'yes'
                 ? 'Count me in →'
