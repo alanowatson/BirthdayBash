@@ -1,6 +1,6 @@
 'use client';
 
-import { useActionState, useState } from 'react';
+import { useActionState, useEffect, useState } from 'react';
 import { submitRsvpAction } from './actions';
 import type { RsvpState } from './actions';
 import Nav from '@/components/Nav';
@@ -12,6 +12,14 @@ const INPUT =
 export default function SignupPage() {
   const [state, action, pending] = useActionState<RsvpState, FormData>(submitRsvpAction, null);
   const [attending, setAttending] = useState<'yes' | 'no'>('yes');
+  const [navigating, setNavigating] = useState(false);
+
+  useEffect(() => {
+    if (state && 'signInUrl' in state) {
+      setNavigating(true);
+      window.location.href = state.signInUrl;
+    }
+  }, [state]);
 
   return (
     <main className="min-h-screen flex flex-col">
@@ -94,7 +102,7 @@ export default function SignupPage() {
               <input type="hidden" name="attending" value={attending} />
             </div>
 
-            {state?.error && (
+            {state && 'error' in state && (
               <p className="text-sm text-red-400 bg-red-950/30 border border-red-800/40 rounded-lg px-4 py-3">
                 {state.error}
               </p>
@@ -102,10 +110,12 @@ export default function SignupPage() {
 
             <button
               type="submit"
-              disabled={pending}
+              disabled={pending || navigating}
               className="rsvp-chip px-6 py-3 rounded-full uppercase text-sm tracking-widest font-medium mt-2 disabled:opacity-50 disabled:cursor-not-allowed"
             >
-              {pending
+              {navigating
+                ? 'Setting things up…'
+                : pending
                 ? 'Saving…'
                 : attending === 'yes'
                 ? 'Count me in →'

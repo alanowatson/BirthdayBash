@@ -35,7 +35,7 @@ async function buildSignInUrl(email: string, next: string): Promise<string | nul
   }
 }
 
-export type RsvpState = { error: string } | null;
+export type RsvpState = { error: string } | { signInUrl: string } | null;
 
 export async function submitRsvpAction(_prev: RsvpState, formData: FormData): Promise<RsvpState> {
   const name = (formData.get('name') as string)?.trim() ?? '';
@@ -79,11 +79,14 @@ export async function submitRsvpAction(_prev: RsvpState, formData: FormData): Pr
   // Create Supabase auth user — pre-confirmed, no email sent
   await supabaseAdmin.auth.admin.createUser({ email, email_confirm: true });
 
-  // Auto sign-in via instant magic link
+  // Auto sign-in via instant magic link — returned to client so the
+  // browser can do a real full-page navigation to the external Supabase URL.
+  // (redirect() from a server action uses Next.js soft-nav which can't
+  //  cross origins, so the ?next= param gets lost.)
   const url = await buildSignInUrl(email, '/signup/profile');
-  if (url) redirect(url);
+  if (url) return { signInUrl: url };
 
-  // Fallback: send a magic link email if instant sign-in failed
+  // Fallback: send a magic link email if instant sign-in generation failed
   const supabase = await createAuthClient();
   const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? 'http://localhost:3000';
   await supabase.auth.signInWithOtp({
@@ -93,5 +96,5 @@ export async function submitRsvpAction(_prev: RsvpState, formData: FormData): Pr
       shouldCreateUser: false,
     },
   });
-  redirect(`/members/${memberSlug}?sent=1`);
+  return { error: `Check your email — we sent a sign-in link to ${email} to continue setup.` };
 }
