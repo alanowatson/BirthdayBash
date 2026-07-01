@@ -8,7 +8,23 @@ import fs from 'fs';
 import http from 'http';
 import { URL } from 'url';
 
-const credentials = JSON.parse(fs.readFileSync('./credentials.json', 'utf8'));
+let credentials;
+try {
+  const raw = fs.readFileSync('./credentials.json', 'utf8');
+  if (!raw.trim()) throw new Error('File is empty');
+  credentials = JSON.parse(raw);
+} catch (e) {
+  if (e.code === 'ENOENT') {
+    console.error('\nMissing credentials.json\n');
+  } else {
+    console.error(`\nCould not read credentials.json: ${e.message}\n`);
+  }
+  console.error('Download it from Google Cloud Console:');
+  console.error('  console.cloud.google.com → APIs & Services → Credentials');
+  console.error('  → OAuth 2.0 Client IDs → your Desktop App → Download JSON');
+  console.error('  Save it as credentials.json in the project root.\n');
+  process.exit(1);
+}
 const { client_id, client_secret } = credentials.installed ?? credentials.web;
 
 const REDIRECT_URI = 'http://localhost:9876/callback';
