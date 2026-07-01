@@ -109,17 +109,25 @@ export async function GET(request: NextRequest) {
     return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
   }
 
-  // Debug mode: ?debug=1 — returns token info without syncing
+  // Debug mode: ?debug=1 — returns token info + live Photos API test without syncing
   const debug = new URL(request.url).searchParams.get('debug');
   if (debug) {
     try {
       const { token, scope } = await getAccessToken();
-      const infoRes = await fetch(`https://www.googleapis.com/oauth2/v3/tokeninfo?access_token=${token}`);
-      const info = await infoRes.json();
+      const [infoRes, albumsRes] = await Promise.all([
+        fetch(`https://www.googleapis.com/oauth2/v3/tokeninfo?access_token=${token}`),
+        fetch(`${PHOTOS_API}/albums?pageSize=5`, {
+          headers: { Authorization: `Bearer ${token}` },
+        }),
+      ]);
+      const [info, albums] = await Promise.all([infoRes.json(), albumsRes.json()]);
       return NextResponse.json({
         scope_from_refresh: scope,
         tokeninfo: info,
         env_refresh_token_prefix: (process.env.GOOGLE_REFRESH_TOKEN ?? '').slice(0, 10),
+        env_album_id: process.env.GOOGLE_PHOTOS_ALBUM_ID ?? '(not set)',
+        albums_api_status: albumsRes.status,
+        albums_response: albums,
       });
     } catch (e) {
       return NextResponse.json({ error: String(e) }, { status: 500 });
