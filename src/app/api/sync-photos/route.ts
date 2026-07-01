@@ -3,7 +3,7 @@ import { supabaseAdmin } from '@/lib/supabase/server';
 
 const PHOTOS_API = 'https://photoslibrary.googleapis.com/v1';
 
-async function getAccessToken(): Promise<string> {
+async function getAccessToken(): Promise<{ token: string; scope: string }> {
   const res = await fetch('https://oauth2.googleapis.com/token', {
     method: 'POST',
     headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
@@ -16,7 +16,7 @@ async function getAccessToken(): Promise<string> {
   });
   const data = await res.json();
   if (!data.access_token) throw new Error(`Token refresh failed: ${JSON.stringify(data)}`);
-  return data.access_token;
+  return { token: data.access_token, scope: data.scope ?? '' };
 }
 
 interface MediaItem {
@@ -109,6 +109,23 @@ export async function GET(request: NextRequest) {
     return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
   }
 
+  // Debug mode: ?debug=1 — returns token info without syncing
+  const debug = new URL(request.url).searchParams.get('debug');
+  if (debug) {
+    try {
+      const { token, scope } = await getAccessToken();
+      const infoRes = await fetch(`https://www.googleapis.com/oauth2/v3/tokeninfo?access_token=${token}`);
+      const info = await infoRes.json();
+      return NextResponse.json({
+        scope_from_refresh: scope,
+        tokeninfo: info,
+        env_refresh_token_prefix: (process.env.GOOGLE_REFRESH_TOKEN ?? '').slice(0, 10),
+      });
+    } catch (e) {
+      return NextResponse.json({ error: String(e) }, { status: 500 });
+    }
+  }
+
   const syncStart = Date.now();
 
   const { data: logEntry } = await supabaseAdmin
@@ -119,7 +136,7 @@ export async function GET(request: NextRequest) {
   const logId = logEntry?.id;
 
   try {
-    const accessToken = await getAccessToken();
+    const { token: accessToken } = await getAccessToken();
     const rawItems    = await fetchAllMediaItems(accessToken);
     const transformed = rawItems.map(transformItem);
 
