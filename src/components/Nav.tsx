@@ -11,7 +11,6 @@ const LINKS = [
   { href: '/where-is-alan',    label: 'Where is Alan?' },
   { href: '/tips',             label: 'Insider Tips' },
   { href: '/#links',           label: 'Links' },
-  { href: '/photos',           label: 'The Album' },
 ];
 
 export default function Nav() {
