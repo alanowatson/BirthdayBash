@@ -33,23 +33,23 @@ export default function Nav() {
       className="fixed top-0 left-0 right-0 z-50 backdrop-blur-md border-b"
       style={{ background: 'rgba(0,0,0,0.4)', borderColor: 'var(--gold-soft)' }}
     >
-      <div className="max-w-6xl mx-auto px-6 py-4 relative flex items-center justify-between md:justify-center">
+      <div className="max-w-6xl mx-auto px-6 py-4 relative flex items-center justify-between lg:justify-center">
 
         {/* Logo — left */}
-        <a href="/" className="flex items-center gap-2 md:absolute md:left-6" onClick={() => setOpen(false)}>
+        <a href="/" className="flex items-center gap-2 lg:absolute lg:left-6" onClick={() => setOpen(false)}>
           <span className="text-gold text-2xl">◆</span>
           <span className="font-display text-xl tracking-widest text-text">ALAN&#39;S 40TH</span>
         </a>
 
         {/* Desktop links — centered */}
-        <div className="hidden md:flex items-center gap-8 text-sm text-text-dim">
+        <div className="hidden lg:flex items-center gap-6 text-sm text-text-dim">
           {LINKS.map((l) => (
             <a key={l.href} href={l.href} className="hover:text-gold transition-colors">{l.label}</a>
           ))}
         </div>
 
         {/* Right slot — Profile (signed in) or Get on the list (signed out). Hidden until auth known to prevent flash. */}
-        <div className="hidden md:flex md:absolute md:right-6">
+        <div className="hidden lg:flex lg:absolute lg:right-6">
           {signedIn === true && (
             <a href="/me" className="text-sm text-text-dim hover:text-gold transition-colors">
               Profile
@@ -62,9 +62,9 @@ export default function Nav() {
           )}
         </div>
 
-        {/* Hamburger — mobile only */}
+        {/* Hamburger — below lg */}
         <button
-          className="md:hidden text-text-dim hover:text-gold transition-colors p-1"
+          className="lg:hidden text-text-dim hover:text-gold transition-colors p-1"
           onClick={() => setOpen((v) => !v)}
           aria-label={open ? 'Close menu' : 'Open menu'}
         >
@@ -83,7 +83,7 @@ export default function Nav() {
       {/* Mobile menu */}
       {open && (
         <div
-          className="md:hidden border-t flex flex-col"
+          className="lg:hidden border-t flex flex-col"
           style={{ background: 'rgba(0,0,0,0.95)', borderColor: 'var(--gold-soft)' }}
         >
           {LINKS.map((l) => (
