@@ -76,9 +76,23 @@ export default function TipsCarousel() {
         />
 
         {/* Body */}
-        <p className="text-text leading-relaxed mb-6" style={{ color: 'rgba(184,176,160,1)' }}>
-          {tip.body}
-        </p>
+        {tip.entries ? (
+          <div className="flex flex-col gap-4 mb-6">
+            {tip.entries.map((entry) => (
+              <div key={entry.name}>
+                <div className="flex items-baseline gap-2 mb-1">
+                  <span className="font-display text-sm" style={{ color: tip.accent }}>{entry.name}</span>
+                  <span className="text-xs" style={{ color: tip.accent + '70' }}>· {entry.where}</span>
+                </div>
+                <p className="text-sm leading-relaxed" style={{ color: 'rgba(184,176,160,1)' }}>{entry.text}</p>
+              </div>
+            ))}
+          </div>
+        ) : (
+          <p className="text-text leading-relaxed mb-6" style={{ color: 'rgba(184,176,160,1)' }}>
+            {tip.body}
+          </p>
+        )}
 
         {/* Pro tip */}
         <div

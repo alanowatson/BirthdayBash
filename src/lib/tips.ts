@@ -1,3 +1,9 @@
+export interface TipEntry {
+  name: string;
+  where: string;
+  text: string;
+}
+
 export interface Tip {
   id: string;
   number: string;
@@ -8,6 +14,8 @@ export interface Tip {
   note: string;
   accent: string;
   icon: string;
+  /** Structured list of items — renders instead of body when present */
+  entries?: TipEntry[];
   /** Event slugs this tip should surface on */
   eventSlugs?: string[];
 }
@@ -112,7 +120,29 @@ export const TIPS: Tip[] = [
     category: 'STRIP SECRET',
     title: 'The Hidden Bar Circuit',
     subtitle: 'Four speakeasies nobody will tell you about',
-    body: 'Ghost Donkey (Cosmopolitan, Level 2): Walk into Block 16 Urban Food Hall, head past Hattie B\'s to the back wall, and look for the green door with a glowing white donkey — it looks like a fire exit. Best mezcal and tequila cocktails on the Strip. The Ski Lodge (Cosmopolitan, inside Superfrico): A snow-globe fever dream — working fireplace, fake snowfall, and a secret menu. Ask your server at Superfrico for the way in. The Vault (Bellagio): On the casino floor near where the old cashier\'s cage used to be — find the alcove with the gilded door and a small "V" placard. Rare vintage spirits, 1950s–90s bottles. Reservation-only; check their Instagram bio link for availability. Caramella (Planet Hollywood): Take the escalator to the mezzanine level and look for it next to the Criss Angel Theater. Italian-themed lounge, DJs Thurs–Sun from 7 PM.',
+    body: '',
+    entries: [
+      {
+        name: 'Ghost Donkey',
+        where: 'Cosmopolitan · Level 2',
+        text: 'Walk into Block 16 Urban Food Hall, head past Hattie B\'s to the back wall, and look for the green door with a glowing white donkey — it looks like a fire exit. Best mezcal and tequila cocktails on the Strip.',
+      },
+      {
+        name: 'The Ski Lodge',
+        where: 'Cosmopolitan · Inside Superfrico',
+        text: 'A snow-globe fever dream — working fireplace, fake snowfall, and a secret menu. Ask your server at Superfrico for the way in.',
+      },
+      {
+        name: 'The Vault',
+        where: 'Bellagio · Casino Floor',
+        text: 'Find the alcove near where the old cashier\'s cage used to be — look for a gilded door with a small "V" placard. Rare vintage spirits from the 1950s–90s. Reservations required on peak times; check their Instagram bio link.',
+      },
+      {
+        name: 'Caramella',
+        where: 'Planet Hollywood · Mezzanine Level',
+        text: 'Take the escalator to the mezzanine and look for it next to the Criss Angel Theater. Italian-themed lounge with DJs Thurs–Sun from 7 PM.',
+      },
+    ],
     note: 'PRO TIP: The Cosmo alone has two speakeasies (Ghost Donkey and the Ski Lodge) plus Secret Pizza and the Chandelier UV menu — you could spend an entire night in that building and never run out of surprises.',
     accent: '#C084FC',
     icon: '🔑',
