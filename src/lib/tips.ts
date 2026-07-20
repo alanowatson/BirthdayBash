@@ -85,7 +85,7 @@ export const TIPS: Tip[] = [
     title: 'Sigma Derby',
     subtitle: '1 Fremont St · $0.50 per race · A Vegas artifact',
     body: 'The Golden Gate is home to one of the last surviving Sigma Derby machines in existence — a fully mechanical horse racing game from the 1950s where five horses chase each other around a glass-encased oval track. Drop in two quarters, pick your horse, and watch the chaos unfold. It\'s the most fun you\'ll have for 50 cents in Las Vegas.',
-    note: 'PRO TIP: The machine is usually near the front of the Golden Gate casino floor. It draws a crowd — part of the fun is the strangers around you cheering for their horse.',
+    note: 'PERSONAL NOTE: This is where you\'d find Alan and his brothers and cousins back in the day. Some traditions are worth keeping. The machine is near the front of the casino floor — it draws a crowd, and part of the fun is the strangers cheering beside you.',
     accent: '#FFD700',
     icon: '🐎',
     eventSlugs: ['fremont-street-crawl'],
