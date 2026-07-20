@@ -178,7 +178,7 @@ export const LOCATIONS: MapLocation[] = [
     id: 'first-street-stage',
     name: '1st Street Stage',
     short: '1st St Stage',
-    coords: [-115.1456, 36.1700],
+    coords: [-115.1444, 36.1700],
     type: 'event',
     color: '#22D3EE',
     description: 'Live music stage at the west end of the Fremont canopy near 1st Street. Free acts most nights — check the FSE schedule. Good landmark for meet-ups since it\'s easy to spot.',
