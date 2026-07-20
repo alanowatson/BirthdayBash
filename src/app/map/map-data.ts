@@ -157,7 +157,7 @@ export const LOCATIONS: MapLocation[] = [
     id: 'the-d',
     name: 'The D Casino',
     short: 'The D',
-    coords: [-115.1425, 36.1692],
+    coords: [-115.1425, 36.1694],
     type: 'landmark',
     color: '#FFD700',
     description: 'Fremont Crawl congregation spot. Head straight to the escalators just inside the main entrance and ride up to the 2nd floor — open bar area, good views down onto the canopy, easy to find the group.',
