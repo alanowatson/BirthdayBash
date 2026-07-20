@@ -154,6 +154,47 @@ export const LOCATIONS: MapLocation[] = [
     ],
   },
   {
+    id: 'the-d',
+    name: 'The D Casino',
+    short: 'The D',
+    coords: [-115.1420, 36.1697],
+    type: 'landmark',
+    color: '#FFD700',
+    description: 'Fremont Crawl congregation spot. Head straight to the escalators just inside the main entrance and ride up to the 2nd floor — open bar area, good views down onto the canopy, easy to find the group.',
+    routes: [
+      {
+        from: 'fremont',
+        label: 'From Fremont St Experience',
+        minutes: 2,
+        steps: [
+          'Walk west along the Fremont canopy',
+          'The D is on the south side, roughly mid-canopy at 301 Fremont St',
+          'Enter main doors → take escalators up → 2nd floor bar area on your right',
+        ],
+      },
+    ],
+  },
+  {
+    id: 'first-street-stage',
+    name: '1st Street Stage',
+    short: '1st St Stage',
+    coords: [-115.1432, 36.1697],
+    type: 'event',
+    color: '#22D3EE',
+    description: 'Live music stage at the west end of the Fremont canopy near 1st Street. Free acts most nights — check the FSE schedule. Good landmark for meet-ups since it\'s easy to spot.',
+    routes: [
+      {
+        from: 'fremont',
+        label: 'From Fremont St Experience',
+        minutes: 3,
+        steps: [
+          'Walk west along the canopy from the main entrance',
+          'Stage is on your left just before 1st Street — you\'ll hear it before you see it',
+        ],
+      },
+    ],
+  },
+  {
     id: 'circa',
     name: 'Circa Resort & Casino',
     short: 'Circa',
