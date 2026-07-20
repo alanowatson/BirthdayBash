@@ -106,4 +106,15 @@ export const TIPS: Tip[] = [
     icon: '🍜',
     eventSlugs: ['fremont-street-crawl'],
   },
+  {
+    id: 'speakeasies',
+    number: '09',
+    category: 'STRIP SECRET',
+    title: 'The Hidden Bar Circuit',
+    subtitle: 'Four speakeasies nobody will tell you about',
+    body: 'Ghost Donkey (Cosmopolitan, Level 2): Walk into Block 16 Urban Food Hall, head past Hattie B\'s to the back wall, and look for the green door with a glowing white donkey — it looks like a fire exit. Best mezcal and tequila cocktails on the Strip. The Ski Lodge (Cosmopolitan, inside Superfrico): A snow-globe fever dream — working fireplace, fake snowfall, and a secret menu. Ask your server at Superfrico for the way in. The Vault (Bellagio): On the casino floor near where the old cashier\'s cage used to be — find the alcove with the gilded door and a small "V" placard. Rare vintage spirits, 1950s–90s bottles. Reservation-only; check their Instagram bio link for availability. Caramella (Planet Hollywood): Take the escalator to the mezzanine level and look for it next to the Criss Angel Theater. Italian-themed lounge, DJs Thurs–Sun from 7 PM.',
+    note: 'PRO TIP: The Cosmo alone has two speakeasies (Ghost Donkey and the Ski Lodge) plus Secret Pizza and the Chandelier UV menu — you could spend an entire night in that building and never run out of surprises.',
+    accent: '#C084FC',
+    icon: '🔑',
+  },
 ];
