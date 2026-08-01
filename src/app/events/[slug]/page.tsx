@@ -13,6 +13,11 @@ const EVENT_MAP_VIEW: Record<string, 'strip' | 'downtown'> = {
   'fremont-street-crawl': 'downtown',
 };
 
+// Events with a confirmed headliner
+const HEADLINER: Record<string, { name: string; photoSrc: string }> = {
+  'saturday-nightclub': { name: 'Zedd', photoSrc: '/zedd-promo.jpg' },
+};
+
 export const revalidate = 0;
 
 const PT = 'America/Los_Angeles';
@@ -92,6 +97,7 @@ export default async function EventPage({ params }: Props) {
   const attendingCount = rsvps.filter((r) => r.status === 'attending').length;
   const price = computePrice(event.pricing_tiers, attendingCount);
   const eventTips = TIPS.filter((t) => t.eventSlugs?.includes(slug));
+  const headliner = HEADLINER[slug] ?? null;
 
   const currentMember = currentMemberRes.data as { id: string; name: string } | null;
 
@@ -174,6 +180,28 @@ export default async function EventPage({ params }: Props) {
                 currentMember={currentMember}
                 currentStatus={myRsvp}
               />
+
+              {headliner && (
+                <div
+                  className="rounded-xl overflow-hidden relative"
+                  style={{ border: '1px solid rgba(212,175,55,0.25)' }}
+                >
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
+                  <img
+                    src={headliner.photoSrc}
+                    alt={headliner.name}
+                    className="w-full object-cover"
+                    style={{ maxHeight: 320 }}
+                  />
+                  <div
+                    className="absolute bottom-0 left-0 right-0 px-4 py-3"
+                    style={{ background: 'linear-gradient(to top, rgba(0,0,0,0.85), transparent)' }}
+                  >
+                    <p className="text-xs uppercase tracking-widest mb-0.5" style={{ color: 'var(--gold-soft)' }}>Headliner</p>
+                    <p className="font-display text-2xl" style={{ color: 'var(--gold)' }}>{headliner.name}</p>
+                  </div>
+                </div>
+              )}
             </div>
           </div>
         </div>
