@@ -187,8 +187,8 @@ export default function MembersGrid({ members }: { members: Member[] }) {
                 <div className="relative mx-auto mb-3" style={{ width: AVATAR_SIZE, height: AVATAR_SIZE }}>
                   <AvatarRing colors={colors} />
                   <div
-                    className="avatar w-full h-full"
-                    style={{ fontSize: '1.25rem', background: avatarBg }}
+                    className="avatar"
+                    style={{ width: AVATAR_SIZE, height: AVATAR_SIZE, fontSize: '1.25rem', background: avatarBg }}
                   >
                     {member.photo_url ? (
                       // eslint-disable-next-line @next/next/no-img-element
