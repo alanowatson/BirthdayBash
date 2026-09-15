@@ -4,29 +4,100 @@ import { useState, useMemo } from 'react';
 import type { Member } from '@/lib/types';
 import { CREWS, CREW_KEYS, type CrewKey } from '@/lib/crews';
 
+// ─── Avatar ring ────────────────────────────────────────────────────────────
+// Renders SVG arcs OUTSIDE the avatar circle, one per crew, equal arc length.
+// The avatar itself stays at its original size.
+
+const RING_STROKE = 3;       // ring line width
+const RING_GAP = 3;          // gap between segments (px along circumference)
+const RING_OFFSET = 3;       // how far outside the avatar the ring sits
+const AVATAR_SIZE = 64;
+const RING_SVG_SIZE = AVATAR_SIZE + (RING_OFFSET + RING_STROKE) * 2;
+const RING_R = RING_SVG_SIZE / 2 - RING_STROKE / 2;
+const CIRCUMFERENCE = 2 * Math.PI * RING_R;
+
+function AvatarRing({ colors }: { colors: string[] }) {
+  if (colors.length === 0) return null;
+
+  const totalGap = colors.length > 1 ? RING_GAP * colors.length : 0;
+  const segLen = (CIRCUMFERENCE - totalGap) / colors.length;
+  const cx = RING_SVG_SIZE / 2;
+  const cy = RING_SVG_SIZE / 2;
+
+  return (
+    <svg
+      width={RING_SVG_SIZE}
+      height={RING_SVG_SIZE}
+      style={{
+        position: 'absolute',
+        top: -(RING_OFFSET + RING_STROKE),
+        left: -(RING_OFFSET + RING_STROKE),
+        transform: 'rotate(-90deg)',
+        pointerEvents: 'none',
+      }}
+      aria-hidden
+    >
+      {colors.map((color, i) => {
+        const start = i * (segLen + (colors.length > 1 ? RING_GAP : 0));
+        return (
+          <circle
+            key={i}
+            cx={cx} cy={cy} r={RING_R}
+            fill="none"
+            stroke={color}
+            strokeWidth={RING_STROKE}
+            strokeDasharray={`${segLen} ${CIRCUMFERENCE - segLen}`}
+            strokeDashoffset={-start}
+            strokeLinecap={colors.length > 1 ? 'round' : 'butt'}
+          />
+        );
+      })}
+    </svg>
+  );
+}
+
+// ─── Card border ────────────────────────────────────────────────────────────
+// Uses CSS conic-gradient through a transparent border.
+// Each crew gets an equal slice of the 360° cone.
+
+function cardBorderStyle(colors: string[]): React.CSSProperties {
+  if (colors.length === 0) {
+    return { border: '1px solid rgba(212,175,55,0.2)' };
+  }
+  const stops: string[] = [];
+  const slice = 360 / colors.length;
+  colors.forEach((c, i) => {
+    stops.push(`${c} ${i * slice}deg ${(i + 1) * slice}deg`);
+  });
+  return {
+    border: '1.5px solid transparent',
+    background: `
+      linear-gradient(var(--bg, #070a10), var(--bg, #070a10)) padding-box,
+      conic-gradient(${stops.join(', ')}) border-box
+    `,
+  };
+}
+
+// ─── Helpers ────────────────────────────────────────────────────────────────
+
+const FALLBACK_GRADIENTS = [
+  'linear-gradient(135deg, #D4AF37, #3B82F6)',
+  'linear-gradient(135deg, #3B82F6, #D4AF37)',
+  'linear-gradient(135deg, #38BDF8, #3B82F6)',
+  'linear-gradient(135deg, #3B82F6, #38BDF8)',
+  'linear-gradient(135deg, #D4AF37, #38BDF8)',
+];
+
 function initials(name: string) {
   return name.split(' ').map((w) => w[0]).join('').slice(0, 2).toUpperCase();
 }
 
-/** CSS gradient string built from however many crew colors a member has. */
-function crewRing(groups: string[]): string {
-  const colors = groups.map((g) => CREWS[g as CrewKey]?.color).filter(Boolean) as string[];
-  if (colors.length === 0) return 'rgba(212,175,55,0.3)';
-  if (colors.length === 1) return `linear-gradient(135deg, ${colors[0]}, ${colors[0]}80)`;
-  return `linear-gradient(135deg, ${colors.join(', ')})`;
-}
-
-/** Background fill for the initials avatar. */
-function crewAvatarBg(groups: string[]): string {
-  const colors = groups.map((g) => CREWS[g as CrewKey]?.color).filter(Boolean) as string[];
-  if (colors.length === 0) return 'linear-gradient(135deg, #D4AF37, #3B82F6)';
-  if (colors.length === 1) return `linear-gradient(135deg, ${colors[0]}40, ${colors[0]}15)`;
-  const stops = colors.map((c, i) => `${c}${i % 2 === 0 ? '40' : '20'}`).join(', ');
-  return `linear-gradient(135deg, ${stops})`;
-}
+// ─── Types ──────────────────────────────────────────────────────────────────
 
 type Filter = 'all' | CrewKey;
 type Sort = 'default' | 'name' | 'crew';
+
+// ─── Main component ─────────────────────────────────────────────────────────
 
 export default function MembersGrid({ members }: { members: Member[] }) {
   const [filter, setFilter] = useState<Filter>('all');
@@ -42,10 +113,7 @@ export default function MembersGrid({ members }: { members: Member[] }) {
 
   const visible = useMemo(() => {
     const filtered =
-      filter === 'all'
-        ? members
-        : members.filter((m) => m.group?.includes(filter));
-
+      filter === 'all' ? members : members.filter((m) => m.group?.includes(filter));
     if (sort === 'name') return [...filtered].sort((a, b) => a.name.localeCompare(b.name));
     if (sort === 'crew') {
       return [...filtered].sort((a, b) => {
@@ -61,29 +129,15 @@ export default function MembersGrid({ members }: { members: Member[] }) {
     <div>
       {/* Filter tabs */}
       <div className="flex flex-wrap gap-2 justify-center mb-4">
-        <FilterPill
-          active={filter === 'all'}
-          color="var(--gold)"
-          glow="rgba(212,175,55,0.25)"
-          onClick={() => setFilter('all')}
-        >
-          All
-          <Count n={counts.all} active={filter === 'all'} color="var(--gold)" />
+        <FilterPill active={filter === 'all'} color="var(--gold)" glow="rgba(212,175,55,0.25)" onClick={() => setFilter('all')}>
+          All <Count n={counts.all} active={filter === 'all'} color="var(--gold)" />
         </FilterPill>
         {CREW_KEYS.map((key) => {
           const crew = CREWS[key];
           return (
-            <FilterPill
-              key={key}
-              active={filter === key}
-              color={crew.color}
-              glow={crew.glow}
-              onClick={() => setFilter(key)}
-            >
+            <FilterPill key={key} active={filter === key} color={crew.color} glow={crew.glow} onClick={() => setFilter(key)}>
               {crew.short}
-              {counts[key] > 0 && (
-                <Count n={counts[key]} active={filter === key} color={crew.color} />
-              )}
+              {counts[key] > 0 && <Count n={counts[key]} active={filter === key} color={crew.color} />}
             </FilterPill>
           );
         })}
@@ -115,37 +169,30 @@ export default function MembersGrid({ members }: { members: Member[] }) {
         <p className="text-center text-text-dim py-12">No members in this group yet.</p>
       ) : (
         <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
-          {visible.map((member) => {
+          {visible.map((member, i) => {
             const groups = member.group ?? [];
-            const primaryCrew = groups.length ? CREWS[groups[0] as CrewKey] : null;
+            const colors = groups.map((g) => CREWS[g as CrewKey]?.color).filter(Boolean) as string[];
+            const avatarBg = member.photo_url
+              ? undefined
+              : FALLBACK_GRADIENTS[i % FALLBACK_GRADIENTS.length];
+
             return (
               <a
                 key={member.id}
                 href={`/members/${member.slug}`}
                 className="event-card rounded-lg p-5 text-center block transition-all"
-                style={{
-                  border: `1px solid ${primaryCrew ? primaryCrew.color + '50' : 'rgba(212,175,55,0.2)'}`,
-                }}
+                style={cardBorderStyle(colors)}
               >
-                {/* Avatar with crew-colored ring (gradient if multiple groups) */}
-                <div
-                  className="mx-auto mb-3 rounded-full flex-shrink-0"
-                  style={{ width: 68, height: 68, padding: 3, background: crewRing(groups) }}
-                >
+                {/* Avatar — stays at original 64px; ring sits outside via absolute SVG */}
+                <div className="relative mx-auto mb-3" style={{ width: AVATAR_SIZE, height: AVATAR_SIZE }}>
+                  <AvatarRing colors={colors} />
                   <div
                     className="avatar w-full h-full"
-                    style={{
-                      fontSize: '1.25rem',
-                      background: member.photo_url ? undefined : crewAvatarBg(groups),
-                    }}
+                    style={{ fontSize: '1.25rem', background: avatarBg }}
                   >
                     {member.photo_url ? (
                       // eslint-disable-next-line @next/next/no-img-element
-                      <img
-                        src={member.photo_url}
-                        alt={member.name}
-                        className="w-full h-full object-cover rounded-full"
-                      />
+                      <img src={member.photo_url} alt={member.name} className="w-full h-full object-cover rounded-full" />
                     ) : (
                       initials(member.name)
                     )}
@@ -154,7 +201,7 @@ export default function MembersGrid({ members }: { members: Member[] }) {
 
                 <p className="font-display text-lg text-gold leading-tight mb-1.5">{member.name}</p>
 
-                {/* One pill per crew */}
+                {/* Crew badge pills */}
                 {groups.length > 0 && (
                   <div className="flex flex-wrap gap-1 justify-center mb-1">
                     {groups.map((g) => {
@@ -164,11 +211,7 @@ export default function MembersGrid({ members }: { members: Member[] }) {
                         <span
                           key={g}
                           className="inline-block text-xs px-2 py-0.5 rounded-full tracking-wide"
-                          style={{
-                            color: crew.color,
-                            background: crew.color + '18',
-                            border: `1px solid ${crew.color}35`,
-                          }}
+                          style={{ color: crew.color, background: crew.color + '18', border: `1px solid ${crew.color}35` }}
                         >
                           {crew.short}
                         </span>
@@ -177,12 +220,8 @@ export default function MembersGrid({ members }: { members: Member[] }) {
                   </div>
                 )}
 
-                {member.bio && (
-                  <p className="text-xs text-text-dim line-clamp-1 mt-1">{member.bio}</p>
-                )}
-                {member.is_referee && (
-                  <p className="text-xs text-sky mt-1">Referee</p>
-                )}
+                {member.bio && <p className="text-xs text-text-dim line-clamp-1 mt-1">{member.bio}</p>}
+                {member.is_referee && <p className="text-xs text-sky mt-1">Referee</p>}
               </a>
             );
           })}
@@ -192,14 +231,12 @@ export default function MembersGrid({ members }: { members: Member[] }) {
   );
 }
 
+// ─── Sub-components ──────────────────────────────────────────────────────────
+
 function FilterPill({
   active, color, glow, onClick, children,
 }: {
-  active: boolean;
-  color: string;
-  glow: string;
-  onClick: () => void;
-  children: React.ReactNode;
+  active: boolean; color: string; glow: string; onClick: () => void; children: React.ReactNode;
 }) {
   return (
     <button
