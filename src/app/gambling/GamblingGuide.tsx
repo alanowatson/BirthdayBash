@@ -89,13 +89,13 @@ const ROULETTE_STRATEGIES = [
     riskLabel: 'Aggressive',
     tagline: 'Win 3-for-3, then go nuclear.',
     description:
-      'The most exciting system on the list. Bet three even-money bets simultaneously and use the results to dictate your next move. The goal is a perfect 3/3 round — that\'s when you go big and put the winnings on individual numbers for a 35:1 shot.',
+      'The most exciting system on the list. Bet three even-money bets simultaneously and use the results to dictate your next move. Win 3/3 outright, or work your way there through the dozen steps — any path that gets you profitable triggers the Climax.',
     howItWorks: [
       { label: 'Round 1', text: 'Place equal bets on 3 different even-money spots (Red, Odd, 1–18 — all must be different categories).' },
       { label: 'Win 0/3', text: 'Rebet the same amounts. Neutral result.' },
       { label: 'Win 1/3', text: 'Take your winnings AND original bet and put it all on a single dozen. Trying to get back to even.' },
       { label: 'Win 2/3', text: 'Take your winnings AND original bet and spread it across 2 different dozens. Trying to build.' },
-      { label: 'Win step 3 or 4 — The Climax', text: 'You\'re profitable. Sweep your stack and spread it equally across 10 individual numbers (straight up, 35:1). If you\'re feeling lazy, drop it all on a dozen instead. One number hit pays massive.' },
+      { label: 'Win 3/3 or win step 3 or 4 — The Climax', text: 'You\'re profitable. Sweep your entire stack and spread it equally across 10 individual numbers (straight up, 35:1). If you\'re feeling lazy, drop it all on a dozen instead. One number hit pays massive.' },
     ],
     videoUrl: 'https://www.youtube.com/watch?v=9A9Nxk15E4U',
     videoLabel: 'Watch: Triple Entry Max Climax',
@@ -284,7 +284,7 @@ export default function GamblingGuide() {
       <div className="max-w-4xl mx-auto">
 
         {/* Tab bar */}
-        <div className="flex gap-1 p-1 rounded-xl mb-10 mx-auto max-w-sm"
+        <div className="flex gap-1 p-1 rounded-xl mb-10 mx-auto max-w-md"
           style={{ background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(212,175,55,0.15)' }}>
           {(['roulette', 'craps', 'specialty'] as Tab[]).map((t) => (
             <button
@@ -296,7 +296,7 @@ export default function GamblingGuide() {
                 color: tab === t ? '#07101F' : 'var(--text-dim)',
               }}
             >
-              {t === 'specialty' ? 'Specialty' : t.charAt(0).toUpperCase() + t.slice(1)}
+              {t === 'specialty' ? 'Specialty Tables' : t.charAt(0).toUpperCase() + t.slice(1)}
             </button>
           ))}
         </div>
