@@ -44,7 +44,7 @@ const ROULETTE_STRATEGIES = [
     howItWorks: [
       { label: 'Start', text: 'Bet $20 on any dozen (1–12, 13–24, or 25–36).' },
       { label: 'Lose', text: 'Add $10 to your bet ($30 total) and stay in Round 1 on the same dozen. Repeat if you keep losing — you\'re chasing round 1 until it hits.' },
-      { label: 'Win Round 1', text: 'You collect ~$40 profit. Now spread those winnings across 4 corner bets on numbers you like. Don\'t add any of your original money.' },
+      { label: 'Win Round 1', text: 'Take everything — your original bet plus the ~$40 profit — and spread it all across 4 corner bets on numbers you like.' },
       { label: 'Win Round 2', text: 'Big win on a corner. Reset completely back to your $20 dozen bet and start over.' },
       { label: 'Lose Round 2', text: 'The corners didn\'t hit. Add $10 to your dozen bet and restart at Round 1.' },
     ],
@@ -60,7 +60,7 @@ const ROULETTE_STRATEGIES = [
       'A three-stage system that uses even-money bets as a launching pad into dozen bets. The magic is in using winnings to fund the next level — you\'re never pressing with your own money, only escalating when ahead.',
     howItWorks: [
       { label: 'Stage 1', text: 'Place a flat even-money bet (Red/Black, Odd/Even, etc.). This is your anchor.' },
-      { label: 'Win Stage 1', text: 'Take the winnings (not your original bet) and split it across 2 different dozens. Your original bet comes back off the table.' },
+      { label: 'Win Stage 1', text: 'Take your original bet AND the winnings and split the full amount across 2 different dozens. Everything rides.' },
       { label: 'Win Stage 2', text: 'You hit a dozen. Reset to Stage 1 but increase your even-money bet slightly — use a small portion of the dozen profit to bump it up. The rest of the dozen profit is pocketed.' },
       { label: 'Lose Stage 2', text: 'Dozens missed. Go back to Stage 1 at the same flat bet. You only lost the winnings from Stage 1, not your original stake.' },
     ],
@@ -77,7 +77,7 @@ const ROULETTE_STRATEGIES = [
     howItWorks: [
       { label: 'Wait', text: 'Watch the scoreboard. Wait for one dozen to miss 8+ consecutive spins before placing a single chip.' },
       { label: 'Enter', text: 'Bet 1 unit on that cold dozen. Follow the Fibonacci sequence if it keeps missing: 1 → 1 → 2 → 3 → 5 → 8 → 13.' },
-      { label: 'Win', text: 'When the dozen hits, a Fibonacci win typically covers all previous losses plus profit. Drop back two steps in the sequence and continue.' },
+      { label: 'Win', text: 'When the dozen hits, you\'re up. Stop. Take the money and walk away — don\'t keep pressing a system that already paid you.' },
       { label: 'Walk Away', text: 'If the 7th step (13 units) loses, stop. The progression has failed. Do not extend further. Reset and find a new cold dozen to stalk.' },
     ],
     videoUrl: 'https://www.youtube.com/watch?v=nBFni4iQjlk',
@@ -93,9 +93,9 @@ const ROULETTE_STRATEGIES = [
     howItWorks: [
       { label: 'Round 1', text: 'Place equal bets on 3 different even-money spots (Red, Odd, 1–18 — all must be different categories).' },
       { label: 'Win 0/3', text: 'Rebet the same amounts. Neutral result.' },
-      { label: 'Win 1/3', text: 'You\'re down slightly. Bet on a single dozen to try to recover.' },
-      { label: 'Win 2/3', text: 'You\'re up. Bet the profit across 2 different dozens to press.' },
-      { label: 'Win 3/3 — The Climax', text: 'Sweep your winnings and spread them equally across 10 individual numbers (straight up, 35:1). If you\'re feeling lazy, drop them on a dozen instead. One hit pays massive.' },
+      { label: 'Win 1/3', text: 'Take your winnings AND original bet and put it all on a single dozen. Trying to get back to even.' },
+      { label: 'Win 2/3', text: 'Take your winnings AND original bet and spread it across 2 different dozens. Trying to build.' },
+      { label: 'Win step 3 or 4 — The Climax', text: 'You\'re profitable. Sweep your stack and spread it equally across 10 individual numbers (straight up, 35:1). If you\'re feeling lazy, drop it all on a dozen instead. One number hit pays massive.' },
     ],
     videoUrl: 'https://www.youtube.com/watch?v=9A9Nxk15E4U',
     videoLabel: 'Watch: Triple Entry Max Climax',
@@ -111,7 +111,7 @@ const RISK_COLORS: Record<string, string> = {
 
 /* ─── Craps ─────────────────────────────────────────────────── */
 
-const CRAPS_STEPS = [
+const PASS_LINE_STEPS = [
   {
     step: '1',
     title: 'The Come-Out Roll',
@@ -120,17 +120,30 @@ const CRAPS_STEPS = [
   {
     step: '2',
     title: 'The Point & Odds',
-    body: 'Once a point is set, the shooter rolls to hit that number before rolling a 7. Back your Pass Line bet with an Odds bet — it\'s the only bet in the casino with zero house edge. Take the maximum odds the table allows.',
+    body: 'Once a point is set, the shooter rolls until they hit the point (win) or roll a 7 (lose — called a "seven out"). Back your Pass Line with an Odds bet behind it — the only bet in the casino with zero house edge. Take the maximum odds the table allows.',
   },
   {
     step: '3',
-    title: 'Place Bets & the Weird Math',
-    body: 'You can Place bet on 6 or 8 anytime — they pay 7:6 (not even money). That means bet in $6 increments: $12 wins $14, $30 wins $35. The 5 and 9 pay 7:5 ($10 increments). The 4 and 10 pay 9:5. These payouts look odd because they\'re approximating true odds without the Odds bet.',
+    title: 'Come Bets',
+    body: 'A Come bet is identical to a Pass Line bet — but placed mid-shooter, after the point is set. The very next roll becomes your Come bet\'s "come-out": 7 or 11 wins immediately, 2/3/12 loses, anything else becomes your Come point. Back it with Odds just like the Pass Line. This is how you get multiple numbers working at once.',
+  },
+];
+
+const PLACE_BET_STEPS = [
+  {
+    step: '1',
+    title: 'What\'s a Place Bet?',
+    body: 'You can bet directly on any box number (4, 5, 6, 8, 9, 10) at any time without waiting for a come-out. The dealer places the chips in your number\'s box. Unlike Come bets, Place bets don\'t move — they stay on that number until you call them down or a seven-out.',
   },
   {
-    step: '4',
+    step: '2',
+    title: 'The Weird Payouts',
+    body: 'Place bets don\'t pay even money — they approximate true odds. The 6 and 8 pay 7:6 (bet in $6 increments: $12 wins $14, $30 wins $35). The 5 and 9 pay 7:5 ($10 increments). The 4 and 10 pay 9:5. Stick to the 6 and 8 first — they have the lowest house edge (~1.52%) and hit most often.',
+  },
+  {
+    step: '3',
     title: 'Pressing vs. Same Bet',
-    body: '"Press" means double your bet after a win (using the profit). "Same bet" means take the profit and leave the original bet untouched. Early in a roll, pressing builds your position fast. On a hot table, press twice then switch to "same bet" to protect your stack. Always say it out loud — dealers move fast.',
+    body: '"Press" means double your bet after a win using the profit. "Same bet" means pocket the win and leave the original untouched. On a hot roll, press once or twice to build your stack, then switch to "same bet" to protect what you\'ve built. Always say it clearly out loud — dealers move fast and assume same bet if you say nothing.',
   },
 ];
 
@@ -146,8 +159,8 @@ const CRAPS_STRATEGIES = [
       { label: 'Start', text: 'Place a Pass Line bet and wait for the point to be established.' },
       { label: 'Come Bet 1', text: 'Once the point is set, place a Come bet. The next roll moves it to a number — back it with full Odds.' },
       { label: 'Come Bet 2', text: 'Place a second Come bet. The next roll moves it to another number — back it with full Odds.' },
-      { label: 'Now you have 3 numbers working', text: 'You\'re done betting. Every time one of your numbers hits, collect the win and immediately place a new Come bet to replace it. Always keep 3 numbers live.' },
-      { label: 'Seven Out', text: 'You lose all three bets. Start over with a new Pass Line bet.' },
+      { label: 'Keep 3 numbers live', text: 'Every time one of your numbers hits, collect the win and immediately place a new Come bet to replace it. Always keep 3 numbers working.' },
+      { label: 'Seven Out', text: 'A seven-out wipes all three active Come bets and their Odds. This is the main risk — one unlucky roll ends everything at once. Important nuance: if the 7 rolls BEFORE your Come bet has traveled to a number, that bet actually pays 1:1 (since 7 is a winner on the come-out). Timing matters.' },
     ],
     videoUrl: 'https://www.youtube.com/watch?v=6W3cfz2RoDQ',
     videoLabel: 'Watch: 3 Point Molly & 3 Point Dolly (Color Up)',
@@ -463,15 +476,35 @@ export default function GamblingGuide() {
               </p>
             </div>
 
-            {/* Tutorial steps */}
-            <p className="text-xs uppercase tracking-widest mb-4" style={{ color: 'var(--gold)' }}>How to Play</p>
-            <div className="grid sm:grid-cols-2 gap-3 mb-8">
-              {CRAPS_STEPS.map((s) => (
+            {/* Tutorial — Pass Line & Come Bets */}
+            <p className="text-xs uppercase tracking-widest mb-1" style={{ color: 'var(--gold)' }}>Pass Line & Come Bets</p>
+            <p className="text-text-dim text-xs mb-4">The foundation. Lowest house edge. Start here.</p>
+            <div className="grid sm:grid-cols-3 gap-3 mb-8">
+              {PASS_LINE_STEPS.map((s) => (
                 <div key={s.step} className="rounded-xl p-4"
                   style={{ background: 'rgba(14,26,46,0.7)', border: '1px solid rgba(212,175,55,0.12)' }}>
                   <div className="flex items-center gap-3 mb-2">
                     <span className="w-7 h-7 rounded-full flex items-center justify-center text-sm font-bold flex-shrink-0"
                       style={{ background: 'rgba(212,175,55,0.15)', color: 'var(--gold)' }}>
+                      {s.step}
+                    </span>
+                    <span className="font-medium text-text text-sm">{s.title}</span>
+                  </div>
+                  <p className="text-text-dim text-xs leading-relaxed ml-10">{s.body}</p>
+                </div>
+              ))}
+            </div>
+
+            {/* Tutorial — Place Bets */}
+            <p className="text-xs uppercase tracking-widest mb-1" style={{ color: 'var(--gold)' }}>Place Bets</p>
+            <p className="text-text-dim text-xs mb-4">Bet any number directly, anytime. Higher edge but immediate action.</p>
+            <div className="grid sm:grid-cols-3 gap-3 mb-8">
+              {PLACE_BET_STEPS.map((s) => (
+                <div key={s.step} className="rounded-xl p-4"
+                  style={{ background: 'rgba(14,26,46,0.7)', border: '1px solid rgba(212,175,55,0.12)' }}>
+                  <div className="flex items-center gap-3 mb-2">
+                    <span className="w-7 h-7 rounded-full flex items-center justify-center text-sm font-bold flex-shrink-0"
+                      style={{ background: 'rgba(59,130,246,0.2)', color: 'var(--blue-bright)' }}>
                       {s.step}
                     </span>
                     <span className="font-medium text-text text-sm">{s.title}</span>
