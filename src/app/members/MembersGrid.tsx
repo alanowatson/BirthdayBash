@@ -61,21 +61,9 @@ function AvatarRing({ colors }: { colors: string[] }) {
 // Each crew gets an equal slice of the 360° cone.
 
 function cardBorderStyle(colors: string[]): React.CSSProperties {
-  if (colors.length === 0) {
-    return { border: '1px solid rgba(212,175,55,0.2)' };
-  }
-  const stops: string[] = [];
-  const slice = 360 / colors.length;
-  colors.forEach((c, i) => {
-    stops.push(`${c} ${i * slice}deg ${(i + 1) * slice}deg`);
-  });
-  return {
-    border: '1.5px solid transparent',
-    background: `
-      linear-gradient(var(--bg, #070a10), var(--bg, #070a10)) padding-box,
-      conic-gradient(${stops.join(', ')}) border-box
-    `,
-  };
+  const primary = colors[0];
+  if (!primary) return { border: '1px solid rgba(212,175,55,0.2)' };
+  return { border: `1.5px solid ${primary}60` };
 }
 
 // ─── Helpers ────────────────────────────────────────────────────────────────
