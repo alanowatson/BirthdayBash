@@ -10,15 +10,19 @@ export default function VoiceBlock() {
         </div>
         <div className="pull-quote text-lg leading-relaxed text-text-dim space-y-4">
           <p>
-            Mortgages. Swim classes. That thing called{' '}
-            <span className="text-gold">&ldquo;responsibility&rdquo;</span>{' '}we all pretend to
-            understand. Leave that life behind and join me in an oasis in the desert.
+            Thank you for saying yes to this. I really appreciate you all coming, and I think your{' '}
+            <span className="text-gold">60 year old self will thank you</span>. Your body may hold a grudge.
           </p>
           <p>
-            SOs are <span className="text-blue-bright">absolutely</span> invited. Misery loves
-            company, and honestly, someone needs to document this with a steady hand.
+            As you can all tell, I have been dreaming of this weekend — getting an elite group of
+            people together. I never had a bachelor party{' '}
+            <span className="text-text-dim">(thanks Covid)</span>{' '}so thanks for letting me go a
+            little off the deep end in a post-kids world.
           </p>
-          <p>Tell your families you love them. Update your wills.</p>
+          <p>
+            I hope I&apos;ve{' '}
+            <span className="text-gold">stacked the deck</span>{' '}enough for us to have the time of our lives.
+          </p>
           <p className="not-italic font-display text-2xl mt-6 text-gold">Xoxo, Alan</p>
         </div>
       </div>
