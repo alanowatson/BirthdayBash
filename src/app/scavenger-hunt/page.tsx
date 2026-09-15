@@ -66,10 +66,10 @@ export default async function ScavengerHuntPage() {
   const tasks = (tasksRes.data ?? []) as ScavengerTask[];
 
   const TEASERS: { rank: string; suit: ScavengerSuit }[] = [
-    { rank: 'A', suit: 'spades' },
-    { rank: '9', suit: 'clubs' },
-    { rank: '7', suit: 'diamonds' },
-    { rank: '2', suit: 'hearts' },
+    { rank: 'Q', suit: 'diamonds' },
+    { rank: 'J', suit: 'spades' },
+    { rank: '6', suit: 'spades' },
+    { rank: '5', suit: 'hearts' },
   ];
   const teaserCards = TEASERS
     .map(({ rank, suit }) => tasks.find((t) => t.rank === rank && t.suit === suit))
