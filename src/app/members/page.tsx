@@ -5,20 +5,9 @@ import Nav from '@/components/Nav';
 import SiteFooter from '@/components/SiteFooter';
 import TravelTable from '../travel/TravelTable';
 import TravelForm from '../travel/TravelForm';
+import MembersGrid from './MembersGrid';
 
 export const revalidate = 0;
-
-const AVATAR_GRADIENTS = [
-  'linear-gradient(135deg, #D4AF37, #3B82F6)',
-  'linear-gradient(135deg, #3B82F6, #D4AF37)',
-  'linear-gradient(135deg, #38BDF8, #3B82F6)',
-  'linear-gradient(135deg, #3B82F6, #38BDF8)',
-  'linear-gradient(135deg, #D4AF37, #38BDF8)',
-];
-
-function initials(name: string) {
-  return name.split(' ').map((w) => w[0]).join('').slice(0, 2).toUpperCase();
-}
 
 type TravelWithMember = Travel & {
   members: { name: string; photo_url: string | null; slug: string } | null;
@@ -90,33 +79,7 @@ export default async function MembersPage() {
               </a>
             </div>
           ) : (
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
-              {members.map((member, i) => (
-                <a
-                  key={member.id}
-                  href={`/members/${member.slug}`}
-                  className="event-card border border-gold-soft rounded-lg p-5 text-center block"
-                >
-                  <div
-                    className="avatar mx-auto mb-3"
-                    style={{
-                      width: 64, height: 64, fontSize: '1.25rem',
-                      background: member.photo_url ? undefined : AVATAR_GRADIENTS[i % AVATAR_GRADIENTS.length],
-                    }}
-                  >
-                    {member.photo_url ? (
-                      // eslint-disable-next-line @next/next/no-img-element
-                      <img src={member.photo_url} alt={member.name} className="w-full h-full object-cover rounded-full" />
-                    ) : (
-                      initials(member.name)
-                    )}
-                  </div>
-                  <p className="font-display text-lg text-gold">{member.name}</p>
-                  {member.bio && <p className="text-xs text-text-dim line-clamp-1">{member.bio}</p>}
-                  {member.is_referee && <p className="text-xs text-sky mt-1">Referee</p>}
-                </a>
-              ))}
-            </div>
+            <MembersGrid members={members} />
           )}
 
           {/* Travel — only shown to signed-in members */}
