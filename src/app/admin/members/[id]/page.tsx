@@ -4,6 +4,7 @@ import { notFound } from 'next/navigation';
 import { updateMemberAction } from './actions';
 import AdminPhotoUpload from './AdminPhotoUpload';
 import AdminRsvpForm from './AdminRsvpForm';
+import CrewAssignForm from './CrewAssignForm';
 
 export const revalidate = 0;
 
@@ -112,6 +113,13 @@ export default async function AdminMemberDetailPage({ params }: Props) {
               Save profile
             </button>
           </form>
+        </div>
+
+        {/* Crew assignment */}
+        <div className="event-card event-card-static border border-gold-soft rounded-xl p-6 mb-8">
+          <h2 className="font-display text-2xl text-gold mb-2">Crew</h2>
+          <p className="text-xs text-text-dim mb-5">Toggle which groups this person belongs to. They&apos;ll appear in every selected crew&apos;s filter tab.</p>
+          <CrewAssignForm memberId={member.id} currentGroups={member.group ?? []} />
         </div>
 
         {/* RSVP management */}

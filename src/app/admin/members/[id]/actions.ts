@@ -16,6 +16,18 @@ async function requireAdmin() {
   if (!member?.is_admin) throw new Error('Not authorized');
 }
 
+export async function updateMemberGroupAction(formData: FormData) {
+  await requireAdmin();
+  const id = formData.get('id') as string;
+  const groups = formData.getAll('group') as string[];
+  const group = groups.length > 0 ? groups : null;
+  await supabaseAdmin.from('members').update({ group }).eq('id', id);
+  revalidatePath('/admin/members');
+  revalidatePath(`/admin/members/${id}`);
+  revalidatePath('/members');
+  revalidatePath('/');
+}
+
 export async function updateMemberAction(formData: FormData) {
   await requireAdmin();
 
