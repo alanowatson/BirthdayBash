@@ -11,10 +11,18 @@ function daysUntil(iso: string): number {
   return Math.max(0, Math.ceil((new Date(iso).getTime() - Date.now()) / 86_400_000));
 }
 
+// Traditional playing-card colors for the teaser preview
+const TEASER_SUIT_COLOR: Record<ScavengerSuit, string> = {
+  hearts:   '#ef4444',
+  diamonds: '#ef4444',
+  spades:   '#e5e7eb',
+  clubs:    '#e5e7eb',
+};
+
 // Minimal static card used only for the locked-state teaser (no interactivity)
 function TeaserCard({ task }: { task: ScavengerTask }) {
   const symbol = SUIT_SYMBOL[task.suit];
-  const color = SUIT_COLOR[task.suit];
+  const color = TEASER_SUIT_COLOR[task.suit];
   return (
     <div
       className="rounded-xl border p-4"
@@ -66,10 +74,14 @@ export default async function ScavengerHuntPage() {
   const tasks = (tasksRes.data ?? []) as ScavengerTask[];
 
   const TEASERS: { rank: string; suit: ScavengerSuit }[] = [
-    { rank: 'Q', suit: 'diamonds' },
-    { rank: 'J', suit: 'spades' },
-    { rank: '6', suit: 'spades' },
-    { rank: '5', suit: 'hearts' },
+    { rank: 'A',  suit: 'spades'   },
+    { rank: '9',  suit: 'clubs'    },
+    { rank: '7',  suit: 'diamonds' },
+    { rank: '2',  suit: 'hearts'   },
+    { rank: 'Q',  suit: 'diamonds' },
+    { rank: 'J',  suit: 'spades'   },
+    { rank: '6',  suit: 'spades'   },
+    { rank: '5',  suit: 'hearts'   },
   ];
   const teaserCards = TEASERS
     .map(({ rank, suit }) => tasks.find((t) => t.rank === rank && t.suit === suit))
