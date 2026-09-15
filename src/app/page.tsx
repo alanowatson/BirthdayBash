@@ -5,7 +5,6 @@ import Nav from '@/components/Nav';
 import Hero from '@/components/Hero';
 import VoiceBlock from '@/components/VoiceBlock';
 import AgendaSection from '@/components/AgendaSection';
-import LodgingSection from '@/components/LodgingSection';
 import ScavengerTeaser from '@/components/ScavengerTeaser';
 import MembersSection from '@/components/MembersSection';
 import LinksSection from '@/components/LinksSection';
@@ -48,14 +47,6 @@ export default async function HomePage() {
       <Hero isSignedIn={isSignedIn} />
       <VoiceBlock />
       <AgendaSection events={events} myRsvps={myRsvps} />
-      <div className="max-w-2xl mx-auto px-6">
-        <div className="deco-divider py-8">
-          <div className="deco-diamond" />
-          <div className="deco-diamond-blue" />
-          <div className="deco-diamond" />
-        </div>
-      </div>
-      <LodgingSection />
       <ScavengerTeaser />
       <MembersSection members={members} />
       <LinksSection links={links} />

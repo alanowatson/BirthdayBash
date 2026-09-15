@@ -13,6 +13,11 @@ const EVENT_MAP_VIEW: Record<string, 'strip' | 'downtown'> = {
   'fremont-street-crawl': 'downtown',
 };
 
+// Events with a gambling callout banner
+const EVENT_GAMBLING_NOTE: Record<string, string> = {
+  'fremont-street-crawl': 'Downtown casinos run better odds than the Strip — single-zero roulette, 3:2 blackjack, and lower table minimums. This is the best time all weekend to actually gamble.',
+};
+
 // Events with a confirmed headliner
 const HEADLINER: Record<string, { name: string; photoSrc: string }> = {
   'saturday-nightclub': { name: 'Zedd', photoSrc: '/zedd-promo.jpg' },
@@ -98,6 +103,7 @@ export default async function EventPage({ params }: Props) {
   const price = computePrice(event.pricing_tiers, attendingCount);
   const eventTips = TIPS.filter((t) => t.eventSlugs?.includes(slug));
   const headliner = HEADLINER[slug] ?? null;
+  const gamblingNote = EVENT_GAMBLING_NOTE[slug] ?? null;
 
   const currentMember = currentMemberRes.data as { id: string; name: string } | null;
 
@@ -153,6 +159,19 @@ export default async function EventPage({ params }: Props) {
 
               {event.description && (
                 <p className="text-text leading-relaxed max-w-xl">{event.description}</p>
+              )}
+
+              {gamblingNote && (
+                <div
+                  className="mt-5 rounded-xl px-5 py-4 max-w-xl flex gap-3 items-start"
+                  style={{ border: '1px solid rgba(212,175,55,0.35)', background: 'rgba(212,175,55,0.07)' }}
+                >
+                  <span className="text-xl flex-shrink-0 mt-0.5">🎰</span>
+                  <div>
+                    <p className="text-xs uppercase tracking-widest mb-1" style={{ color: 'var(--gold)' }}>Best Gambling of the Trip</p>
+                    <p className="text-sm text-text leading-relaxed">{gamblingNote}</p>
+                  </div>
+                </div>
               )}
             </div>
 
