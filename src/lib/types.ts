@@ -10,7 +10,7 @@ export interface Member {
   obsession: string | null;
   tshirt_size: string | null;
   plus_one_member_id: string | null;
-  group: 'high-school' | 'arizona' | 'nyc' | 'dancers' | 'vegas-vets' | null;
+  group: string[] | null;
   is_admin: boolean;
   is_referee: boolean;
   trip_rsvp: 'yes' | 'no' | null;

@@ -8,6 +8,23 @@ function initials(name: string) {
   return name.split(' ').map((w) => w[0]).join('').slice(0, 2).toUpperCase();
 }
 
+/** CSS gradient string built from however many crew colors a member has. */
+function crewRing(groups: string[]): string {
+  const colors = groups.map((g) => CREWS[g as CrewKey]?.color).filter(Boolean) as string[];
+  if (colors.length === 0) return 'rgba(212,175,55,0.3)';
+  if (colors.length === 1) return `linear-gradient(135deg, ${colors[0]}, ${colors[0]}80)`;
+  return `linear-gradient(135deg, ${colors.join(', ')})`;
+}
+
+/** Background fill for the initials avatar. */
+function crewAvatarBg(groups: string[]): string {
+  const colors = groups.map((g) => CREWS[g as CrewKey]?.color).filter(Boolean) as string[];
+  if (colors.length === 0) return 'linear-gradient(135deg, #D4AF37, #3B82F6)';
+  if (colors.length === 1) return `linear-gradient(135deg, ${colors[0]}40, ${colors[0]}15)`;
+  const stops = colors.map((c, i) => `${c}${i % 2 === 0 ? '40' : '20'}`).join(', ');
+  return `linear-gradient(135deg, ${stops})`;
+}
+
 type Filter = 'all' | CrewKey;
 type Sort = 'default' | 'name' | 'crew';
 
@@ -18,18 +35,22 @@ export default function MembersGrid({ members }: { members: Member[] }) {
   const counts = useMemo(() => {
     const c: Record<string, number> = { all: members.length };
     for (const key of CREW_KEYS) {
-      c[key] = members.filter((m) => m.group === key).length;
+      c[key] = members.filter((m) => m.group?.includes(key)).length;
     }
     return c;
   }, [members]);
 
   const visible = useMemo(() => {
-    const filtered = filter === 'all' ? members : members.filter((m) => m.group === filter);
+    const filtered =
+      filter === 'all'
+        ? members
+        : members.filter((m) => m.group?.includes(filter));
+
     if (sort === 'name') return [...filtered].sort((a, b) => a.name.localeCompare(b.name));
     if (sort === 'crew') {
       return [...filtered].sort((a, b) => {
-        const ai = a.group ? CREW_KEYS.indexOf(a.group as CrewKey) : 999;
-        const bi = b.group ? CREW_KEYS.indexOf(b.group as CrewKey) : 999;
+        const ai = a.group?.length ? CREW_KEYS.indexOf(a.group[0] as CrewKey) : 999;
+        const bi = b.group?.length ? CREW_KEYS.indexOf(b.group[0] as CrewKey) : 999;
         return ai !== bi ? ai - bi : a.name.localeCompare(b.name);
       });
     }
@@ -95,37 +116,27 @@ export default function MembersGrid({ members }: { members: Member[] }) {
       ) : (
         <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
           {visible.map((member) => {
-            const crew = member.group ? CREWS[member.group as CrewKey] : null;
+            const groups = member.group ?? [];
+            const primaryCrew = groups.length ? CREWS[groups[0] as CrewKey] : null;
             return (
               <a
                 key={member.id}
                 href={`/members/${member.slug}`}
                 className="event-card rounded-lg p-5 text-center block transition-all"
                 style={{
-                  border: `1px solid ${crew ? crew.color + '50' : 'rgba(212,175,55,0.2)'}`,
+                  border: `1px solid ${primaryCrew ? primaryCrew.color + '50' : 'rgba(212,175,55,0.2)'}`,
                 }}
               >
-                {/* Avatar */}
+                {/* Avatar with crew-colored ring (gradient if multiple groups) */}
                 <div
                   className="mx-auto mb-3 rounded-full flex-shrink-0"
-                  style={{
-                    width: 68,
-                    height: 68,
-                    padding: 3,
-                    background: crew
-                      ? `linear-gradient(135deg, ${crew.color}, ${crew.color}80)`
-                      : 'rgba(212,175,55,0.3)',
-                  }}
+                  style={{ width: 68, height: 68, padding: 3, background: crewRing(groups) }}
                 >
                   <div
                     className="avatar w-full h-full"
                     style={{
                       fontSize: '1.25rem',
-                      background: member.photo_url
-                        ? undefined
-                        : crew
-                          ? `linear-gradient(135deg, ${crew.color}40, ${crew.color}15)`
-                          : 'linear-gradient(135deg, #D4AF37, #3B82F6)',
+                      background: member.photo_url ? undefined : crewAvatarBg(groups),
                     }}
                   >
                     {member.photo_url ? (
@@ -141,19 +152,29 @@ export default function MembersGrid({ members }: { members: Member[] }) {
                   </div>
                 </div>
 
-                <p className="font-display text-lg text-gold leading-tight mb-1">{member.name}</p>
+                <p className="font-display text-lg text-gold leading-tight mb-1.5">{member.name}</p>
 
-                {crew && (
-                  <span
-                    className="inline-block text-xs px-2 py-0.5 rounded-full tracking-wide mb-1"
-                    style={{
-                      color: crew.color,
-                      background: crew.color + '18',
-                      border: `1px solid ${crew.color}35`,
-                    }}
-                  >
-                    {crew.short}
-                  </span>
+                {/* One pill per crew */}
+                {groups.length > 0 && (
+                  <div className="flex flex-wrap gap-1 justify-center mb-1">
+                    {groups.map((g) => {
+                      const crew = CREWS[g as CrewKey];
+                      if (!crew) return null;
+                      return (
+                        <span
+                          key={g}
+                          className="inline-block text-xs px-2 py-0.5 rounded-full tracking-wide"
+                          style={{
+                            color: crew.color,
+                            background: crew.color + '18',
+                            border: `1px solid ${crew.color}35`,
+                          }}
+                        >
+                          {crew.short}
+                        </span>
+                      );
+                    })}
+                  </div>
                 )}
 
                 {member.bio && (
