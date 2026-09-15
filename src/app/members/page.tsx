@@ -6,6 +6,7 @@ import SiteFooter from '@/components/SiteFooter';
 import TravelTable from '../travel/TravelTable';
 import TravelForm from '../travel/TravelForm';
 import MembersGrid from './MembersGrid';
+import { sortMembers } from '@/lib/sort-members';
 
 export const revalidate = 0;
 
@@ -43,7 +44,7 @@ export default async function MembersPage() {
       : Promise.resolve({ data: null }),
   ]);
 
-  const members = (membersRes.data ?? []) as Member[];
+  const members = sortMembers((membersRes.data ?? []) as Member[]);
   const allTravel = ((travelRes.data ?? []) as TravelWithMember[]).filter(
     (t) => t.arrives_at || t.departs_at || t.accommodation
   );

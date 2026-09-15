@@ -10,6 +10,7 @@ import MembersSection from '@/components/MembersSection';
 import LinksSection from '@/components/LinksSection';
 import CtaSection from '@/components/CtaSection';
 import SiteFooter from '@/components/SiteFooter';
+import { sortMembers } from '@/lib/sort-members';
 
 export const revalidate = 0;
 
@@ -27,7 +28,7 @@ export default async function HomePage() {
   ]);
 
   const events     = (eventsRes.data ?? []) as Event[];
-  const members    = (membersRes.data ?? []) as Member[];
+  const members    = sortMembers((membersRes.data ?? []) as Member[]);
   const links      = (linksRes.data ?? []) as SiteLink[];
   const isSignedIn = !!currentMemberRes.data?.id;
 
