@@ -10,7 +10,7 @@ const LINKS = [
   { href: '/map',              label: 'Maps' },
   { href: '/where-is-alan',    label: 'Where is Alan?' },
   { href: '/tips',             label: 'Insider Tips' },
-  { href: '/gambling',         label: 'Table Games' },
+  { href: '/gambling',         label: "Alan's Gambling Academy" },
   { href: '/#links',           label: 'Links' },
 ];
 

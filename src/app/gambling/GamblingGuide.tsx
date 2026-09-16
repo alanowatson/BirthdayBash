@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 
-type Tab = 'roulette' | 'craps' | 'specialty';
+type Tab = 'roulette' | 'craps' | 'blackjack' | 'specialty';
 
 /* ─── Roulette ─────────────────────────────────────────────── */
 
@@ -114,18 +114,18 @@ const RISK_COLORS: Record<string, string> = {
 const PASS_LINE_STEPS = [
   {
     step: '1',
-    title: 'The Come-Out Roll',
-    body: 'Every round starts with a come-out roll. Bet the Pass Line before the shooter rolls. A 7 or 11 wins immediately. A 2, 3, or 12 (craps) loses. Any other number (4, 5, 6, 8, 9, 10) becomes the Point.',
+    title: 'Buy In & Place the Table Minimum',
+    body: 'Buy in for 20–30× the table minimum — $10 table, bring $200–$300. Toss a chip to the layout and say "Pass Line." The shooter rolls the come-out: 7 or 11 wins instantly, 2/3/12 loses, any other number (4, 5, 6, 8, 9, 10) becomes the Point.',
   },
   {
     step: '2',
-    title: 'The Point & Odds',
-    body: 'Once a point is set, the shooter rolls until they hit the point (win) or roll a 7 (lose — called a "seven out"). Back your Pass Line with an Odds bet behind it — the only bet in the casino with zero house edge. Take the maximum odds the table allows.',
+    title: 'Take the Odds — Every Time',
+    body: 'Once a Point is set, place chips directly behind your Pass Line bet and say "odds." This is the only bet in the entire casino with zero house edge — it pays true odds. Take the maximum the table allows (usually 2×–10× your Pass Line). If the Point hits before a 7, both bets pay.',
   },
   {
     step: '3',
-    title: 'Come Bets',
-    body: 'A Come bet is identical to a Pass Line bet — but placed mid-shooter, after the point is set. The very next roll becomes your Come bet\'s "come-out": 7 or 11 wins immediately, 2/3/12 loses, anything else becomes your Come point. Back it with Odds just like the Pass Line. This is how you get multiple numbers working at once.',
+    title: 'Add Come Bets → You\'re Playing 3 Point Molly',
+    body: 'After the Point is set, toss a chip in the Come box. The next roll becomes its mini come-out: 7/11 wins, 2/3/12 loses, anything else is your Come point — back it with Odds. Do this twice and you\'ve got 3 numbers working. That\'s the 3 Point Molly — the best strategy in craps.',
   },
 ];
 
@@ -270,6 +270,116 @@ const SPECIALTY_GAMES = [
   },
 ];
 
+/* ─── Blackjack ─────────────────────────────────────────────── */
+
+type BJAction = 'H' | 'S' | 'D' | 'Ds' | 'Y' | 'YN' | 'N' | 'SUR' | '';
+
+const BJ_CELL: Record<BJAction, { bg: string; color: string; label: string }> = {
+  H:   { bg: 'rgba(255,255,255,0.07)', color: 'rgba(200,215,240,0.6)',  label: 'H'   },
+  S:   { bg: 'rgba(212,175,55,0.25)',  color: '#D4AF37',                label: 'S'   },
+  D:   { bg: 'rgba(52,211,153,0.25)',  color: '#34D399',                label: 'D'   },
+  Ds:  { bg: 'rgba(45,212,191,0.22)',  color: '#2DD4BF',                label: 'Ds'  },
+  Y:   { bg: 'rgba(52,211,153,0.25)',  color: '#34D399',                label: 'Y'   },
+  YN:  { bg: 'rgba(251,191,36,0.22)',  color: '#FBBF24',                label: 'Y/N' },
+  N:   { bg: 'rgba(255,255,255,0.03)', color: 'rgba(255,255,255,0.22)', label: 'N'   },
+  SUR: { bg: 'rgba(96,165,250,0.22)',  color: '#60A5FA',                label: 'SUR' },
+  '':  { bg: 'transparent',            color: 'transparent',            label: ''    },
+};
+
+const BJ_DEALERS = ['2','3','4','5','6','7','8','9','10','A'];
+
+const BJ_HARD: { hand: string; row: BJAction[] }[] = [
+  { hand: '17', row: ['S','S','S','S','S','S','S','S','S','S'] },
+  { hand: '16', row: ['S','S','S','S','S','H','H','H','H','H'] },
+  { hand: '15', row: ['S','S','S','S','S','H','H','H','H','H'] },
+  { hand: '14', row: ['S','S','S','S','S','H','H','H','H','H'] },
+  { hand: '13', row: ['S','S','S','S','S','H','H','H','H','H'] },
+  { hand: '12', row: ['H','H','S','S','S','H','H','H','H','H'] },
+  { hand: '11', row: ['D','D','D','D','D','D','D','D','D','D'] },
+  { hand: '10', row: ['D','D','D','D','D','D','D','D','H','H'] },
+  { hand: '9',  row: ['H','D','D','D','D','H','H','H','H','H'] },
+  { hand: '8',  row: ['H','H','H','H','H','H','H','H','H','H'] },
+];
+
+const BJ_SOFT: { hand: string; row: BJAction[] }[] = [
+  { hand: 'A,9', row: ['S','S','S','S','S','S','S','S','S','S'] },
+  { hand: 'A,8', row: ['S','S','S','S','Ds','S','S','S','S','S'] },
+  { hand: 'A,7', row: ['Ds','Ds','Ds','Ds','Ds','S','S','H','H','H'] },
+  { hand: 'A,6', row: ['H','D','D','D','D','H','H','H','H','H'] },
+  { hand: 'A,5', row: ['H','H','D','D','D','H','H','H','H','H'] },
+  { hand: 'A,4', row: ['H','H','D','D','D','H','H','H','H','H'] },
+  { hand: 'A,3', row: ['H','H','H','D','D','H','H','H','H','H'] },
+  { hand: 'A,2', row: ['H','H','H','D','D','H','H','H','H','H'] },
+];
+
+const BJ_PAIRS: { hand: string; row: BJAction[] }[] = [
+  { hand: 'A,A', row: ['Y','Y','Y','Y','Y','Y','Y','Y','Y','Y'] },
+  { hand: 'T,T', row: ['N','N','N','N','N','N','N','N','N','N'] },
+  { hand: '9,9', row: ['Y','Y','Y','Y','Y','N','Y','Y','N','N'] },
+  { hand: '8,8', row: ['Y','Y','Y','Y','Y','Y','Y','Y','Y','Y'] },
+  { hand: '7,7', row: ['Y','Y','Y','Y','Y','Y','N','N','N','N'] },
+  { hand: '6,6', row: ['YN','Y','Y','Y','Y','N','N','N','N','N'] },
+  { hand: '5,5', row: ['N','N','N','N','N','N','N','N','N','N'] },
+  { hand: '4,4', row: ['N','N','N','YN','YN','N','N','N','N','N'] },
+  { hand: '3,3', row: ['YN','YN','Y','Y','Y','Y','N','N','N','N'] },
+  { hand: '2,2', row: ['YN','YN','Y','Y','Y','Y','N','N','N','N'] },
+];
+
+function BJSection({
+  title, subtitle, rows, accent,
+}: {
+  title: string; subtitle?: string;
+  rows: { hand: string; row: BJAction[] }[];
+  accent: string;
+}) {
+  return (
+    <div>
+      <p className="text-xs uppercase tracking-widest mb-0.5" style={{ color: accent }}>{title}</p>
+      {subtitle && <p className="text-xs text-text-dim mb-2">{subtitle}</p>}
+      <div className="overflow-x-auto rounded-xl" style={{ border: '1px solid rgba(255,255,255,0.07)' }}>
+        <table className="text-xs border-collapse" style={{ minWidth: 420 }}>
+          <thead>
+            <tr style={{ background: 'rgba(255,255,255,0.05)' }}>
+              <th className="px-3 py-2 text-left text-text-dim font-normal"
+                style={{ background: 'rgba(7,16,31,0.9)', minWidth: 52, position: 'sticky', left: 0, zIndex: 1 }}>
+                vs →
+              </th>
+              {BJ_DEALERS.map(d => (
+                <th key={d} className="py-2 text-center font-bold"
+                  style={{ color: accent, minWidth: 36, width: 36 }}>
+                  {d}
+                </th>
+              ))}
+            </tr>
+          </thead>
+          <tbody>
+            {rows.map((r, i) => (
+              <tr key={r.hand} style={{ background: i % 2 === 0 ? 'rgba(14,26,46,0.65)' : 'rgba(7,16,31,0.55)' }}>
+                <td className="px-3 py-1.5 font-bold text-text"
+                  style={{
+                    background: i % 2 === 0 ? 'rgba(14,26,46,0.95)' : 'rgba(7,16,31,0.95)',
+                    position: 'sticky', left: 0, zIndex: 1,
+                  }}>
+                  {r.hand}
+                </td>
+                {r.row.map((action, j) => {
+                  const c = BJ_CELL[action];
+                  return (
+                    <td key={j} className="py-1.5 text-center font-bold"
+                      style={{ background: c.bg, color: c.color, width: 36, minWidth: 36 }}>
+                      {c.label}
+                    </td>
+                  );
+                })}
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  );
+}
+
 /* ─── Component ─────────────────────────────────────────────── */
 
 export default function GamblingGuide() {
@@ -284,19 +394,19 @@ export default function GamblingGuide() {
       <div className="max-w-4xl mx-auto">
 
         {/* Tab bar */}
-        <div className="flex gap-1 p-1 rounded-xl mb-10 mx-auto max-w-md"
+        <div className="flex gap-1 p-1 rounded-xl mb-10 mx-auto max-w-2xl"
           style={{ background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(212,175,55,0.15)' }}>
-          {(['roulette', 'craps', 'specialty'] as Tab[]).map((t) => (
+          {(['roulette', 'craps', 'blackjack', 'specialty'] as Tab[]).map((t) => (
             <button
               key={t}
               onClick={() => setTab(t)}
-              className="flex-1 py-2 px-3 rounded-lg text-xs uppercase tracking-widest font-medium transition-all"
+              className="flex-1 py-2 px-2 rounded-lg text-xs uppercase tracking-widest font-medium transition-all"
               style={{
                 background: tab === t ? 'var(--gold)' : 'transparent',
                 color: tab === t ? '#07101F' : 'var(--text-dim)',
               }}
             >
-              {t === 'specialty' ? 'Specialty Tables' : t.charAt(0).toUpperCase() + t.slice(1)}
+              {t === 'specialty' ? 'Specialty' : t.charAt(0).toUpperCase() + t.slice(1)}
             </button>
           ))}
         </div>
@@ -327,7 +437,7 @@ export default function GamblingGuide() {
               </div>
 
               <p className="text-text-dim text-sm leading-relaxed">
-                The four strategies below are arranged from <span style={{ color: '#34D399' }}>most conservative</span> to{' '}
+                The five strategies below are arranged from <span style={{ color: '#34D399' }}>most conservative</span> to{' '}
                 <span style={{ color: '#F87171' }}>most aggressive</span>.
               </p>
             </div>
@@ -490,7 +600,7 @@ export default function GamblingGuide() {
                     </span>
                     <span className="font-medium text-text text-sm">{s.title}</span>
                   </div>
-                  <p className="text-text-dim text-xs leading-relaxed ml-10">{s.body}</p>
+                  <p className="text-text-dim text-xs leading-relaxed">{s.body}</p>
                 </div>
               ))}
             </div>
@@ -509,7 +619,7 @@ export default function GamblingGuide() {
                     </span>
                     <span className="font-medium text-text text-sm">{s.title}</span>
                   </div>
-                  <p className="text-text-dim text-xs leading-relaxed ml-10">{s.body}</p>
+                  <p className="text-text-dim text-xs leading-relaxed">{s.body}</p>
                 </div>
               ))}
             </div>
@@ -606,6 +716,99 @@ export default function GamblingGuide() {
               <a href="https://www.youtube.com/watch?v=2VUoFcUjrS4" target="_blank" rel="noopener noreferrer"
                 className="text-xs text-text-dim hover:text-gold transition-colors">
                 Watch: CEG Craps Basics (Day 1 Introduction) →
+              </a>
+            </div>
+          </div>
+        )}
+
+        {/* ── BLACKJACK ── */}
+        {tab === 'blackjack' && (
+          <div>
+            {/* Intro */}
+            <div className="mb-8 rounded-xl p-5"
+              style={{ background: 'rgba(14,26,46,0.7)', border: '1px solid rgba(212,175,55,0.15)' }}>
+              <p className="text-xs uppercase tracking-widest mb-2" style={{ color: 'var(--gold)' }}>Basic Strategy</p>
+              <p className="text-text-dim text-sm leading-relaxed mb-3">
+                Basic strategy cuts the house edge to <strong className="text-text">~0.5%</strong> — the best odds at any table game.
+                These decisions are mathematically optimal for a standard{' '}
+                <strong className="text-text">6-deck game, dealer stands on soft 17</strong>.
+                Always play at a <strong className="text-text">3:2 table</strong> — never 6:5.
+              </p>
+              <div className="flex flex-wrap gap-x-5 gap-y-1 text-xs text-text-dim">
+                <span>✓ Never take insurance</span>
+                <span>✓ Surrender before anything else (if offered)</span>
+                <span>✓ Split before doubling</span>
+              </div>
+            </div>
+
+            {/* Grids */}
+            <div className="flex flex-col gap-7">
+              <BJSection
+                title="Hard Totals"
+                subtitle="No ace, or ace counted as 1"
+                rows={BJ_HARD}
+                accent="var(--gold)"
+              />
+              <BJSection
+                title="Soft Totals"
+                subtitle="Hand includes an ace counted as 11"
+                rows={BJ_SOFT}
+                accent="#2DD4BF"
+              />
+              <BJSection
+                title="Pair Splitting"
+                subtitle="Always resolve splits before considering doubles"
+                rows={BJ_PAIRS}
+                accent="#60A5FA"
+              />
+
+              {/* Surrender */}
+              <div className="rounded-xl p-4"
+                style={{ background: 'rgba(96,165,250,0.07)', border: '1px solid rgba(96,165,250,0.2)' }}>
+                <p className="text-xs uppercase tracking-widest mb-2" style={{ color: '#60A5FA' }}>Surrender (if offered)</p>
+                <div className="flex flex-col gap-1 text-xs">
+                  <p><span className="text-text font-medium">Hard 16 vs 9, 10, A</span><span className="text-text-dim"> — Surrender (hit if not available)</span></p>
+                  <p><span className="text-text font-medium">Hard 15 vs 10</span><span className="text-text-dim"> — Surrender (hit if not available)</span></p>
+                </div>
+              </div>
+            </div>
+
+            {/* Key */}
+            <div className="mt-8 rounded-xl p-5"
+              style={{ background: 'rgba(14,26,46,0.5)', border: '1px solid rgba(255,255,255,0.06)' }}>
+              <p className="text-xs uppercase tracking-widest mb-3 text-text-dim">Key</p>
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                {([
+                  ['H',   'Hit'],
+                  ['S',   'Stand'],
+                  ['D',   'Double down (hit if not allowed)'],
+                  ['Ds',  'Double down (stand if not allowed)'],
+                  ['Y',   'Split the pair'],
+                  ['YN',  'Split only if DAS is offered'],
+                  ['N',   "Don't split"],
+                  ['SUR', 'Surrender (hit if not available)'],
+                ] as [BJAction, string][]).map(([action, desc]) => {
+                  const c = BJ_CELL[action];
+                  return (
+                    <div key={action} className="flex items-center gap-2.5">
+                      <span className="w-9 h-6 rounded flex items-center justify-center text-xs font-bold flex-shrink-0"
+                        style={{ background: c.bg, color: c.color }}>
+                        {c.label}
+                      </span>
+                      <span className="text-xs text-text-dim">{desc}</span>
+                    </div>
+                  );
+                })}
+              </div>
+              <p className="text-xs text-text-dim mt-3 pt-3" style={{ borderTop: '1px solid rgba(255,255,255,0.06)' }}>
+                Insurance or even money: <strong className="text-text">never take it</strong>. House edge on insurance is 5.8%.
+              </p>
+            </div>
+
+            <div className="mt-6 text-center">
+              <a href="https://www.blackjackapprenticeship.com/blackjack-strategy-charts/" target="_blank" rel="noopener noreferrer"
+                className="text-xs text-text-dim hover:text-gold transition-colors">
+                More detailed charts at Blackjack Apprenticeship →
               </a>
             </div>
           </div>

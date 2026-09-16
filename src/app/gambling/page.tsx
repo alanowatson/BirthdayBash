@@ -16,8 +16,8 @@ export default function GamblingPage() {
           Alan&apos;s Gambling Academy
         </h1>
         <p className="text-text-dim text-lg max-w-xl mx-auto">
-          Alan&apos;s here to help you look like you know what you&apos;re doing,
-          plus Alan&apos;s favorite strategies to play Roulette and Craps.
+          My guide to help n00bs look like you know what you&apos;re doing,
+          plus my favorite strategies to play Roulette and Craps.
         </p>
         <div className="w-16 h-px mx-auto mt-6" style={{ background: 'linear-gradient(90deg, transparent, var(--gold), transparent)' }} />
       </section>

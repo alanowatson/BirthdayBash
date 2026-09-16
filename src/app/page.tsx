@@ -20,7 +20,7 @@ export default async function HomePage() {
 
   const [eventsRes, membersRes, linksRes, currentMemberRes] = await Promise.all([
     supabaseAdmin.from('events').select('*').order('starts_at', { ascending: true }),
-    supabaseAdmin.from('members').select('*').order('created_at', { ascending: true }),
+    supabaseAdmin.from('members').select('*').or('trip_rsvp.is.null,trip_rsvp.eq.yes').order('created_at', { ascending: true }),
     supabaseAdmin.from('site_links').select('*').eq('is_visible', true).order('display_order', { ascending: true }),
     user?.email
       ? supabaseAdmin.from('members').select('id').eq('email', user.email).maybeSingle()
