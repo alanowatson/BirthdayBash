@@ -33,7 +33,7 @@ const VIEWS = {
 const STRIP_IDS = ['vdara', 'cosmopolitan', 'aria', 'planet-hollywood'];
 const DOWNTOWN_IDS = ['el-cortez', 'fremont', 'circa', 'the-d', 'first-street-stage'];
 
-export default function StripMap({ initialView = 'strip' }: { initialView?: 'strip' | 'downtown' }) {
+export default function StripMap({ initialView = 'strip', hideToggle = false }: { initialView?: 'strip' | 'downtown'; hideToggle?: boolean }) {
   const [activeView, setActiveView] = useState<'strip' | 'downtown'>(initialView);
   const [selected, setSelected] = useState<MapLocation | null>(null);
   const [activeRouteFrom, setActiveRouteFrom] = useState<string>('vdara');
@@ -101,32 +101,34 @@ export default function StripMap({ initialView = 'strip' }: { initialView?: 'str
 
   return (
     <div className="flex flex-col gap-4 h-full">
-      {/* View toggle */}
-      <div className="flex gap-2">
-        {(['strip', 'downtown'] as const).map((v) => {
-          const alanHere = v === 'strip' ? alanInStrip : alanInDowntown;
-          return (
-            <button
-              key={v}
-              onClick={() => switchView(v)}
-              className="px-4 py-2 rounded-full text-xs uppercase tracking-widest transition-all flex items-center gap-2"
-              style={{
-                border: `1px solid ${activeView === v ? 'var(--gold)' : 'rgba(212,175,55,0.2)'}`,
-                background: activeView === v ? 'rgba(212,175,55,0.1)' : 'transparent',
-                color: activeView === v ? 'var(--gold)' : 'var(--text-dim)',
-              }}
-            >
-              {v === 'strip' ? '◆ Strip · CityCenter' : '✦ Downtown · Fremont'}
-              {alanHere && (
-                <span className="relative flex h-2 w-2 flex-shrink-0">
-                  <span className="animate-ping absolute inline-flex h-full w-full rounded-full opacity-75" style={{ background: '#22c55e' }} />
-                  <span className="relative inline-flex rounded-full h-2 w-2" style={{ background: '#22c55e' }} />
-                </span>
-              )}
-            </button>
-          );
-        })}
-      </div>
+      {/* View toggle — hidden when controlled by parent TabSwitcher */}
+      {!hideToggle && (
+        <div className="flex gap-2">
+          {(['strip', 'downtown'] as const).map((v) => {
+            const alanHere = v === 'strip' ? alanInStrip : alanInDowntown;
+            return (
+              <button
+                key={v}
+                onClick={() => switchView(v)}
+                className="px-4 py-2 rounded-full text-xs uppercase tracking-widest transition-all flex items-center gap-2"
+                style={{
+                  border: `1px solid ${activeView === v ? 'var(--gold)' : 'rgba(212,175,55,0.2)'}`,
+                  background: activeView === v ? 'rgba(212,175,55,0.1)' : 'transparent',
+                  color: activeView === v ? 'var(--gold)' : 'var(--text-dim)',
+                }}
+              >
+                {v === 'strip' ? '◆ Strip · CityCenter' : '✦ Downtown · Fremont'}
+                {alanHere && (
+                  <span className="relative flex h-2 w-2 flex-shrink-0">
+                    <span className="animate-ping absolute inline-flex h-full w-full rounded-full opacity-75" style={{ background: '#22c55e' }} />
+                    <span className="relative inline-flex rounded-full h-2 w-2" style={{ background: '#22c55e' }} />
+                  </span>
+                )}
+              </button>
+            );
+          })}
+        </div>
+      )}
 
       <div className="flex flex-col lg:flex-row gap-4 flex-1">
         {/* Map */}

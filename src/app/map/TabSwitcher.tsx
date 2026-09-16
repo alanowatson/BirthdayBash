@@ -17,13 +17,16 @@ const StripMap = dynamic(() => import('./StripMap'), {
   ),
 });
 
-const TABS = [
-  { id: 'strip', label: '◆ Strip Map', desc: 'Event locations · walking routes · CityCenter + Downtown' },
-  { id: 'indoor', label: '⬡ Indoor Guide', desc: 'Cosmopolitan floor-by-floor · Chandelier Bar · Marquee · Secret Pizza' },
-] as const;
+type MapTab = 'strip' | 'downtown' | 'indoor';
+
+const TABS: { id: MapTab; label: string; desc: string }[] = [
+  { id: 'strip',    label: '◆ Strip · CityCenter',  desc: 'Cosmopolitan · Aria · Planet Hollywood · walking routes' },
+  { id: 'downtown', label: '✦ Downtown · Fremont',   desc: 'El Cortez · Circa · Fremont St Crawl · better odds' },
+  { id: 'indoor',   label: '⬡ Indoor Guide',         desc: 'Cosmopolitan floor-by-floor · Chandelier Bar · Secret Pizza' },
+];
 
 export default function TabSwitcher() {
-  const [activeTab, setActiveTab] = useState<'strip' | 'indoor'>('strip');
+  const [activeTab, setActiveTab] = useState<MapTab>('strip');
 
   return (
     <div className="flex flex-col gap-6">
@@ -52,10 +55,10 @@ export default function TabSwitcher() {
 
       {/* Tab content */}
       <div style={{ minHeight: 520 }}>
-        {activeTab === 'strip' ? (
-          <StripMap />
-        ) : (
+        {activeTab === 'indoor' ? (
           <IndoorGuide />
+        ) : (
+          <StripMap key={activeTab} initialView={activeTab} hideToggle />
         )}
       </div>
     </div>

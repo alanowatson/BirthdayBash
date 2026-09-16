@@ -336,46 +336,59 @@ function BJSection({
     <div>
       <p className="text-xs uppercase tracking-widest mb-0.5" style={{ color: accent }}>{title}</p>
       {subtitle && <p className="text-xs text-text-dim mb-2">{subtitle}</p>}
-      <div className="overflow-x-auto rounded-xl" style={{ border: '1px solid rgba(255,255,255,0.07)' }}>
-        <table className="text-xs border-collapse" style={{ minWidth: 420 }}>
-          <thead>
-            <tr style={{ background: 'rgba(255,255,255,0.05)' }}>
-              <th className="px-3 py-2 text-left text-text-dim font-normal"
-                style={{ background: 'rgba(7,16,31,0.9)', minWidth: 52, position: 'sticky', left: 0, zIndex: 1 }}>
-                vs →
-              </th>
-              {BJ_DEALERS.map(d => (
-                <th key={d} className="py-2 text-center font-bold"
-                  style={{ color: accent, minWidth: 36, width: 36 }}>
-                  {d}
+      <div className="relative">
+        {/* Right-edge fade — visual scroll hint */}
+        <div className="absolute right-0 top-0 bottom-0 w-8 pointer-events-none z-10 rounded-r-xl"
+          style={{ background: 'linear-gradient(to right, transparent, rgba(7,16,31,0.85))' }} />
+        <div
+          className="overflow-x-auto rounded-xl"
+          style={{
+            border: '1px solid rgba(255,255,255,0.07)',
+            WebkitOverflowScrolling: 'touch',
+            overscrollBehaviorX: 'contain',
+          }}
+        >
+          <table className="text-xs border-collapse" style={{ minWidth: 380 }}>
+            <thead>
+              <tr style={{ background: 'rgba(255,255,255,0.05)' }}>
+                <th className="px-2 py-2 text-left text-text-dim font-normal"
+                  style={{ background: 'rgba(7,16,31,0.9)', minWidth: 44, position: 'sticky', left: 0, zIndex: 1 }}>
+                  vs →
                 </th>
-              ))}
-            </tr>
-          </thead>
-          <tbody>
-            {rows.map((r, i) => (
-              <tr key={r.hand} style={{ background: i % 2 === 0 ? 'rgba(14,26,46,0.65)' : 'rgba(7,16,31,0.55)' }}>
-                <td className="px-3 py-1.5 font-bold text-text"
-                  style={{
-                    background: i % 2 === 0 ? 'rgba(14,26,46,0.95)' : 'rgba(7,16,31,0.95)',
-                    position: 'sticky', left: 0, zIndex: 1,
-                  }}>
-                  {r.hand}
-                </td>
-                {r.row.map((action, j) => {
-                  const c = BJ_CELL[action];
-                  return (
-                    <td key={j} className="py-1.5 text-center font-bold"
-                      style={{ background: c.bg, color: c.color, width: 36, minWidth: 36 }}>
-                      {c.label}
-                    </td>
-                  );
-                })}
+                {BJ_DEALERS.map(d => (
+                  <th key={d} className="py-2 text-center font-bold"
+                    style={{ color: accent, minWidth: 32, width: 32 }}>
+                    {d}
+                  </th>
+                ))}
               </tr>
-            ))}
-          </tbody>
-        </table>
+            </thead>
+            <tbody>
+              {rows.map((r, i) => (
+                <tr key={r.hand} style={{ background: i % 2 === 0 ? 'rgba(14,26,46,0.65)' : 'rgba(7,16,31,0.55)' }}>
+                  <td className="px-2 py-2 font-bold text-text"
+                    style={{
+                      background: i % 2 === 0 ? 'rgba(14,26,46,0.95)' : 'rgba(7,16,31,0.95)',
+                      position: 'sticky', left: 0, zIndex: 1,
+                    }}>
+                    {r.hand}
+                  </td>
+                  {r.row.map((action, j) => {
+                    const c = BJ_CELL[action];
+                    return (
+                      <td key={j} className="py-2 text-center font-bold"
+                        style={{ background: c.bg, color: c.color, width: 32, minWidth: 32 }}>
+                        {c.label}
+                      </td>
+                    );
+                  })}
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
       </div>
+      <p className="text-right text-xs text-text-dim mt-1 opacity-50">← swipe →</p>
     </div>
   );
 }
@@ -732,7 +745,7 @@ export default function GamblingGuide() {
                 Basic strategy cuts the house edge to <strong className="text-text">~0.5%</strong> — the best odds at any table game.
                 These decisions are mathematically optimal for a standard{' '}
                 <strong className="text-text">6-deck game, dealer stands on soft 17</strong>.
-                Always play at a <strong className="text-text">3:2 table</strong> — never 6:5.
+                3:2 tables pay better than 6:5 — and they&apos;re easier to find downtown than on the Strip.
               </p>
               <div className="flex flex-wrap gap-x-5 gap-y-1 text-xs text-text-dim">
                 <span>✓ Never take insurance</span>
@@ -784,7 +797,7 @@ export default function GamblingGuide() {
                   ['D',   'Double down (hit if not allowed)'],
                   ['Ds',  'Double down (stand if not allowed)'],
                   ['Y',   'Split the pair'],
-                  ['YN',  'Split only if DAS is offered'],
+                  ['YN',  'Split only if DAS (Double After Split) is offered'],
                   ['N',   "Don't split"],
                   ['SUR', 'Surrender (hit if not available)'],
                 ] as [BJAction, string][]).map(([action, desc]) => {
@@ -805,10 +818,16 @@ export default function GamblingGuide() {
               </p>
             </div>
 
-            <div className="mt-6 text-center">
+            <div className="mt-6 flex flex-col sm:flex-row items-center justify-center gap-4">
+              <a href="https://www.sweepscointracker.com/tools/blackjack/" target="_blank" rel="noopener noreferrer"
+                className="flex items-center gap-2 text-xs px-4 py-2 rounded-full transition-opacity hover:opacity-80"
+                style={{ background: 'rgba(212,175,55,0.12)', border: '1px solid rgba(212,175,55,0.3)', color: 'var(--gold)' }}>
+                <span>♠</span>
+                Practice Basic Strategy (Interactive Trainer) →
+              </a>
               <a href="https://www.blackjackapprenticeship.com/blackjack-strategy-charts/" target="_blank" rel="noopener noreferrer"
                 className="text-xs text-text-dim hover:text-gold transition-colors">
-                More detailed charts at Blackjack Apprenticeship →
+                Full charts at Blackjack Apprenticeship →
               </a>
             </div>
           </div>
