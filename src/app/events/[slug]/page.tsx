@@ -23,6 +23,34 @@ const HEADLINER: Record<string, { name: string; photoSrc: string }> = {
   'saturday-nightclub': { name: 'Zedd', photoSrc: '/zedd-promo.jpg' },
 };
 
+// Fremont East bonus spots (static, separate from the crawl timeline)
+const FREMONT_EAST: Record<string, {
+  parties: { name: string; vibe: string; desc: string }[];
+  bars: { name: string; vibe: string; desc: string }[];
+}> = {
+  'fremont-street-crawl': {
+    parties: [
+      {
+        name: 'We All Scream',
+        vibe: 'Club',
+        desc: 'The best club energy in Fremont East — packed dancefloor, great DJs, and a crowd that\'s actually there to party. Keep this one in the back pocket for when you want to go hard.',
+      },
+      {
+        name: 'Disco Pussy',
+        vibe: 'Bar / Club',
+        desc: 'Loud, dark, absurdly fun. Dive bar meets disco — no pretense, cheap drinks, the kind of place that makes Fremont East worth the detour.',
+      },
+    ],
+    bars: [
+      {
+        name: 'Lucky Day',
+        vibe: 'Cocktail Bar',
+        desc: 'A more laid-back spot for a drink between stops. Solid cocktails without the full club energy — a good place to regroup before the next venue.',
+      },
+    ],
+  },
+};
+
 export const revalidate = 0;
 
 const PT = 'America/Los_Angeles';
@@ -104,6 +132,8 @@ export default async function EventPage({ params }: Props) {
   const eventTips = TIPS.filter((t) => t.eventSlugs?.includes(slug));
   const headliner = HEADLINER[slug] ?? null;
   const gamblingNote = EVENT_GAMBLING_NOTE[slug] ?? null;
+
+  const fremonEast = FREMONT_EAST[slug] ?? null;
 
   const currentMember = currentMemberRes.data as { id: string; name: string } | null;
 
@@ -299,6 +329,51 @@ export default async function EventPage({ params }: Props) {
                 </div>
               </>
             )}
+          </div>
+        </section>
+      )}
+
+      {/* Fremont East bonus spots */}
+      {fremonEast && (
+        <section
+          className="py-10 px-6 border-t"
+          style={{ borderColor: 'var(--gold-soft)' }}
+        >
+          <div className="max-w-5xl mx-auto">
+            <p className="text-xs uppercase tracking-widest text-text-dim mb-1">Fremont East</p>
+            <p className="text-text-dim text-sm mb-6">East of the canopy — the nightlife neighborhood. Bonus stops if the group&apos;s still going.</p>
+            <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
+              {fremonEast.parties.map((v) => (
+                <div
+                  key={v.name}
+                  className="rounded-xl p-5"
+                  style={{ border: '1px solid rgba(192,132,252,0.25)', background: 'rgba(192,132,252,0.05)' }}
+                >
+                  <div className="flex items-center gap-2 mb-3">
+                    <span className="text-lg">🪩</span>
+                    <span className="text-xs uppercase tracking-widest" style={{ color: '#C084FC' }}>Party</span>
+                  </div>
+                  <p className="font-display text-lg mb-0.5" style={{ color: '#C084FC' }}>{v.name}</p>
+                  <p className="text-xs text-text-dim mb-3 uppercase tracking-wide">{v.vibe}</p>
+                  <p className="text-sm text-text-dim leading-relaxed">{v.desc}</p>
+                </div>
+              ))}
+              {fremonEast.bars.map((v) => (
+                <div
+                  key={v.name}
+                  className="rounded-xl p-5"
+                  style={{ border: '1px solid rgba(34,211,238,0.25)', background: 'rgba(34,211,238,0.05)' }}
+                >
+                  <div className="flex items-center gap-2 mb-3">
+                    <span className="text-lg">🍸</span>
+                    <span className="text-xs uppercase tracking-widest" style={{ color: '#22D3EE' }}>Grab a Drink</span>
+                  </div>
+                  <p className="font-display text-lg mb-0.5" style={{ color: '#22D3EE' }}>{v.name}</p>
+                  <p className="text-xs text-text-dim mb-3 uppercase tracking-wide">{v.vibe}</p>
+                  <p className="text-sm text-text-dim leading-relaxed">{v.desc}</p>
+                </div>
+              ))}
+            </div>
           </div>
         </section>
       )}

@@ -31,7 +31,7 @@ const VIEWS = {
 };
 
 const STRIP_IDS = ['vdara', 'cosmopolitan', 'aria', 'planet-hollywood'];
-const DOWNTOWN_IDS = ['el-cortez', 'fremont', 'circa', 'the-d', 'first-street-stage'];
+const DOWNTOWN_IDS = ['el-cortez', 'fremont', 'circa', 'the-d', 'first-street-stage', 'we-all-scream', 'disco-pussy', 'lucky-day'];
 
 export default function StripMap({ initialView = 'strip', hideToggle = false }: { initialView?: 'strip' | 'downtown'; hideToggle?: boolean }) {
   const [activeView, setActiveView] = useState<'strip' | 'downtown'>(initialView);

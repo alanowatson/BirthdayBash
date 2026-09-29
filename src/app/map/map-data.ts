@@ -194,6 +194,68 @@ export const LOCATIONS: MapLocation[] = [
       },
     ],
   },
+  // ── Fremont East Entertainment District ──────────────────────
+  {
+    id: 'we-all-scream',
+    name: 'We All Scream',
+    short: 'We All Scream',
+    coords: [-115.1358, 36.1685],
+    type: 'event',
+    color: '#C084FC',
+    description: 'The best club energy in Fremont East. Packed dancefloor, great DJs, crowd that\'s actually there to party. This is the move when you want to go hard.',
+    routes: [
+      {
+        from: 'fremont',
+        label: 'From Fremont St',
+        minutes: 5,
+        steps: [
+          'Head east on Fremont past El Cortez',
+          'Fremont East District starts around 7th St — keep walking east',
+          'We All Scream is roughly at 8th & Fremont',
+        ],
+      },
+    ],
+  },
+  {
+    id: 'disco-pussy',
+    name: 'Disco Pussy',
+    short: 'Disco Pussy',
+    coords: [-115.1350, 36.1685],
+    type: 'event',
+    color: '#F472B6',
+    description: 'Loud, dark, absurdly fun. Dive bar meets disco — no pretense, cheap drinks, exactly the kind of place that makes Fremont East worth the detour.',
+    routes: [
+      {
+        from: 'fremont',
+        label: 'From Fremont St',
+        minutes: 6,
+        steps: [
+          'Head east past El Cortez into the Fremont East district',
+          'Disco Pussy is near 9th & Fremont — easy to spot',
+        ],
+      },
+    ],
+  },
+  {
+    id: 'lucky-day',
+    name: 'Lucky Day',
+    short: 'Lucky Day',
+    coords: [-115.1373, 36.1686],
+    type: 'landmark',
+    color: '#22D3EE',
+    description: 'A more laid-back cocktail bar for a drink between stops. Good vibes without the full club energy — a solid spot to regroup.',
+    routes: [
+      {
+        from: 'fremont',
+        label: 'From Fremont St',
+        minutes: 4,
+        steps: [
+          'Walk east past El Cortez on Fremont',
+          'Lucky Day is just past 6th St in the Fremont East stretch',
+        ],
+      },
+    ],
+  },
   {
     id: 'circa',
     name: 'Circa Resort & Casino',
