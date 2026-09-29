@@ -130,9 +130,9 @@ export default function StripMap({ initialView = 'strip', hideToggle = false }: 
         </div>
       )}
 
-      <div className="flex flex-col lg:flex-row gap-4 flex-1">
+      <div className="flex flex-col lg:flex-row gap-4 lg:h-[560px]">
         {/* Map */}
-        <div className="h-[420px] lg:h-auto lg:flex-1 rounded-xl overflow-hidden" style={{ border: '1px solid rgba(212,175,55,0.15)' }}>
+        <div className="h-[420px] lg:h-full lg:flex-1 rounded-xl overflow-hidden" style={{ border: '1px solid rgba(212,175,55,0.15)' }}>
           <Map
             {...viewport}
             // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -224,7 +224,7 @@ export default function StripMap({ initialView = 'strip', hideToggle = false }: 
         </div>
 
         {/* Sidebar: location list + route directions */}
-        <div className="lg:w-72 flex flex-col gap-3" style={{ minHeight: 0 }}>
+        <div className="lg:w-72 flex flex-col gap-3 lg:overflow-y-auto" style={{ minHeight: 0 }}>
           {/* Location list */}
           <div className="flex flex-col gap-2">
             {visibleLocations.map((loc) => (

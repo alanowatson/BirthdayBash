@@ -54,7 +54,7 @@ export default function TabSwitcher() {
       </div>
 
       {/* Tab content */}
-      <div style={{ minHeight: 520 }}>
+      <div>
         {activeTab === 'indoor' ? (
           <IndoorGuide />
         ) : (
