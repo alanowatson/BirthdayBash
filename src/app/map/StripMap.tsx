@@ -100,7 +100,7 @@ export default function StripMap({ initialView = 'strip', hideToggle = false }: 
   }
 
   return (
-    <div className="flex flex-col gap-4 h-full">
+    <div className="flex flex-col gap-4">
       {/* View toggle — hidden when controlled by parent TabSwitcher */}
       {!hideToggle && (
         <div className="flex gap-2">
@@ -130,9 +130,9 @@ export default function StripMap({ initialView = 'strip', hideToggle = false }: 
         </div>
       )}
 
-      <div className="flex flex-col lg:flex-row gap-4 lg:h-[560px]">
+      <div className="flex flex-col lg:flex-row gap-4">
         {/* Map */}
-        <div className="h-[420px] lg:h-full lg:flex-1 rounded-xl overflow-hidden" style={{ border: '1px solid rgba(212,175,55,0.15)' }}>
+        <div className="h-[420px] lg:h-[520px] lg:flex-1 rounded-xl overflow-hidden" style={{ border: '1px solid rgba(212,175,55,0.15)' }}>
           <Map
             {...viewport}
             // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -224,7 +224,7 @@ export default function StripMap({ initialView = 'strip', hideToggle = false }: 
         </div>
 
         {/* Sidebar: location list + route directions */}
-        <div className="lg:w-72 flex flex-col gap-3 lg:overflow-y-auto" style={{ minHeight: 0 }}>
+        <div className="lg:w-72 flex flex-col gap-3 lg:max-h-[520px] lg:overflow-y-auto" style={{ minHeight: 0 }}>
           {/* Location list */}
           <div className="flex flex-col gap-2">
             {visibleLocations.map((loc) => (
