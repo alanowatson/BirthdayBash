@@ -242,7 +242,7 @@ function Rules() {
 const GENERAL_RULES = [
   {
     title: 'Game Start',
-    body: "The game begins Friday morning. Study the board and strategize beforehand — but tasks completed before the official start don't count.",
+    body: "The game begins Friday morning. Study the board and strategize beforehand, but tasks completed before the official start don't count. All location riddles will be within a 10 min walk to the weekend's activities.",
   },
   {
     title: 'Strangers Only',
@@ -250,11 +250,11 @@ const GENERAL_RULES = [
   },
   {
     title: 'No Spoilers',
-    body: "You cannot tell anyone outside the group about the game while attempting to complete a task. Loose lips sink ships and forfeit cards.",
+    body: "You shouldn't tell anyone outside the group about the game while attempting to complete a task. If it makes the card significantly easier to obtain by cluing in the stranger, it's prohibited.",
   },
   {
     title: 'Cards Can Move',
-    body: "Points follow the cards, not the player. Once claimed, a card can be traded, wagered, or outright stolen from another player. Mini-games, degenerate gambling, subterfuge, and other chicanery are encouraged.",
+    body: "Points follow the cards, not the player (with a few relatively obvious exceptions). Once claimed, a card can be traded, wagered, or outright stolen from another player. Mini-games, degenerate gambling, subterfuge, and other chicanery are encouraged.",
   },
 ];
 
