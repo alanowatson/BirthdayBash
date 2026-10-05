@@ -14,8 +14,9 @@ export default function VoiceBlock() {
             <span className="text-gold">60 year old self will thank you</span>. Your body may hold a grudge.
           </p>
           <p>
-            As you can all tell, I have been dreaming of this weekend — getting an elite group of
-            people together. I never had a bachelor party{' '}
+            As you can all tell, I have been dreaming of this weekend, getting an elite group,
+            comprised of great friends from different parts of my life, and celebrating the best way
+            I know how. I never had a bachelor party{' '}
             <span className="text-text-dim">(thanks Covid)</span>{' '}so thanks for letting me go a
             little off the deep end in a post-kids world.
           </p>
