@@ -98,7 +98,7 @@ export default async function ScavengerHuntPage() {
           The Great T-Rex<br />Scavenger Hunt 2.0
         </h1>
         <p className="text-text-dim text-lg max-w-xl mx-auto">
-          52 tasks. Four suits. One wild weekend. Prizes, bragging rights, and a silver &amp; gold
+          52 chances to rack up points. One wild weekend. Prizes, bragging rights, and a silver &amp; gold
           foil deck of poker cards as souvenirs.
         </p>
       </section>
