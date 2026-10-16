@@ -9,8 +9,8 @@ const LINKS = [
   { href: '/members',          label: "Who's Coming" },
   { href: '/map',              label: 'Maps' },
   { href: '/where-is-alan',    label: 'Where is Alan?' },
-  { href: '/tips',             label: 'Insider Tips' },
-  { href: '/gambling',         label: "Alan's Gambling Academy" },
+  { href: '/tips',             label: 'Tips' },
+  { href: '/gambling',         label: 'Gambling' },
   { href: '/#links',           label: 'Links' },
 ];
 
@@ -34,23 +34,23 @@ export default function Nav() {
       className="fixed top-0 left-0 right-0 z-50 backdrop-blur-md border-b"
       style={{ background: 'rgba(0,0,0,0.4)', borderColor: 'var(--gold-soft)' }}
     >
-      <div className="max-w-6xl mx-auto px-6 py-4 relative flex items-center justify-between lg:justify-center">
+      <div className="max-w-6xl mx-auto px-6 py-4 flex items-center gap-4">
 
-        {/* Logo — left */}
-        <a href="/" className="flex items-center gap-2 lg:absolute lg:left-6" onClick={() => setOpen(false)}>
+        {/* Logo — fixed-width left column */}
+        <a href="/" className="flex items-center gap-2 flex-shrink-0 lg:w-40" onClick={() => setOpen(false)}>
           <span className="text-gold text-2xl">◆</span>
           <span className="font-display text-xl tracking-widest text-text">ALAN&#39;S 40TH</span>
         </a>
 
-        {/* Desktop links — centered */}
-        <div className="hidden lg:flex items-center gap-6 text-sm text-text-dim">
+        {/* Desktop links — centered in the remaining space */}
+        <div className="hidden lg:flex flex-1 items-center justify-center gap-5 text-xs text-text-dim">
           {LINKS.map((l) => (
-            <a key={l.href} href={l.href} className="hover:text-gold transition-colors">{l.label}</a>
+            <a key={l.href} href={l.href} className="hover:text-gold transition-colors whitespace-nowrap">{l.label}</a>
           ))}
         </div>
 
-        {/* Right slot — Profile (signed in) or Get on the list (signed out). Hidden until auth known to prevent flash. */}
-        <div className="hidden lg:flex lg:absolute lg:right-6">
+        {/* Right slot — fixed-width, mirrors logo width to keep links truly centered */}
+        <div className="hidden lg:flex lg:w-40 justify-end flex-shrink-0">
           {signedIn === true && (
             <a href="/me" className="text-sm text-text-dim hover:text-gold transition-colors">
               Profile
@@ -65,7 +65,7 @@ export default function Nav() {
 
         {/* Hamburger — below lg */}
         <button
-          className="lg:hidden text-text-dim hover:text-gold transition-colors p-1"
+          className="lg:hidden ml-auto text-text-dim hover:text-gold transition-colors p-1"
           onClick={() => setOpen((v) => !v)}
           aria-label={open ? 'Close menu' : 'Open menu'}
         >
