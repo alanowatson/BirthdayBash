@@ -2,8 +2,8 @@
 
 import { useEffect, useState } from 'react';
 
-// Oct 22, 2026 — midnight PDT (UTC-7)
-const TARGET = new Date('2026-10-22T07:00:00Z').getTime();
+// Oct 22, 2026 — 6:00 PM PDT (UTC-7)
+const TARGET = new Date('2026-10-23T01:00:00Z').getTime();
 
 function pad(n: number) {
   return String(n).padStart(2, '0');
