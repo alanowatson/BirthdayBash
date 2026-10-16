@@ -234,6 +234,33 @@ function Rules() {
             <RuleCard key={rule.title} title={rule.title} body={rule.body} />
           ))}
         </div>
+
+        <div className="flex items-center gap-4 mb-8 mt-12">
+          <div className="flex-1 h-px" style={{ background: 'var(--gold-soft)' }} />
+          <p className="font-display text-xl tracking-widest whitespace-nowrap" style={{ color: '#C084FC' }}>The Jokers</p>
+          <div className="flex-1 h-px" style={{ background: 'var(--gold-soft)' }} />
+        </div>
+
+        <div className="grid md:grid-cols-2 gap-6 mb-4">
+          {['Joker I', 'Joker II'].map((name) => (
+            <div
+              key={name}
+              className="rounded-xl p-6 text-center flex flex-col items-center gap-3"
+              style={{ border: '1px solid rgba(192,132,252,0.35)', background: 'rgba(192,132,252,0.06)' }}
+            >
+              <span style={{ fontSize: '2.5rem', lineHeight: 1 }}>🃏</span>
+              <p className="font-display text-2xl" style={{ color: '#C084FC' }}>{name}</p>
+              <p className="font-display text-4xl" style={{ color: '#C084FC', lineHeight: 1 }}>15 pts</p>
+              <p className="text-sm text-text-dim leading-relaxed">
+                Awarded by the referees — not claimable. Reserved for MVP group vibes,
+                heroic acts of partying, or balancing the game in real time.
+              </p>
+            </div>
+          ))}
+        </div>
+        <p className="text-xs text-center text-text-dim">
+          You cannot compete for a Joker. You can only earn one.
+        </p>
       </div>
     </section>
   );
@@ -265,7 +292,7 @@ const SCORING_RULES = [
   },
   {
     title: 'The Deck',
-    body: "The 52 tasks are represented by a special silver & gold foil poker deck — which are also your souvenirs. Complete a task, claim the card and its points. Each task can only be claimed once.",
+    body: "The 52 tasks are represented by a special silver & gold foil poker deck — which are also your souvenirs. Complete a task, claim the card and its points. Each task can only be claimed once. Two Joker cards also exist and are awarded separately by the referees.",
   },
   {
     title: 'Evidence',
