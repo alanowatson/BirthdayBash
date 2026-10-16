@@ -37,7 +37,7 @@ export default function Nav() {
       <div className="max-w-6xl mx-auto px-6 py-4 flex items-center gap-4">
 
         {/* Logo — fixed-width left column */}
-        <a href="/" className="flex items-center gap-2 flex-shrink-0 lg:w-40" onClick={() => setOpen(false)}>
+        <a href="/" className="flex items-center gap-2 flex-shrink-0 whitespace-nowrap lg:w-44" onClick={() => setOpen(false)}>
           <span className="text-gold text-2xl">◆</span>
           <span className="font-display text-xl tracking-widest text-text">ALAN&#39;S 40TH</span>
         </a>
@@ -50,7 +50,7 @@ export default function Nav() {
         </div>
 
         {/* Right slot — fixed-width, mirrors logo width to keep links truly centered */}
-        <div className="hidden lg:flex lg:w-40 justify-end flex-shrink-0">
+        <div className="hidden lg:flex lg:w-44 justify-end flex-shrink-0">
           {signedIn === true && (
             <a href="/me" className="text-sm text-text-dim hover:text-gold transition-colors">
               Profile
