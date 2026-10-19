@@ -119,7 +119,7 @@ export const TIPS: Tip[] = [
     number: '09',
     category: 'STRIP SECRET',
     title: 'The Hidden Bar Circuit',
-    subtitle: 'Four speakeasies nobody will tell you about',
+    subtitle: 'Five speakeasies nobody will tell you about',
     body: '',
     entries: [
       {
@@ -133,6 +133,11 @@ export const TIPS: Tip[] = [
         text: 'A snow-globe fever dream — working fireplace, fake snowfall, and a secret menu. Ask your server at Superfrico for the way in.',
       },
       {
+        name: 'The Barbershop Cuts & Cocktails',
+        where: 'Cosmopolitan · Level 1, near Bellagio entrance',
+        text: 'Find the barber pole near the Las Vegas Blvd entrance. Walk through the working barbershop to the back-left corner and look for the door labeled "Janitor." Through the closet is a second door into a Prohibition-style lounge. Open until 2 AM.',
+      },
+      {
         name: 'The Vault',
         where: 'Bellagio · Casino Floor',
         text: 'Find the alcove near where the old cashier\'s cage used to be — look for a gilded door with a small "V" placard. Rare vintage spirits from the 1950s–90s. Reservations required on peak times; check their Instagram bio link.',
@@ -143,7 +148,7 @@ export const TIPS: Tip[] = [
         text: 'Take the escalator to the mezzanine and look for it next to the Criss Angel Theater. Italian-themed lounge with DJs Thurs–Sun from 7 PM.',
       },
     ],
-    note: 'PRO TIP: The Cosmo alone has two speakeasies (Ghost Donkey and the Ski Lodge) plus Secret Pizza and the Chandelier UV menu — you could spend an entire night in that building and never run out of surprises.',
+    note: 'PRO TIP: The Cosmo alone has three speakeasies (Ghost Donkey, the Ski Lodge, and the Barbershop) plus Secret Pizza and the Chandelier UV menu — you could spend an entire night in that building and never run out of surprises.',
     accent: '#C084FC',
     icon: '🔑',
   },
