@@ -1,3 +1,5 @@
+Imagine a wedding website but better.  I wanted to create a one stop shop for a 20 person trip to Vegas.  Complete with scavenger hunt style game, gambling tutorials, and integration with a phone app I hacked together to ping my location during a bar crawl.
+
 This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
 
 ## Getting Started
